@@ -1,6 +1,13 @@
 ﻿/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+/* General Styles */
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
 a.navbar-brand {
   white-space: normal;
   text-align: center;
@@ -8,28 +15,268 @@ a.navbar-brand {
 }
 
 a {
+  text-decoration: none;
   color: #0077cc;
+}
+
+/* Header Styles */
+.header {
+  padding: 20px 0;
+  background-color: #FFFFFF;
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.1);
+}
+
+.header-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name {
+  font-family: 'Baloo 2', cursive;
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 1.6em;
+  color: #319BC5;
+}
+
+.brand-subtitle {
+  font-family: 'Baloo 2', cursive;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 1.6em;
+  color: #000000;
+  margin-top: -15px;
+}
+
+.search-container {
+  flex: 1;
+  max-width: 500px;
+  margin: 0 40px;
+}
+
+.search-input {
+  display: flex;
+  border: 1px solid #DDDDDD;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.search-input input {
+  flex: 1;
+  border: none;
+  padding: 10px 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.2em;
+  border-radius: 26px 0 0 27px;
+  outline: none;
+}
+
+.search-button {
+  background-color: #319BC5;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 0 19px 20px 0;
+  cursor: pointer;
+}
+
+.header-icons {
+  display: flex;
+  gap: 25px;
+}
+
+.header-icons .icon {
+  color: #000000;
+  font-size: 30px;
+  transition: color 0.3s;
+}
+
+.header-icons .icon:hover {
+  color: #319BC5;
+}
+
+/* Bar Styles */
+.bar {
+  background-color: #000000;
+  padding: 10px 0;
+}
+
+.bar-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 50px;
+}
+
+.bar-icon-left {
+  color: #FFFFFF;
+  font-size: 25px;
+  margin-right: 30px;
+  padding-bottom: 7px;
+  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.bar-icon-left:hover {
+  color: #3482F7;
+  text-decoration: none;
+}
+
+.bar-item {
+  font-family: 'Lalezar', cursive;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 1;
+  color: #FFFFFF;
+  margin-right: 40px;
+  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.bar-item:hover {
+  color: #319BC5;
+  text-decoration: none;
+}
+
+.bar-item.active {
+  color: #319BC5;
+}
+
+.bar-icons {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-bottom: 7px;
+}
+
+.bar-icons .icon {
+  color: #FFFFFF;
+  font-size: 25px;
+  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.bar-icons .icon:hover {
+  color: #3482F7;
 }
 
 .btn-primary {
   color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+  background-color: #319BC5;
+  border-color: #2a86ab;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+.btn-primary:hover {
+  background-color: #2a86ab;
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
   color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+  background-color: #319BC5;
+  border-color: #2a86ab;
 }
 
 .border-top {
   border-top: 1px solid #e5e5e5;
 }
+
 .border-bottom {
   border-bottom: 1px solid #e5e5e5;
 }
 
+/* Footer */
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px;
+  background-color: #f8f9fa;
+}
+
+.footer .container {
+  text-align: center;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .brand-name {
+    font-size: 48px;
+  }
+
+  .brand-subtitle {
+    font-size: 16px;
+  }
+
+  .bar-item {
+    font-size: 28px;
+  }
+
+  .search-container {
+    max-width: 300px;
+    margin: 0 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-wrapper {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .search-container {
+    max-width: 100%;
+    margin: 15px 0;
+  }
+
+  .bar-content {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 10px 0;
+  }
+
+  .bar-icon-left {
+    margin-right: 15px;
+    height: 40px;
+  }
+
+  .bar-item {
+    margin-right: 20px;
+    margin-bottom: 10px;
+    font-size: 24px;
+    height: 40px;
+  }
+
+  .bar-icons {
+    width: auto;
+    margin-top: 0;
+    height: 40px;
+  }
+}
+
+/* Bootstrap Overrides */
+.container-fluid {
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+/* Box shadow utility */
 .box-shadow {
   box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
@@ -37,12 +284,4 @@ a {
 button.accept-policy {
   font-size: 1rem;
   line-height: inherit;
-}
-
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
 }

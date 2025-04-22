@@ -3,33 +3,55 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - QuanLySuaChua_BaoHanh</title>
+    <title>@ViewData["Title"] - Panasonic Trung tâm bảo hành</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/QuanLySuaChua_BaoHanh.styles.css" asp-append-version="true" />
+    <!-- Google Fonts for Baloo 2, Lalezar, Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;700&family=Inter&family=Lalezar&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">QuanLySuaChua_BaoHanh</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+    <header class="header box-shadow">
+        <div class="container-fluid">
+            <div class="header-wrapper">
+                <div class="brand">
+                    <div class="brand-name">Panasonic</div>
+                    <div class="brand-subtitle">Trung tâm bảo hành</div>
+                </div>
+                <div class="search-container">
+                    <div class="search-input">
+                        <input type="text" placeholder="Tìm kiếm" />
+                        <button class="search-button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="header-icons">
+                    <a href="#" class="icon"><i class="fa-solid fa-bell"></i></a>
+                    <a href="#" class="icon"><i class="fas fa-map-marker-alt"></i></a>
+                    <a href="#" class="icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="icon"><i class="fas fa-user"></i></a>
                 </div>
             </div>
-        </nav>
+        </div>
     </header>
+    
+    <div class="bar">
+        <div class="container-fluid">
+            <div class="bar-content">
+                <a href="#" class="bar-icon-left"><i class="fas fa-home"></i></a>
+                <a href="#" class="bar-item">Giới thiệu</a>
+                <a href="#" class="bar-item">Đăng kí dịch vụ</a>
+                <a href="#" class="bar-item active">Đơn sửa chữa</a>
+                <div class="bar-icons">
+                    <a href="#" class="icon"><i class="fas fa-user"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -38,7 +60,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - QuanLySuaChua_BaoHanh - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - Panasonic Trung tâm bảo hành - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
