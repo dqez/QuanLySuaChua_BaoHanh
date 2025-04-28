@@ -1,4 +1,12 @@
+using Microsoft.AspNetCore.Identity;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure Identity UI to use Bootstrap 5
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    // configure options
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
