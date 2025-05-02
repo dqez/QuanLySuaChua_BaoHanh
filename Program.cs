@@ -1,17 +1,18 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using test_identityBHSC.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure Identity UI to use Bootstrap 5
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    // configure options
-});
+
+builder.Services.AddDbContext<BHSC_DbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddIdentity<NguoiDung,IdentityRole<int>>()
+    .AddEntityFrameworkStores<BHSC_DbContext>()
+    .AddDefaultTokenProviders();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
-var connectionString = builder.Configuration.GetConnectionString("default");
 
 var app = builder.Build();
 
@@ -28,7 +29,13 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
 
 app.MapControllerRoute(
     name: "default",

@@ -1,0 +1,31 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+
+namespace test_identityBHSC.Models;
+
+[PrimaryKey("PhieuXuatId", "PhieuSuaChuaId")]
+[Table("ChiTietPX")]
+public partial class ChiTietPx
+{
+    [Key]
+    [Column("PhieuXuatID")]
+    public int PhieuXuatId { get; set; }
+
+    [Key]
+    [Column("PhieuSuaChuaID")]
+    public int PhieuSuaChuaId { get; set; }
+
+    [StringLength(500)]
+    public string? GhiChu { get; set; }
+
+    [ForeignKey("PhieuSuaChuaId")]
+    [InverseProperty("ChiTietPxes")]
+    public virtual PhieuSuaChua PhieuSuaChua { get; set; } = null!;
+
+    [ForeignKey("PhieuXuatId")]
+    [InverseProperty("ChiTietPxes")]
+    public virtual PhieuXuat PhieuXuat { get; set; } = null!;
+}
