@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace test_identityBHSC.Models;
+namespace QuanLySuaChua_BaoHanh.Models;
 
 [Table("NguoiDung")]
 [Index("UserName", Name = "UQ__NguoiDun__D5B8C7F043064735", IsUnique = true)]

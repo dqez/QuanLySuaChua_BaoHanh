@@ -1,0 +1,38 @@
+﻿@model QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models.RoleViewModel
+@{
+    ViewData["Title"] = "Sửa role";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">Sửa Role</h1>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-edit mr-1"></i>
+            Thông tin Role
+        </div>
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <form asp-action="Edit">
+                <input type="hidden" asp-for="Id" />
+                
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

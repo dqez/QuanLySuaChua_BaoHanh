@@ -4,7 +4,7 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
-    namespace test_identityBHSC.Models;
+    namespace QuanLySuaChua_BaoHanh.Models;
 
     public partial class BHSC_DbContext : IdentityDbContext<NguoiDung, IdentityRole<int>, int>
 {

@@ -1,0 +1,41 @@
+﻿@model Microsoft.AspNetCore.Identity.IdentityRole<int>
+@{
+    ViewData["Title"] = "Xóa vai trò";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">Xóa Role</h1>
+    
+    <div class="card mb-4">
+        <div class="card-header text-danger">
+            <i class="fas fa-exclamation-triangle mr-1"></i>
+            Cảnh báo xóa
+        </div>
+        <div class="card-body">
+            <h4>Bạn có chắc chắn muốn xóa role này?</h4>
+            <div class="mt-3">
+                <dl class="row">
+                    <dt class="col-sm-2">
+                        ID:
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Model.Id
+                    </dd>
+                    <dt class="col-sm-2">
+                        Tên role:
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Model.Name
+                    </dd>
+                </dl>
+                
+                <form asp-action="Delete">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+                    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

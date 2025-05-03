@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace test_identityBHSC.Models;
+namespace QuanLySuaChua_BaoHanh.Models;
 
 [Table("PhieuNhap")]
 public partial class PhieuNhap

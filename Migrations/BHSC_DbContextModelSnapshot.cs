@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using test_identityBHSC.Models;
+using QuanLySuaChua_BaoHanh.Models;
 
 #nullable disable
 
@@ -155,7 +155,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.ChiTietPn", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.ChiTietPn", b =>
                 {
                     b.Property<int>("PhieuNhapId")
                         .HasColumnType("int")
@@ -176,7 +176,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.ToTable("ChiTietPN");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.ChiTietPx", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.ChiTietPx", b =>
                 {
                     b.Property<int>("PhieuXuatId")
                         .HasColumnType("int")
@@ -198,7 +198,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.ToTable("ChiTietPX");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.ChiTietSuaChua", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.ChiTietSuaChua", b =>
                 {
                     b.Property<int>("ChiTietId")
                         .ValueGeneratedOnAdd()
@@ -247,7 +247,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.ToTable("ChiTietSuaChua");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.DanhMuc", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.DanhMuc", b =>
                 {
                     b.Property<int>("DanhMucId")
                         .ValueGeneratedOnAdd()
@@ -273,7 +273,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.ToTable("DanhMuc");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.LinhKien", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.LinhKien", b =>
                 {
                     b.Property<int>("LinhKienId")
                         .ValueGeneratedOnAdd()
@@ -313,7 +313,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.ToTable("LinhKien");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.NguoiDung", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.NguoiDung", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -419,7 +419,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.ToTable("NguoiDung", (string)null);
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.PhieuNhap", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.PhieuNhap", b =>
                 {
                     b.Property<int>("PhieuNhapId")
                         .ValueGeneratedOnAdd()
@@ -456,7 +456,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.ToTable("PhieuNhap");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.PhieuSuaChua", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.PhieuSuaChua", b =>
                 {
                     b.Property<int>("PhieuSuaChuaId")
                         .ValueGeneratedOnAdd()
@@ -540,7 +540,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.ToTable("PhieuSuaChua");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.PhieuXuat", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.PhieuXuat", b =>
                 {
                     b.Property<int>("PhieuXuatId")
                         .ValueGeneratedOnAdd()
@@ -577,7 +577,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.ToTable("PhieuXuat");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.Phuong", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.Phuong", b =>
                 {
                     b.Property<int>("PhuongId")
                         .ValueGeneratedOnAdd()
@@ -603,7 +603,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.ToTable("Phuong");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.Quan", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.Quan", b =>
                 {
                     b.Property<int>("QuanId")
                         .ValueGeneratedOnAdd()
@@ -629,7 +629,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.ToTable("Quan");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.SanPham", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.SanPham", b =>
                 {
                     b.Property<int>("SanPhamId")
                         .ValueGeneratedOnAdd()
@@ -681,7 +681,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.ToTable("SanPham");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.ThanhPho", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.ThanhPho", b =>
                 {
                     b.Property<int>("ThanhPhoId")
                         .ValueGeneratedOnAdd()
@@ -701,7 +701,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.ToTable("ThanhPho");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.ThongBao", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.ThongBao", b =>
                 {
                     b.Property<int>("ThongBaoId")
                         .ValueGeneratedOnAdd()
@@ -742,7 +742,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.ToTable("ThongBao");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.TinNhan", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.TinNhan", b =>
                 {
                     b.Property<int>("TinNhanId")
                         .ValueGeneratedOnAdd()
@@ -793,7 +793,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
-                    b.HasOne("test_identityBHSC.Models.NguoiDung", null)
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.NguoiDung", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -802,7 +802,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
-                    b.HasOne("test_identityBHSC.Models.NguoiDung", null)
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.NguoiDung", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -817,7 +817,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("test_identityBHSC.Models.NguoiDung", null)
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.NguoiDung", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -826,22 +826,22 @@ namespace QuanLySuaChua_BaoHanh.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.HasOne("test_identityBHSC.Models.NguoiDung", null)
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.NguoiDung", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.ChiTietPn", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.ChiTietPn", b =>
                 {
-                    b.HasOne("test_identityBHSC.Models.LinhKien", "LinhKien")
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.LinhKien", "LinhKien")
                         .WithMany("ChiTietPns")
                         .HasForeignKey("LinhKienId")
                         .IsRequired()
                         .HasConstraintName("FK__ChiTietPN__LinhK__6B24EA82");
 
-                    b.HasOne("test_identityBHSC.Models.PhieuNhap", "PhieuNhap")
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.PhieuNhap", "PhieuNhap")
                         .WithMany("ChiTietPns")
                         .HasForeignKey("PhieuNhapId")
                         .IsRequired()
@@ -852,15 +852,15 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.Navigation("PhieuNhap");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.ChiTietPx", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.ChiTietPx", b =>
                 {
-                    b.HasOne("test_identityBHSC.Models.PhieuSuaChua", "PhieuSuaChua")
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.PhieuSuaChua", "PhieuSuaChua")
                         .WithMany("ChiTietPxes")
                         .HasForeignKey("PhieuSuaChuaId")
                         .IsRequired()
                         .HasConstraintName("FK__ChiTietPX__Phieu__6754599E");
 
-                    b.HasOne("test_identityBHSC.Models.PhieuXuat", "PhieuXuat")
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.PhieuXuat", "PhieuXuat")
                         .WithMany("ChiTietPxes")
                         .HasForeignKey("PhieuXuatId")
                         .IsRequired()
@@ -871,21 +871,21 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.Navigation("PhieuXuat");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.ChiTietSuaChua", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.ChiTietSuaChua", b =>
                 {
-                    b.HasOne("test_identityBHSC.Models.LinhKien", "LinhKien")
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.LinhKien", "LinhKien")
                         .WithMany("ChiTietSuaChuas")
                         .HasForeignKey("LinhKienId")
                         .IsRequired()
                         .HasConstraintName("FK__ChiTietSu__LinhK__70DDC3D8");
 
-                    b.HasOne("test_identityBHSC.Models.PhieuSuaChua", "PhieuSuaChua")
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.PhieuSuaChua", "PhieuSuaChua")
                         .WithMany("ChiTietSuaChuas")
                         .HasForeignKey("PhieuSuaChuaId")
                         .IsRequired()
                         .HasConstraintName("FK__ChiTietSu__Phieu__6FE99F9F");
 
-                    b.HasOne("test_identityBHSC.Models.SanPham", "SanPham")
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.SanPham", "SanPham")
                         .WithMany("ChiTietSuaChuas")
                         .HasForeignKey("SanPhamId")
                         .IsRequired()
@@ -898,9 +898,9 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.Navigation("SanPham");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.LinhKien", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.LinhKien", b =>
                 {
-                    b.HasOne("test_identityBHSC.Models.DanhMuc", "DanhMuc")
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.DanhMuc", "DanhMuc")
                         .WithMany("LinhKiens")
                         .HasForeignKey("DanhMucId")
                         .HasConstraintName("FK__LinhKien__DanhMu__47DBAE45");
@@ -908,9 +908,9 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.Navigation("DanhMuc");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.NguoiDung", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.NguoiDung", b =>
                 {
-                    b.HasOne("test_identityBHSC.Models.Phuong", "Phuong")
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.Phuong", "Phuong")
                         .WithMany("NguoiDungs")
                         .HasForeignKey("PhuongId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -919,9 +919,9 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.Navigation("Phuong");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.PhieuNhap", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.PhieuNhap", b =>
                 {
-                    b.HasOne("test_identityBHSC.Models.NguoiDung", "Kho")
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.NguoiDung", "Kho")
                         .WithMany("PhieuNhaps")
                         .HasForeignKey("KhoId")
                         .IsRequired()
@@ -930,20 +930,20 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.Navigation("Kho");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.PhieuSuaChua", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.PhieuSuaChua", b =>
                 {
-                    b.HasOne("test_identityBHSC.Models.NguoiDung", "KhachHang")
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.NguoiDung", "KhachHang")
                         .WithMany("PhieuSuaChuaKhachHangs")
                         .HasForeignKey("KhachHangId")
                         .IsRequired()
                         .HasConstraintName("FK__PhieuSuaC__Khach__5070F446");
 
-                    b.HasOne("test_identityBHSC.Models.NguoiDung", "KyThuat")
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.NguoiDung", "KyThuat")
                         .WithMany("PhieuSuaChuaKyThuats")
                         .HasForeignKey("KyThuatId")
                         .HasConstraintName("FK__PhieuSuaC__KyThu__5165187F");
 
-                    b.HasOne("test_identityBHSC.Models.Phuong", "Phuong")
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.Phuong", "Phuong")
                         .WithMany("PhieuSuaChuas")
                         .HasForeignKey("PhuongId")
                         .IsRequired()
@@ -956,9 +956,9 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.Navigation("Phuong");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.PhieuXuat", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.PhieuXuat", b =>
                 {
-                    b.HasOne("test_identityBHSC.Models.NguoiDung", "Kho")
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.NguoiDung", "Kho")
                         .WithMany("PhieuXuats")
                         .HasForeignKey("KhoId")
                         .IsRequired()
@@ -967,9 +967,9 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.Navigation("Kho");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.Phuong", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.Phuong", b =>
                 {
-                    b.HasOne("test_identityBHSC.Models.Quan", "Quan")
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.Quan", "Quan")
                         .WithMany("Phuongs")
                         .HasForeignKey("QuanId")
                         .IsRequired()
@@ -978,9 +978,9 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.Navigation("Quan");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.Quan", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.Quan", b =>
                 {
-                    b.HasOne("test_identityBHSC.Models.ThanhPho", "ThanhPho")
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.ThanhPho", "ThanhPho")
                         .WithMany("Quans")
                         .HasForeignKey("ThanhPhoId")
                         .IsRequired()
@@ -989,15 +989,15 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.Navigation("ThanhPho");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.SanPham", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.SanPham", b =>
                 {
-                    b.HasOne("test_identityBHSC.Models.DanhMuc", "DanhMuc")
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.DanhMuc", "DanhMuc")
                         .WithMany("SanPhams")
                         .HasForeignKey("DanhMucId")
                         .IsRequired()
                         .HasConstraintName("FK__SanPham__DanhMuc__4BAC3F29");
 
-                    b.HasOne("test_identityBHSC.Models.NguoiDung", "KhachHang")
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.NguoiDung", "KhachHang")
                         .WithMany("SanPhams")
                         .HasForeignKey("KhachHangId")
                         .IsRequired()
@@ -1008,9 +1008,9 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.Navigation("KhachHang");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.ThongBao", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.ThongBao", b =>
                 {
-                    b.HasOne("test_identityBHSC.Models.NguoiDung", "NguoiDung")
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.NguoiDung", "NguoiDung")
                         .WithMany("ThongBaos")
                         .HasForeignKey("NguoiDungId")
                         .IsRequired()
@@ -1019,15 +1019,15 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.Navigation("NguoiDung");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.TinNhan", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.TinNhan", b =>
                 {
-                    b.HasOne("test_identityBHSC.Models.NguoiDung", "NguoiGui")
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.NguoiDung", "NguoiGui")
                         .WithMany("TinNhanNguoiGuis")
                         .HasForeignKey("NguoiGuiId")
                         .IsRequired()
                         .HasConstraintName("FK__TinNhan__NguoiGu__5EBF139D");
 
-                    b.HasOne("test_identityBHSC.Models.NguoiDung", "NguoiNhan")
+                    b.HasOne("QuanLySuaChua_BaoHanh.Models.NguoiDung", "NguoiNhan")
                         .WithMany("TinNhanNguoiNhans")
                         .HasForeignKey("NguoiNhanId")
                         .IsRequired()
@@ -1038,21 +1038,21 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.Navigation("NguoiNhan");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.DanhMuc", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.DanhMuc", b =>
                 {
                     b.Navigation("LinhKiens");
 
                     b.Navigation("SanPhams");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.LinhKien", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.LinhKien", b =>
                 {
                     b.Navigation("ChiTietPns");
 
                     b.Navigation("ChiTietSuaChuas");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.NguoiDung", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.NguoiDung", b =>
                 {
                     b.Navigation("PhieuNhaps");
 
@@ -1071,41 +1071,41 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.Navigation("TinNhanNguoiNhans");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.PhieuNhap", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.PhieuNhap", b =>
                 {
                     b.Navigation("ChiTietPns");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.PhieuSuaChua", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.PhieuSuaChua", b =>
                 {
                     b.Navigation("ChiTietPxes");
 
                     b.Navigation("ChiTietSuaChuas");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.PhieuXuat", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.PhieuXuat", b =>
                 {
                     b.Navigation("ChiTietPxes");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.Phuong", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.Phuong", b =>
                 {
                     b.Navigation("NguoiDungs");
 
                     b.Navigation("PhieuSuaChuas");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.Quan", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.Quan", b =>
                 {
                     b.Navigation("Phuongs");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.SanPham", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.SanPham", b =>
                 {
                     b.Navigation("ChiTietSuaChuas");
                 });
 
-            modelBuilder.Entity("test_identityBHSC.Models.ThanhPho", b =>
+            modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.ThanhPho", b =>
                 {
                     b.Navigation("Quans");
                 });

@@ -30,12 +30,7 @@
     <Folder Include="Areas\NhanVienKho\Controllers\" />
     <Folder Include="Areas\NhanVienKho\Models\" />
     <Folder Include="Areas\NhanVienKho\Views\" />
-    <Folder Include="Areas\KhachHang\Controllers\" />
     <Folder Include="Areas\KhachHang\Models\" />
-    <Folder Include="Areas\KhachHang\Views\" />
-    <Folder Include="Areas\QuanTriVien\Controllers\" />
-    <Folder Include="Areas\QuanTriVien\Models\" />
-    <Folder Include="Areas\QuanTriVien\Views\" />
   </ItemGroup>
 
 </Project>
