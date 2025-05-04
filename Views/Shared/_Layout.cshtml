@@ -33,11 +33,15 @@
                     <a href="#" class="icon"><i class="fas fa-map-marker-alt"></i></a>
                     <a href="#" class="icon"><i class="fab fa-facebook-f"></i></a>
                     <a href="#" class="icon"><i class="fas fa-user"></i></a>
+                    
+                    @{
+                        bool isAuthenticated = User.Identity?.IsAuthenticated ?? false;
+                    }
 
-                    @if (User.Identity.IsAuthenticated)
+                    @if (isAuthenticated && User.Identity != null)
                     {
                         <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="d-inline">
-                            <button type="submit" class="btn btn-link text-decoration-none">Đăng xuất</button>
+                            <button type="submit" class="btn btn-link text-decoration-none">Đăng xuất (@User.Identity.Name)</button>
                         </form>
                     }
                     else

@@ -1,8 +1,119 @@
-﻿@{
-    ViewData["Title"] = "Trang chủ - Quản trị viên";
+﻿@model IEnumerable<QuanLySuaChua_BaoHanh.Models.PhieuSuaChua>
+@{
+    ViewData["Title"] = "Trang chủ";
     Layout = "_LayoutAdmin";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Trang chủ - Quản trị viên</h1>
+<div class="container-fluid">
+    <h1 class="mt-4">Trang chủ</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active">Trang chủ</li>
+    </ol>
+
+    <div class="row">
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-primary text-white mb-4">
+                <div class="card-body">
+                    <h2>@ViewBag.TotalUsers</h2>
+                    <div>Tổng số người dùng</div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" asp-area="QuanTriVien" asp-controller="User" asp-action="Index">Xem chi tiết</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-success text-white mb-4">
+                <div class="card-body">
+                    <h2>@ViewBag.TotalRoles</h2>
+                    <div>Tổng số vai trò</div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" asp-area="QuanTriVien" asp-controller="Role" asp-action="Index">Xem chi tiết</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-info text-white mb-4">
+                <div class="card-body">
+                    <h2>@ViewBag.TotalProducts</h2>
+                    <div>Tổng số sản phẩm</div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="#">Xem chi tiết</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-danger text-white mb-4">
+                <div class="card-body">
+                    <h2>@ViewBag.TotalOrders</h2>
+                    <div>Tổng số đơn hàng</div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="#">Xem chi tiết</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table mr-1"></i>
+            Đơn sửa chữa mới nhất
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Khách hàng</th>
+                            <th>Ngày gửi</th>
+                            <th>Trạng thái</th>
+                            <th>Tổng tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+                                <td>@order.PhieuSuaChuaId</td>
+                                <td>@order.KhachHang.HoTen</td>
+                                <td>@order.NgayGui.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>
+                                    @switch (order.TrangThai)
+                                    {
+                                        case "ChoXuLy":
+                                            <span class="badge badge-warning">Chờ xử lý</span>
+                                            break;
+                                        case "DangXuLy":
+                                            <span class="badge badge-info">Đang xử lý</span>
+                                            break;
+                                        case "HoanThanh":
+                                            <span class="badge badge-success">Hoàn thành</span>
+                                            break;
+                                        case "DaHuy":
+                                            <span class="badge badge-danger">Đã hủy</span>
+                                            break;
+                                        default:
+                                            <span class="badge badge-secondary">@order.TrangThai</span>
+                                            break;
+                                    }
+                                </td>
+                                <td>@(order.TongTien?.ToString("N0") ?? "0") đ</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
