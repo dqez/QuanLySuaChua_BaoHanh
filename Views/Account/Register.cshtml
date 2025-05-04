@@ -2,92 +2,163 @@
 
 @{
     ViewData["Title"] = "Đăng ký tài khoản";
+    Layout = "_Layout";
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h2>@ViewData["Title"]</h2>
+<style>
+    body {
+        background-color: #FFFFFF;
+        font-family: 'Baloo 2', sans-serif;
+    }
+    
+    .register-container {
+        max-width: 700px;
+        margin: 50px auto;
+        padding: 20px;
+    }
+    
+    .register-form {
+        background-color: #FFFFFF;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
+    }
+    
+    .register-title {
+        font-family: 'Baloo 2', sans-serif;
+        font-size: 36px;
+        font-weight: 600;
+        text-align: center;
+        color: #319BC5;
+        margin-bottom: 30px;
+    }
+    
+    .form-control {
+        background-color: #D9D9D9;
+        border: none;
+        border-radius: 10px;
+        padding: 12px;
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+    
+    .form-label {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+    
+    .btn-register {
+        background-color: #319BC5;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 20px;
+        font-family: 'Baloo 2', sans-serif;
+        font-size: 24px;
+        width: 100%;
+        margin-top: 20px;
+    }
+    
+    .register-links {
+        margin-top: 20px;
+        text-align: center;
+    }
+    
+    .register-links a {
+        color: #319BC5;
+        text-decoration: none;
+        font-size: 18px;
+    }
+</style>
+
+<div class="register-container">
+    <div class="register-form">
+        <h2 class="register-title">@ViewData["Title"]</h2>
+        
+        <form asp-controller="Account" asp-action="Register" method="post">
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="UserName" class="form-label"></label>
+                        <input asp-for="UserName" class="form-control" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="HoTen" class="form-label"></label>
+                        <input asp-for="HoTen" class="form-control" />
+                        <span asp-validation-for="HoTen" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
-                    <div asp-validation-summary="All" class="text-danger"></div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label asp-for="UserName"></label>
-                                <input asp-for="UserName" class="form-control" />
-                                <span asp-validation-for="UserName" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label asp-for="Email"></label>
-                                <input asp-for="Email" class="form-control" />
-                                <span asp-validation-for="Email" class="text-danger"></span>
-                            </div>
-                        </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label"></label>
+                        <input asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label asp-for="Password"></label>
-                                <input asp-for="Password" class="form-control" />
-                                <span asp-validation-for="Password" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label asp-for="ConfirmPassword"></label>
-                                <input asp-for="ConfirmPassword" class="form-control" />
-                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                            </div>
-                        </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="ConfirmPassword" class="form-label"></label>
+                        <input asp-for="ConfirmPassword" class="form-control" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label asp-for="HoTen"></label>
-                                <input asp-for="HoTen" class="form-control" />
-                                <span asp-validation-for="HoTen" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label asp-for="PhoneNumber"></label>
-                                <input asp-for="PhoneNumber" class="form-control" />
-                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label asp-for="DiaChi"></label>
-                        <input asp-for="DiaChi" class="form-control" />
-                        <span asp-validation-for="DiaChi" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label asp-for="PhuongId"></label>
-                        <select asp-for="PhuongId" asp-items="ViewBag.Phuongs" class="form-control">
-                            <option value="">-- Chọn phường --</option>
-                        </select>
-                        <span asp-validation-for="PhuongId" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Đăng ký</button>
-                    </div>
-                </form>
+                </div>
             </div>
-        </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="PhoneNumber" class="form-label"></label>
+                        <input asp-for="PhoneNumber" class="form-control" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="DiaChi" class="form-label"></label>
+                <input asp-for="DiaChi" class="form-control" />
+                <span asp-validation-for="DiaChi" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="PhuongId" class="form-label"></label>
+                <select asp-for="PhuongId" asp-items="ViewBag.Phuongs" class="form-control">
+                    <option value="">-- Chọn phường --</option>
+                </select>
+                <span asp-validation-for="PhuongId" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-register">Đăng ký</button>
+            
+            <div class="register-links">
+                <p>
+                    <a asp-action="Login">
+                        Đã có tài khoản? Đăng nhập tại đây
+                    </a>
+                </p>
+            </div>
+        </form>
     </div>
 </div>
 
 @section Scripts {
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
     @await Html.PartialAsync("_ValidationScriptsPartial")
 }

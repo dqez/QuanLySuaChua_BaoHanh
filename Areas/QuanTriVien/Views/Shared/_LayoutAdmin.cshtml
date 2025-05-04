@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Panasonic Service Center</title>
+    <title>@ViewData["Title"] - Panasonic Trung tâm bảo hành</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Inter:wght@400;500&display=swap">
@@ -114,7 +114,7 @@
         /* Sidebar styles */
         .sidebar {
             background-color: var(--blue-primary);
-            width: 280px;
+            width: 300px;
             position: fixed;
             left: 0;
             top: 70px;
@@ -181,10 +181,15 @@
             <i class="bi bi-geo-alt"></i>
             <i class="bi bi-facebook"></i>
             <i class="bi bi-person-circle"></i>
-            @if (User.Identity.IsAuthenticated)
+            
+            @{
+                bool isAuthenticated = User.Identity?.IsAuthenticated ?? false;
+            }
+
+            @if (isAuthenticated && User.Identity != null)
             {
                 <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="d-inline">
-                    <button type="submit" class="btn btn-link text-decoration-none">Đăng xuất</button>
+                    <button type="submit" class="btn btn-link text-decoration-none">Đăng xuất (@User.Identity.Name)</button>
                 </form>
             }
             else

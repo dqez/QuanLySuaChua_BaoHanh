@@ -129,6 +129,8 @@ namespace QuanLySuaChua_BaoHanh.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
+            Response.Cookies.Delete(".AspNetCore.Identity.Application");
+            Response.Cookies.Delete(".AspNetCore.Cookies");
             return RedirectToAction("Index", "Home");
         }
 
