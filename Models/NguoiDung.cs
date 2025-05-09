@@ -9,11 +9,13 @@ namespace QuanLySuaChua_BaoHanh.Models;
 
 [Table("NguoiDung")]
 [Index("UserName", Name = "UQ__NguoiDun__D5B8C7F043064735", IsUnique = true)]
-public partial class NguoiDung : IdentityUser<int>
+public partial class NguoiDung : IdentityUser<string>
 {
     [Key]
     [Column("NguoiDungID")]
-    public override int Id { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public override string Id { get; set; }
 
     [Required, StringLength(50), Unicode(false)]
     [Column("TaiKhoan")]
@@ -36,7 +38,9 @@ public partial class NguoiDung : IdentityUser<int>
     public override string? PhoneNumber { get; set; }
 
     [Column("PhuongID")]
-    public int PhuongId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string PhuongId { get; set; }
 
     [StringLength(20), Unicode(false)]
     [Column("VaiTro")]

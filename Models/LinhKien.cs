@@ -11,10 +11,14 @@ public partial class LinhKien
 {
     [Key]
     [Column("LinhKienID")]
-    public int LinhKienId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string LinhKienId { get; set; }
 
     [Column("DanhMucID")]
-    public int? DanhMucId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? DanhMucId { get; set; }
 
     [StringLength(255)]
     public string TenLinhKien { get; set; } = null!;

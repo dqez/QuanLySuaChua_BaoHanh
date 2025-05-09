@@ -37,7 +37,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models
 
         [Required(ErrorMessage = "Phường là bắt buộc")]
         [Display(Name = "Phường")]
-        public int PhuongId { get; set; }
+        public string PhuongId { get; set; }
 
         public List<string> SelectedRoles { get; set; }
     }
@@ -45,7 +45,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models
     // EditUserViewModel.cs
     public class EditUserViewModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [Display(Name = "Tên đăng nhập")]
         public string UserName { get; set; } // Read-only
@@ -76,7 +76,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models
 
         [Required(ErrorMessage = "Phường là bắt buộc")]
         [Display(Name = "Phường")]
-        public int PhuongId { get; set; }
+        public string PhuongId { get; set; }
 
         public List<string> SelectedRoles { get; set; }
     }

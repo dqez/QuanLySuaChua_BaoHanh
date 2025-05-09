@@ -3,7 +3,7 @@ using QuanLySuaChua_BaoHanh.Models;
 
 public static class RoleSeedData
 {
-    public static async Task SeedRoles(RoleManager<IdentityRole<int>> roleManager)
+    public static async Task SeedRoles(RoleManager<IdentityRole<string>> roleManager)
     {
         string[] roleNames = { "QuanTriVien", "KhachHang", "KyThuatVien", "NhanVienKho", "TuVanVien" };
 
@@ -11,7 +11,7 @@ public static class RoleSeedData
         {
             if (!await roleManager.RoleExistsAsync(roleName))
             {
-                await roleManager.CreateAsync(new IdentityRole<int>(roleName));
+                await roleManager.CreateAsync(new IdentityRole<string>(roleName));
             }
         }
     }
@@ -26,7 +26,7 @@ public static class RoleSeedData
                 Email = "admin@example.com",
                 HoTen = "Quản trị viên",
                 PhoneNumber = "0123456789",
-                PhuongId = 1, // Đảm bảo có dữ liệu Phường trước
+                PhuongId = "HC",
                 VaiTro = "QuanTriVien",
                 DiaChi = "Địa chỉ văn phòng"
             };

@@ -6,7 +6,7 @@
 
     namespace QuanLySuaChua_BaoHanh.Models;
 
-    public partial class BHSC_DbContext : IdentityDbContext<NguoiDung, IdentityRole<int>, int>
+    public partial class BHSC_DbContext : IdentityDbContext<NguoiDung, IdentityRole<string>,string>
 {
         public BHSC_DbContext()
         {

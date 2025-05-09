@@ -11,10 +11,14 @@ public partial class ThongBao
 {
     [Key]
     [Column("ThongBaoID")]
-    public int ThongBaoId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string ThongBaoId { get; set; }
 
     [Column("NguoiDungID")]
-    public int NguoiDungId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string NguoiDungId { get; set; }
 
     [StringLength(255)]
     public string TieuDe { get; set; } = null!;

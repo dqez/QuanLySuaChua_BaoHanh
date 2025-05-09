@@ -11,13 +11,19 @@ public partial class TinNhan
 {
     [Key]
     [Column("TinNhanID")]
-    public int TinNhanId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string TinNhanId { get; set; }
 
     [Column("NguoiGuiID")]
-    public int NguoiGuiId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string NguoiGuiId { get; set; }
 
     [Column("NguoiNhanID")]
-    public int NguoiNhanId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string NguoiNhanId { get; set; }
 
     [StringLength(2000)]
     public string? NoiDung { get; set; }

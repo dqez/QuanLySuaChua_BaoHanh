@@ -11,13 +11,17 @@ public partial class Phuong
 {
     [Key]
     [Column("PhuongID")]
-    public int PhuongId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string PhuongId { get; set; }
 
     [StringLength(100)]
     public string TenPhuong { get; set; } = null!;
 
     [Column("QuanID")]
-    public int QuanId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string QuanId { get; set; }
 
     [InverseProperty("Phuong")]
     public virtual ICollection<NguoiDung> NguoiDungs { get; set; } = new List<NguoiDung>();

@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<BHSC_DbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddIdentity<NguoiDung,IdentityRole<int>>(options =>
+builder.Services.AddIdentity<NguoiDung,IdentityRole<string>>(options =>
     {
         // Password settings
         options.Password.RequireDigit = false;
@@ -67,7 +67,7 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var userManager = services.GetRequiredService<UserManager<NguoiDung>>();
-        var roleManager = services.GetRequiredService<RoleManager<IdentityRole<int>>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole<string>>>();
         await RoleSeedData.SeedRoles(roleManager);
         await RoleSeedData.SeedAdminUser(userManager);
     }

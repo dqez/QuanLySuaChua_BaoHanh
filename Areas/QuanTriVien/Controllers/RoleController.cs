@@ -13,10 +13,10 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
     [Authorize(Roles = "QuanTriVien")]
     public class RoleController : Controller
     {
-        private readonly RoleManager<IdentityRole<int>> _roleManager;
+        private readonly RoleManager<IdentityRole<string>> _roleManager;
         private readonly UserManager<NguoiDung> _userManager;
 
-        public RoleController(RoleManager<IdentityRole<int>> roleManager, UserManager<NguoiDung> userManager)
+        public RoleController(RoleManager<IdentityRole<string>> roleManager, UserManager<NguoiDung> userManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -50,7 +50,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
                 }
 
                 // Tạo role mới
-                var identityRole = new IdentityRole<int>
+                var identityRole = new IdentityRole<string>
                 {
                     Name = model.Name
                 };
@@ -72,7 +72,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         }
 
         //get: quantrivien/role/edit/{id}
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(string id)
         {
             var role = await _roleManager.FindByIdAsync(id.ToString());
             if (role == null)
@@ -92,7 +92,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         //post: quantrivien/role/edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, RoleViewModel model)
+        public async Task<IActionResult> Edit(string id, RoleViewModel model)
         {
             if (id != model.Id)
             {
@@ -101,7 +101,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
 
             if (ModelState.IsValid)
             {
-                var role = await _roleManager.FindByIdAsync(id.ToString());
+                var role = await _roleManager.FindByIdAsync(id);
                 if (role == null)
                 {
                     return NotFound();
@@ -128,9 +128,9 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
 
 
         //get: quantrivien/role/delete/{id}
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var role = await _roleManager.FindByIdAsync(id.ToString());
+            var role = await _roleManager.FindByIdAsync(id);
             if (role == null)
             {
                 return NotFound();
@@ -142,9 +142,9 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         //post: quantrivien/role/delete/{id}
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var role = await _roleManager.FindByIdAsync(id.ToString());
+            var role = await _roleManager.FindByIdAsync(id);
             if (role == null)
             {
                 return NotFound();
@@ -170,7 +170,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         }
 
         //get: quantrivien/role/assignRoles
-        public async Task<IActionResult> AssignRoles(int? userId)
+        public async Task<IActionResult> AssignRoles(string? userId)
         {
             var users = await _userManager.Users.ToListAsync();
             ViewBag.Users = users;
@@ -178,9 +178,9 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
 
             UserRolesViewModel model = new UserRolesViewModel();
 
-            if (userId.HasValue)
+            if (!string.IsNullOrEmpty(userId))
             {
-                var user = await _userManager.FindByIdAsync(userId.Value.ToString());
+                var user = await _userManager.FindByIdAsync(userId);
                 if (user != null)
                 {
                     model.UserId = user.Id;

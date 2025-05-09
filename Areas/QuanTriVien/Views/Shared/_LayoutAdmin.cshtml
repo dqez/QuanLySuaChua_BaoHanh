@@ -207,6 +207,14 @@
                 <i class="bi bi-house-door"></i>
                 <span>Trang chủ</span>
             </a>
+            <a href="@Url.Action("Index", "ManageAccounts", new { area = "QuanTriVien" })" class="nav-item">
+                <i class="bi bi-gear"></i>
+                <span>Cập nhật tài khoản và phân quyền</span>
+            </a>
+            <a href="@Url.Action("RepairOrders", "Orders")" class="nav-item">
+                <i class="bi bi-list-check"></i>
+                <span>Xem danh sách đơn sửa chữa</span>
+            </a>
             <a href="@Url.Action("AssignTasks", "Task")" class="nav-item">
                 <i class="bi bi-clipboard-check"></i>
                 <span>Phân công nhiệm vụ</span>
@@ -214,14 +222,6 @@
             <a href="@Url.Action("Reports", "Statistics")" class="nav-item">
                 <i class="bi bi-bar-chart"></i>
                 <span>Xem báo cáo thống kê</span>
-            </a>
-            <a href="@Url.Action("RepairOrders", "Orders")" class="nav-item">
-                <i class="bi bi-list-check"></i>
-                <span>Xem danh sách đơn sửa chữa</span>
-            </a>
-            <a href="@Url.Action("Index", "ManageAccounts", new { area = "QuanTriVien" })" class="nav-item">
-                <i class="bi bi-gear"></i>
-                <span>Cập nhật tài khoản và phân quyền</span>
             </a>
         </nav>
     </aside>
