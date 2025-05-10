@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace QuanLySuaChua_BaoHanh.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class intIDtostringID : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,8 +15,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -30,8 +29,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                 name: "DanhMuc",
                 columns: table => new
                 {
-                    DanhMucID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DanhMucID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
                     TenDanhMuc = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     PhanLoai = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false)
                 },
@@ -44,8 +42,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                 name: "ThanhPho",
                 columns: table => new
                 {
-                    ThanhPhoID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ThanhPhoID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
                     TenThanhPho = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
@@ -59,7 +56,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -78,9 +75,8 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                 name: "LinhKien",
                 columns: table => new
                 {
-                    LinhKienID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DanhMucID = table.Column<int>(type: "int", nullable: true),
+                    LinhKienID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
+                    DanhMucID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true),
                     TenLinhKien = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     SoLuongTon = table.Column<int>(type: "int", nullable: false),
                     DonGia = table.Column<decimal>(type: "decimal(12,2)", nullable: false),
@@ -101,10 +97,9 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                 name: "Quan",
                 columns: table => new
                 {
-                    QuanID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    QuanID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
                     TenQuan = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    ThanhPhoID = table.Column<int>(type: "int", nullable: false)
+                    ThanhPhoID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -120,10 +115,9 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                 name: "Phuong",
                 columns: table => new
                 {
-                    PhuongID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PhuongID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
                     TenPhuong = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    QuanID = table.Column<int>(type: "int", nullable: false)
+                    QuanID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -139,14 +133,13 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                 name: "NguoiDung",
                 columns: table => new
                 {
-                    NguoiDungID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NguoiDungID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
                     TaiKhoan = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: false),
                     MatKhau = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
                     HoTen = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
                     Email = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: true),
                     Sdt = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true),
-                    PhuongID = table.Column<int>(type: "int", nullable: false),
+                    PhuongID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
                     VaiTro = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true),
                     DiaChi = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -177,7 +170,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "varchar(20)", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -199,7 +192,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<string>(type: "varchar(20)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -216,8 +209,8 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<string>(type: "varchar(20)", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -240,7 +233,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "varchar(20)", nullable: false),
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -260,9 +253,8 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                 name: "PhieuNhap",
                 columns: table => new
                 {
-                    PhieuNhapID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    KhoID = table.Column<int>(type: "int", nullable: false),
+                    PhieuNhapID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
+                    KhoID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
                     NgayNhap = table.Column<DateTime>(type: "datetime2(0)", precision: 0, nullable: false),
                     TongTien = table.Column<decimal>(type: "decimal(12,2)", nullable: true),
                     TrangThai = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
@@ -282,11 +274,10 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                 name: "PhieuSuaChua",
                 columns: table => new
                 {
-                    PhieuSuaChuaID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    KhachHangID = table.Column<int>(type: "int", nullable: false),
-                    KyThuatID = table.Column<int>(type: "int", nullable: true),
-                    PhuongID = table.Column<int>(type: "int", nullable: false),
+                    PhieuSuaChuaID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
+                    KhachHangID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
+                    KyThuatID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true),
+                    PhuongID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
                     MoTaKhachHang = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     TrangThai = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
                     NgayGui = table.Column<DateTime>(type: "datetime2(0)", precision: 0, nullable: false, defaultValueSql: "(getdate())"),
@@ -324,9 +315,8 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                 name: "PhieuXuat",
                 columns: table => new
                 {
-                    PhieuXuatID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    KhoID = table.Column<int>(type: "int", nullable: false),
+                    PhieuXuatID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
+                    KhoID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
                     NgayXuat = table.Column<DateTime>(type: "datetime2(0)", precision: 0, nullable: false),
                     TongTien = table.Column<decimal>(type: "decimal(12,2)", nullable: true),
                     TrangThai = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
@@ -346,10 +336,9 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                 name: "SanPham",
                 columns: table => new
                 {
-                    SanPhamID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    KhachHangID = table.Column<int>(type: "int", nullable: false),
-                    DanhMucID = table.Column<int>(type: "int", nullable: false),
+                    SanPhamID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
+                    KhachHangID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
+                    DanhMucID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
                     MaBH = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
                     TenSanPham = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     NgayMua = table.Column<DateOnly>(type: "date", nullable: false),
@@ -376,9 +365,8 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                 name: "ThongBao",
                 columns: table => new
                 {
-                    ThongBaoID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NguoiDungID = table.Column<int>(type: "int", nullable: false),
+                    ThongBaoID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
+                    NguoiDungID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
                     TieuDe = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     NoiDung = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     TrangThai = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true, defaultValue: "ChuaDoc"),
@@ -398,10 +386,9 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                 name: "TinNhan",
                 columns: table => new
                 {
-                    TinNhanID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NguoiGuiID = table.Column<int>(type: "int", nullable: false),
-                    NguoiNhanID = table.Column<int>(type: "int", nullable: false),
+                    TinNhanID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
+                    NguoiGuiID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
+                    NguoiNhanID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
                     NoiDung = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     ThoiGianGui = table.Column<DateTime>(type: "datetime2(0)", precision: 0, nullable: false),
                     TrangThai = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true)
@@ -425,8 +412,8 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                 name: "ChiTietPN",
                 columns: table => new
                 {
-                    PhieuNhapID = table.Column<int>(type: "int", nullable: false),
-                    LinhKienID = table.Column<int>(type: "int", nullable: false),
+                    PhieuNhapID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
+                    LinhKienID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
                     SoLuong = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -448,8 +435,8 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                 name: "ChiTietPX",
                 columns: table => new
                 {
-                    PhieuXuatID = table.Column<int>(type: "int", nullable: false),
-                    PhieuSuaChuaID = table.Column<int>(type: "int", nullable: false),
+                    PhieuXuatID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
+                    PhieuSuaChuaID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
                     GhiChu = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
@@ -471,11 +458,10 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                 name: "ChiTietSuaChua",
                 columns: table => new
                 {
-                    ChiTietID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SanPhamID = table.Column<int>(type: "int", nullable: false),
-                    PhieuSuaChuaID = table.Column<int>(type: "int", nullable: false),
-                    LinhKienID = table.Column<int>(type: "int", nullable: false),
+                    ChiTietID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
+                    SanPhamID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
+                    PhieuSuaChuaID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
+                    LinhKienID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
                     LoaiDon = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true),
                     SoLuongLinhKien = table.Column<int>(type: "int", nullable: false),
                     MoTaKhachHang = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),

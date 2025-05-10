@@ -11,7 +11,9 @@ public partial class ThanhPho
 {
     [Key]
     [Column("ThanhPhoID")]
-    public int ThanhPhoId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string ThanhPhoId { get; set; }
 
     [StringLength(100)]
     public string TenThanhPho { get; set; } = null!;

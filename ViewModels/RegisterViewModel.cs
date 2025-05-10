@@ -38,6 +38,6 @@ namespace QuanLySuaChua_BaoHanh.ViewModels
         public string DiaChi { get; set; }
 
         [Display(Name = "Phường")]
-        public int PhuongId { get; set; }
+        public string PhuongId { get; set; }
     }
 }

@@ -11,13 +11,19 @@ public partial class SanPham
 {
     [Key]
     [Column("SanPhamID")]
-    public int SanPhamId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string SanPhamId { get; set; }
 
     [Column("KhachHangID")]
-    public int KhachHangId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string KhachHangId { get; set; }
 
     [Column("DanhMucID")]
-    public int DanhMucId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string DanhMucId { get; set; }
 
     [Column("MaBH")]
     [StringLength(100)]

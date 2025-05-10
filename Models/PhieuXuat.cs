@@ -11,10 +11,14 @@ public partial class PhieuXuat
 {
     [Key]
     [Column("PhieuXuatID")]
-    public int PhieuXuatId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string PhieuXuatId { get; set; }
 
     [Column("KhoID")]
-    public int KhoId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string KhoId { get; set; }
 
     [Precision(0)]
     public DateTime NgayXuat { get; set; }

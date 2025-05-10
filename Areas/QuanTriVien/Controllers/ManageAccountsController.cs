@@ -12,11 +12,11 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
     public class ManageAccountsController : Controller
     {
         private readonly UserManager<NguoiDung> _userManager;
-        private readonly RoleManager<IdentityRole<int>> _roleManager;
+        private readonly RoleManager<IdentityRole<string>> _roleManager;
 
         public ManageAccountsController(
             UserManager<NguoiDung> userManager,
-            RoleManager<IdentityRole<int>> roleManager)
+            RoleManager<IdentityRole<string>> roleManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -47,6 +47,6 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
     public class AccountsOverviewViewModel
     {
         public IEnumerable<NguoiDung> Users { get; set; }
-        public IEnumerable<IdentityRole<int>> Roles { get; set; }
+        public IEnumerable<IdentityRole<string>> Roles { get; set; }
     }
 }

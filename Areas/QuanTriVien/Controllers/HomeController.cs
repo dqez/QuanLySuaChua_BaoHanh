@@ -11,12 +11,12 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
     public class HomeController : Controller
     {
         private readonly UserManager<NguoiDung> _userManager;
-        private readonly RoleManager<IdentityRole<int>> _roleManager;
+        private readonly RoleManager<IdentityRole<string>> _roleManager;
         private readonly BHSC_DbContext _context;
 
         public HomeController(
             UserManager<NguoiDung> userManager,
-            RoleManager<IdentityRole<int>> roleManager,
+            RoleManager<IdentityRole<string>> roleManager,
             BHSC_DbContext context)
         {
             _userManager = userManager;

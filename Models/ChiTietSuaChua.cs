@@ -11,16 +11,24 @@ public partial class ChiTietSuaChua
 {
     [Key]
     [Column("ChiTietID")]
-    public int ChiTietId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string ChiTietId { get; set; }
 
     [Column("SanPhamID")]
-    public int SanPhamId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string SanPhamId { get; set; }
 
     [Column("PhieuSuaChuaID")]
-    public int PhieuSuaChuaId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string PhieuSuaChuaId { get; set; }
 
     [Column("LinhKienID")]
-    public int LinhKienId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string LinhKienId { get; set; }
 
     [StringLength(20)]
     [Unicode(false)]
