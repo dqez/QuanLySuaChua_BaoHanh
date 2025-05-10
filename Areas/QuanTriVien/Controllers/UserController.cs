@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models;
+using QuanLySuaChua_BaoHanh.Services;
 
 namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
 {
@@ -19,15 +20,18 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         private readonly UserManager<NguoiDung> _userManager;
         private readonly RoleManager<IdentityRole<string>> _roleManager;
         private readonly BHSC_DbContext _context;
+        private readonly IDGenerator _idGenerator;
 
         public UserController(
             UserManager<NguoiDung> userManager,
             RoleManager<IdentityRole<string>> roleManager,
-            BHSC_DbContext context)
+            BHSC_DbContext context,
+            IDGenerator idGenerator)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _context = context;
+            _idGenerator = idGenerator;
         }
 
         // get: quantrivien/user
@@ -106,14 +110,17 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         {
             if (ModelState.IsValid)
             {
+                string vaiTro = model.SelectedRoles[0];
                 var user = new NguoiDung
                 {
+                    Id = await _idGenerator.GenerateNguoiDungIDAsync(vaiTro),
                     UserName = model.UserName,
                     Email = model.Email,
                     HoTen = model.HoTen,
                     PhoneNumber = model.PhoneNumber,
                     DiaChi = model.DiaChi,
                     PhuongId = model.PhuongId,
+                    VaiTro = vaiTro,
                     EmailConfirmed = true,
                     PhoneNumberConfirmed = true
                 };
@@ -198,6 +205,12 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
             if (id != model.Id)
             {
                 return NotFound();
+            }
+
+            if (string.IsNullOrEmpty(model.Password))
+            {
+                ModelState.Remove("Password");
+                ModelState.Remove("ConfirmPassword");
             }
 
             if (ModelState.IsValid)

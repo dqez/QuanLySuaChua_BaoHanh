@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using QuanLySuaChua_BaoHanh.Models;
+using QuanLySuaChua_BaoHanh.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,8 @@ builder.Services.ConfigureApplicationCookie(options => {
     options.SlidingExpiration = true;
 });
 
+//dang ky IDGenerator
+builder.Services.AddScoped<IDGenerator>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -66,10 +69,13 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     try
     {
-        var userManager = services.GetRequiredService<UserManager<NguoiDung>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole<string>>>();
-        await RoleSeedData.SeedRoles(roleManager);
-        await RoleSeedData.SeedAdminUser(userManager);
+        var userManager = services.GetRequiredService<UserManager<NguoiDung>>();
+        var idGenerator = services.GetRequiredService<IDGenerator>();
+        var context = services.GetRequiredService<BHSC_DbContext>();
+
+        await RoleSeedData.SeedRoles(roleManager, idGenerator);
+        await RoleSeedData.SeedAdminUser(userManager, idGenerator, context);
     }
     catch (Exception ex)
     {

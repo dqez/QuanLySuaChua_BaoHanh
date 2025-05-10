@@ -54,7 +54,6 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models
         [EmailAddress]
         public string Email { get; set; }
 
-        [StringLength(100, ErrorMessage = "{0} phải có ít nhất {2} và tối đa {1} ký tự.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Mật khẩu mới (để trống nếu không thay đổi)")]
         public string Password { get; set; }

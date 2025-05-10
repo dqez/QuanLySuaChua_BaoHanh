@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models;
+using QuanLySuaChua_BaoHanh.Services;
 
 namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
 {
@@ -15,11 +16,13 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
     {
         private readonly RoleManager<IdentityRole<string>> _roleManager;
         private readonly UserManager<NguoiDung> _userManager;
+        private readonly IDGenerator _idGenerator;
 
-        public RoleController(RoleManager<IdentityRole<string>> roleManager, UserManager<NguoiDung> userManager)
+        public RoleController(RoleManager<IdentityRole<string>> roleManager, UserManager<NguoiDung> userManager, IDGenerator idGenerator)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            _idGenerator = idGenerator;
         }
 
         //get: quantrivien/role
@@ -40,19 +43,28 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(RoleViewModel model)
         {
+
+            ModelState.Remove("Id");
+                // Kiểm tra role đã tồn tại
+               
             if (ModelState.IsValid)
             {
-                // Kiểm tra role đã tồn tại
-                if (await _roleManager.RoleExistsAsync(model.Name))
+                 if (await _roleManager.RoleExistsAsync(model.Name))
                 {
                     ModelState.AddModelError("", "Role đã tồn tại!");
                     return View(model);
                 }
 
+                string roleId = await _idGenerator.GenerateRoleIdAsync(model.Name);
+                model.Id = roleId;
+
                 // Tạo role mới
                 var identityRole = new IdentityRole<string>
                 {
-                    Name = model.Name
+                    Id = model.Id,
+                    Name = model.Name,
+                    //NormalizedName = model.Name.ToUpper(),
+
                 };
 
                 var result = await _roleManager.CreateAsync(identityRole);
