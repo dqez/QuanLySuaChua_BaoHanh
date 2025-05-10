@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Quyền truy cập bị từ chối";
+}
+
+<div class="container text-center mt-5">
+    <div class="error-page">
+        <div class="error-icon mb-4">
+            <i class="fas fa-lock fa-5x" style="color: #319BC5;"></i>
+        </div>
+        <h1 class="mb-3" style="color: #319BC5;">@ViewData["Title"]</h1>
+        <p class="lead mb-4">Bạn không có quyền truy cập vào trang này.</p>
+        
+    </div>
+</div>
+
+<style>
+    .error-page {
+        padding: 40px 0;
+    }
+    .error-page h1 {
+        font-family: 'Baloo 2', sans-serif;
+    }
+    .btn-primary {
+        background-color: #003d7c;
+        border-color: #003d7c;
+    }
+    .btn-primary:hover {
+        background-color: #002d5c;
+        border-color: #002d5c;
+    }
+    .error-icon {
+        animation: pulse 1.5s infinite;
+    }
+    @@keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+</style>

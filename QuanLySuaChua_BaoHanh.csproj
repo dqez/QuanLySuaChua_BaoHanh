@@ -7,21 +7,30 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.12" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.12" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.12">
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.15">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.15">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Admin\" />
-    <Folder Include="Areas\KhachHang\" />
-    <Folder Include="Data\" />
-    <Folder Include="Migrations\" />
-    <Folder Include="ViewModel\" />
-    <Folder Include="Services\" />
+    <Folder Include="Areas\KyThuatVien\Controllers\" />
+    <Folder Include="Areas\KyThuatVien\Models\" />
+    <Folder Include="Areas\KyThuatVien\Views\" />
+    <Folder Include="Areas\TuVanVien\Controllers\" />
+    <Folder Include="Areas\TuVanVien\Models\" />
+    <Folder Include="Areas\TuVanVien\Views\" />
+    <Folder Include="Areas\NhanVienKho\Controllers\" />
+    <Folder Include="Areas\NhanVienKho\Models\" />
+    <Folder Include="Areas\NhanVienKho\Views\" />
+    <Folder Include="Areas\KhachHang\Models\" />
   </ItemGroup>
 
 </Project>

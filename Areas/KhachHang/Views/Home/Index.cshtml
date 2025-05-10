@@ -1,0 +1,128 @@
+﻿@model QuanLySuaChua_BaoHanh.Models.NguoiDung
+@{
+    ViewData["Title"] = "Trang chủ khách hàng";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">Thông tin cá nhân</h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">@Model.HoTen</h6>
+                    <p><i class="bi bi-envelope me-2"></i> @Model.Email</p>
+                    <p><i class="bi bi-telephone me-2"></i> @Model.PhoneNumber</p>
+                    <p><i class="bi bi-geo-alt me-2"></i> @ViewBag.DiaChi</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">Thiết bị của bạn</h5>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.Products != null && ((List<QuanLySuaChua_BaoHanh.Models.SanPham>)ViewBag.Products).Count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Tên sản phẩm</th>
+                                        <th>Hãng sản xuất</th>
+                                        <th>Model</th>
+                                        <th>Số series</th>
+                                        <th>Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in (List<QuanLySuaChua_BaoHanh.Models.SanPham>)ViewBag.Products)
+                                    {
+                                        <tr>
+                                            <td>@item.TenSanPham</td>
+                                            <td>@item.DanhMuc</td>
+                                            <td>@item.NgayMua</td>
+                                            <td>@item.ThoiGianBaoHanh</td>
+                                            <td>@item.MaBh</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Bạn chưa có thiết bị nào đăng ký.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">Lịch sử sửa chữa</h5>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.Orders != null && ((List<QuanLySuaChua_BaoHanh.Models.PhieuSuaChua>)ViewBag.Orders).Count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Mã phiếu</th>
+                                        <th>Ngày gửi</th>
+                                        <th>Tình trạng</th>
+                                        <th>Mô tả</th>
+                                        <th>Ngày hoàn thành</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in (List<QuanLySuaChua_BaoHanh.Models.PhieuSuaChua>)ViewBag.Orders)
+                                    {
+                                        <tr>
+                                            <td>@order.PhieuSuaChuaId</td>
+                                            <td>@order.NgayGui.ToString("dd/MM/yyyy")</td>
+                                            <td>
+                                                @{
+                                                    string badgeClass = "badge bg-secondary";
+
+                                                    switch (order.TrangThai?.ToLower())
+                                                    {
+                                                        case "đang xử lý":
+                                                            badgeClass = "badge bg-warning text-dark";
+                                                            break;
+                                                        case "hoàn thành":
+                                                            badgeClass = "badge bg-success";
+                                                            break;
+                                                        case "đã hủy":
+                                                            badgeClass = "badge bg-danger";
+                                                            break;
+                                                        case "chờ xác nhận":
+                                                            badgeClass = "badge bg-info";
+                                                            break;
+                                                    }
+                                                }
+                                                <span class="@badgeClass">@order.TrangThai</span>
+                                            </td>
+                                            <td>@(string.IsNullOrEmpty(order.MoTaKhachHang) ? "Không có mô tả" : order.MoTaKhachHang)</td>
+                                            <td>@(order.NgayTra.HasValue ? order.NgayTra.Value.ToString("dd/MM/yyyy") : "Chưa hoàn thành")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Bạn chưa có phiếu sửa chữa nào.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

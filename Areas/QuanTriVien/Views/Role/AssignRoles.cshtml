@@ -1,0 +1,94 @@
+﻿@model QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models.UserRolesViewModel
+@{
+    ViewData["Title"] = "Phân quyền";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">Phân quyền người dùng</h1>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-users mr-1"></i>
+                    Danh sách người dùng
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        @foreach (var user in ViewBag.Users)
+                        {
+                            <a asp-action="AssignRoles" asp-route-userId="@user.Id"
+                               class="list-group-item list-group-item-action @(Model.UserId == user.Id ? "active" : "")">
+                                @user.UserName
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            @if (Model.UserId != 0)
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-user-tag mr-1"></i>
+                        Phân quyền cho: <strong>@Model.UserName</strong>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="AssignRoles">
+                            <input type="hidden" name="UserId" value="@Model.UserId" />
+                            <input type="hidden" name="UserName" value="@Model.UserName" />
+
+                            <div class="form-group">
+                                <label>Chọn các quyền:</label>
+                                @foreach (var role in ViewBag.Roles)
+                                {
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input"
+                                               name="SelectedRoles" value="@role.Name" id="role_@role.Id"
+                                        @(Model.Roles != null && Model.Roles.Contains(role.Name) ? "checked" : "") />
+                                        <label class="form-check-label" for="role_@role.Id">@role.Name</label>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card">
+                    <div class="card-body">
+                        <p class="text-muted">Vui lòng chọn một người dùng từ danh sách bên trái để phân quyền.</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

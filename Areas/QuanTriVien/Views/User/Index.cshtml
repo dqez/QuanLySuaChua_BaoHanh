@@ -1,0 +1,103 @@
+﻿@model QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models.PaginatedList<QuanLySuaChua_BaoHanh.Models.NguoiDung>
+@{
+    ViewData["Title"] = "Quản lý người dùng";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">Quản lý Người dùng</h1>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-users mr-1"></i>
+            Danh sách Người dùng
+        </div>
+        <div class="card-body">
+            <p>
+                <a asp-action="Create" class="btn btn-primary">Thêm người dùng mới</a>
+            </p>
+
+            <form asp-action="Index" method="get">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Tìm kiếm..."
+                           name="searchString" value="@ViewData["CurrentFilter"]" />
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit">Tìm kiếm</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">Đặt lại</a>
+                    </div>
+                </div>
+            </form>
+
+            <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Họ tên</th>
+                            <th>Email</th>
+                            <th>Số điện thoại</th>
+                            <th>Tùy chọn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>@user.Id</td>
+                                <td>@user.UserName</td>
+                                <td>@user.HoTen</td>
+                                <td>@user.Email</td>
+                                <td>@user.PhoneNumber</td>
+                                <td>
+                                    <a asp-action="Details" asp-route-id="@user.Id" class="btn btn-info btn-sm">Chi tiết</a>
+                                    <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-primary btn-sm">Sửa</a>
+                                    <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-danger btn-sm">Xóa</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @{
+                var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+            }
+
+            <div class="d-flex justify-content-between mt-3">
+                <a asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageIndex - 1)"
+                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                   class="btn btn-outline-primary @prevDisabled">
+                    Trang trước
+                </a>
+
+                <div>
+                    Trang @Model.PageIndex trên @Model.TotalPages
+                </div>
+
+                <a asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageIndex + 1)"
+                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                   class="btn btn-outline-primary @nextDisabled">
+                    Trang tiếp
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

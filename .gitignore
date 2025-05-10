@@ -17,7 +17,7 @@ obj/
 *.log
 
 # Bỏ qua thư mục chứa user secrets và config nhạy cảm
-appsettings.json
+!appsettings.json
 appsettings.Development.json
 secrets.json
 # User-specific files

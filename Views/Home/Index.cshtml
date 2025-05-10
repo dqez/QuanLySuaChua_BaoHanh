@@ -1,8 +1,52 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Trung Tâm Bảo Hành Panasonic";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+<style>
+    .text-primary-color {
+        color: #319BC5;
+    }
+    .btn-primary-color {
+        background-color: #319BC5;
+        border-color: #319BC5;
+        color: white;
+    }
+    .btn-primary-color:hover {
+        background-color: #287ca0; /* Màu đậm hơn một chút khi hover */
+        border-color: #287ca0;
+        color: white;
+    }
+    
+    /* Thêm các style mới để cân đối bố cục */
+    .home-container {
+        padding: 5rem 0;
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .welcome-content {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+</style>
+
+<div class="home-container">
+    <div class="welcome-content text-center">
+        <h1 class="display-4 fw-bold mb-5 text-primary-color">Chào mừng đến Trung Tâm Bảo Hành Thiết Bị Lạnh Panasonic</h1>
+
+        <p class="lead mb-4">
+            Chúng tôi là địa chỉ tin cậy của bạn cho mọi nhu cầu bảo hành và sửa chữa thiết bị lạnh Panasonic chính hãng.
+        </p>
+        <p class="mb-5">
+            Đội ngũ kỹ thuật viên chuyên nghiệp, được đào tạo bài bản, sẵn sàng hỗ trợ bạn nhanh chóng và hiệu quả.
+        </p>
+
+        <div class="mt-5">
+            <a href="#" class="btn btn-primary-color btn-lg px-4 me-2">Liên Hệ Ngay</a>
+            <a href="#" class="btn btn-outline-secondary btn-lg px-4">Tìm Hiểu Thêm</a>
+        </div>
+    </div>
 </div>
