@@ -28,16 +28,13 @@ public partial class ChiTietSuaChua
     [Column("LinhKienID")]
     [StringLength(20)]
     [Unicode(false)]
-    public string LinhKienId { get; set; }
+    public string? LinhKienId { get; set; }
 
     [StringLength(20)]
     [Unicode(false)]
     public string? LoaiDon { get; set; }
 
     public int SoLuongLinhKien { get; set; }
-
-    [StringLength(1000)]
-    public string? MoTaKhachHang { get; set; }
 
     [StringLength(500)]
     public string? DanhGiaKyThuat { get; set; }

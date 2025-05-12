@@ -27,7 +27,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         }
 
         // GET: NhanVienKho/LinhKiens/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string? id)
         {
             if (id == null)
             {
@@ -70,7 +70,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         }
 
         // GET: NhanVienKho/LinhKiens/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string? id)
         {
             if (id == null)
             {
@@ -91,7 +91,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("LinhKienId,DanhMucId,TenLinhKien,SoLuongTon,DonGia,PhamViSuDung,GhiChu")] LinhKien linhKien)
+        public async Task<IActionResult> Edit(string id, [Bind("LinhKienId,DanhMucId,TenLinhKien,SoLuongTon,DonGia,PhamViSuDung,GhiChu")] LinhKien linhKien)
         {
             if (id != linhKien.LinhKienId)
             {
@@ -123,7 +123,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         }
 
         // GET: NhanVienKho/LinhKiens/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string? id)
         {
             if (id == null)
             {
@@ -144,7 +144,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         // POST: NhanVienKho/LinhKiens/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var linhKien = await _context.LinhKiens.FindAsync(id);
             if (linhKien != null)
@@ -156,7 +156,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool LinhKienExists(int id)
+        private bool LinhKienExists(string id)
         {
             return _context.LinhKiens.Any(e => e.LinhKienId == id);
         }
