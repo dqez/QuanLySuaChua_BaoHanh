@@ -50,12 +50,12 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
             if (ModelState.IsValid)
             {
                  if (await _roleManager.RoleExistsAsync(model.Name))
-                {
+                 {
                     ModelState.AddModelError("", "Role đã tồn tại!");
                     return View(model);
-                }
+                 }
 
-                string roleId = await _idGenerator.GenerateRoleIdAsync(model.Name);
+                 string roleId = await _idGenerator.GenerateRoleIdAsync(model.Name);
                 model.Id = roleId;
 
                 // Tạo role mới
