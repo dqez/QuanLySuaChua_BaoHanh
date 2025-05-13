@@ -14,6 +14,9 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.PhieuSuaChuaId)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.MoTaKhachHang)
             </th>
             <th>
@@ -23,28 +26,7 @@
                 @Html.DisplayNameFor(model => model.NgayGui)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NgayHen)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NgayTra)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.DiaChiNhanTraSanPham)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.KhoangCach)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PhiVanChuyen)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NgayThanhToan)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PhuongThucThanhToan)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TongTien)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.GhiChu)
@@ -55,15 +37,15 @@
             <th>
                 @Html.DisplayNameFor(model => model.KyThuat)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Phuong)
-            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhieuSuaChuaId)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.MoTaKhachHang)
             </td>
@@ -74,28 +56,7 @@
                 @Html.DisplayFor(modelItem => item.NgayGui)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.NgayHen)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NgayTra)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.DiaChiNhanTraSanPham)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.KhoangCach)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhiVanChuyen)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NgayThanhToan)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhuongThucThanhToan)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TongTien)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.GhiChu)
@@ -107,12 +68,8 @@
                 @Html.DisplayFor(modelItem => item.KyThuat.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Phuong.PhuongId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.PhieuSuaChuaId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.PhieuSuaChuaId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.PhieuSuaChuaId">Delete</a>
+                @* <a asp-action="Edit" asp-route-id="@item.PhieuSuaChuaId">Edit</a> | *@
+                <a asp-action="Details" asp-route-id="@item.PhieuSuaChuaId">Xem chi tiết</a> |
             </td>
         </tr>
 }

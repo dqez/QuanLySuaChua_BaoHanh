@@ -91,8 +91,22 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
             {
                 return NotFound();
             }
-            ViewData["KhachHangId"] = new SelectList(_context.NguoiDungs, "Id", "Id", phieuSuaChua.KhachHangId);
-            ViewData["KyThuatId"] = new SelectList(_context.NguoiDungs, "Id", "Id", phieuSuaChua.KyThuatId);
+
+            var assignedIds = await _context.PhieuSuaChuas
+                .Where(p => p.KyThuatId != null && p.PhieuSuaChuaId != id)
+                .Select(p => p.KyThuatId)
+                .ToListAsync();
+
+            ViewBag.AssignedTechnicians = await _context.NguoiDungs
+                .Where(u => assignedIds.Contains(u.Id))
+                .ToListAsync();
+
+            ViewBag.UnassignedTechnicians = await _context.NguoiDungs
+                .Where(u => u.VaiTro == "KyThuatVien" && !assignedIds.Contains(u.Id))
+                .ToListAsync();
+
+            ViewData["KhachHangId"] = new SelectList(_context.NguoiDungs.Where(u => u.VaiTro == "KhachHang"), "Id", "Id", phieuSuaChua.KhachHangId);
+            ViewData["KyThuatId"] = new SelectList(_context.NguoiDungs.Where(u => u.VaiTro == "KyThuatVien"), "Id", "Id", phieuSuaChua.KyThuatId);
             ViewData["PhuongId"] = new SelectList(_context.Phuongs, "PhuongId", "PhuongId", phieuSuaChua.PhuongId);
             return View(phieuSuaChua);
         }
