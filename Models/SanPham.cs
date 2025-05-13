@@ -48,9 +48,9 @@ public partial class SanPham
 
     [ForeignKey("DanhMucId")]
     [InverseProperty("SanPhams")]
-    public virtual DanhMuc DanhMuc { get; set; } = null!;
+    public virtual DanhMuc? DanhMuc { get; set; }
 
     [ForeignKey("KhachHangId")]
     [InverseProperty("SanPhams")]
-    public virtual NguoiDung KhachHang { get; set; } = null!;
+    public virtual NguoiDung? KhachHang { get; set; }
 }
