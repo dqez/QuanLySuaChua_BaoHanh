@@ -4,100 +4,290 @@
     Layout = "_LayoutAdmin";
 }
 
-<div class="container-fluid">
-    <h1 class="mt-4">Quản lý Người dùng</h1>
-
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success">
-            @TempData["SuccessMessage"]
-        </div>
+<style>
+    .page-title {
+        font-family: 'Baloo 2', cursive;
+        font-weight: 700;
+        color: var(--blue-primary);
+        margin-bottom: 25px;
+    }
+    
+    .content-card {
+        background-color: var(--white);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        margin-bottom: 30px;
+        width: 100%;
+        overflow-x: auto;
     }
 
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger">
-            @TempData["ErrorMessage"]
-        </div>
+    
+    .search-input11 {
+        border: 1px solid #ced4da;
+        border-right: none;
+        border-radius: 5px 0 0 5px;
+        padding: 8px 12px;
+        font-size: 14px;
+        box-shadow: none;
     }
+    
+    .search-input11:focus {
+        box-shadow: none;
+        border-color: var(--blue-primary);
+    }
+    
+    /* Cố định chiều cao cho tất cả các phần tử trong thanh công cụ */
+    .btn-primary-custom, 
+    .search-button11,
+    .reset-button,
+    .search-input11 {
+        height: 38px !important;
+        display: flex;
+        align-items: center;
+    }
+    
+    .search-button11 {
+        border-radius: 0 5px 5px 0;
+        background-color: var(--blue-primary);
+        border: 1px solid var(--blue-primary);
+        color: white;
+    }
+    
+    .search-button11:hover {
+        background-color: #2580a3;
+        border-color: #2580a3;
+    }
+    
+    .reset-button {
+        background-color: #6c757d;
+        border: 1px solid #6c757d;
+        color: white;
+        border-radius: 5px;
+        margin-left: 10px;
+    }
+    
+    .reset-button:hover {
+        background-color: #5a6268;
+        border-color: #5a6268;
+    }
+    
+    .custom-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    
+    .custom-table th {
+        background-color: #f8f9fa;
+        color: #495057;
+        font-weight: 600;
+        padding: 12px 15px;
+        border-bottom: 2px solid #dee2e6;
+    }
+    
+    .custom-table td {
+        padding: 10px 15px;
+        border-bottom: 1px solid #dee2e6;
+        vertical-align: middle;
+    }
+    
+    .custom-table tr:hover {
+        background-color: rgba(49, 155, 197, 0.05);
+    }
+    
+    .btn-primary-custom {
+        background-color: var(--blue-primary);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 16px;
+        text-decoration: none;
+        font-size: 14px;
+        transition: background-color 0.2s;
+    }
+    
+    .btn-primary-custom:hover {
+        background-color: #2580a3;
+        color: white;
+    }
+    
+    .btn-action {
+        padding: 6px 12px;
+        margin-right: 5px;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 13px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-info {
+        background-color: #17a2b8;
+    }
+    
+    .btn-info:hover {
+        background-color: #138496;
+        color: white;
+    }
+    
+    .btn-edit {
+        background-color: var(--blue-primary);
+    }
+    
+    .btn-edit:hover {
+        background-color: #2580a3;
+        color: white;
+    }
+    
+    .btn-delete {
+        background-color: #dc3545;
+    }
+    
+    .btn-delete:hover {
+        background-color: #c82333;
+        color: white;
+    }
+    
+    .pagination-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+    }
+    
+    .pagination-button {
+        background-color: #fff;
+        border: 1px solid var(--blue-primary);
+        color: var(--blue-primary);
+        padding: 6px 12px;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    
+    .pagination-button:not(.disabled):hover {
+        background-color: var(--blue-primary);
+        color: white;
+    }
+    
+    .pagination-button.disabled {
+        color: #6c757d;
+        border-color: #dee2e6;
+        cursor: not-allowed;
+    }
+    
+    .pagination-info {
+        font-weight: 500;
+        color: #495057;
+    }
+    
+    .alert-custom {
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+</style>
 
-    <div class="card mb-4">
-        <div class="card-header">
-            <i class="fas fa-users mr-1"></i>
-            Danh sách Người dùng
+<h1 class="page-title"><i class="bi bi-people me-2"></i>Quản lý Người dùng</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-custom alert-success">
+        <i class="bi bi-check-circle me-2"></i> @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-custom alert-danger">
+        <i class="bi bi-exclamation-triangle me-2"></i> @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="content-card">    <div class="d-flex justify-content-between align-items-stretch mb-4">
+        <div>
+            <a asp-action="Create" class="btn-primary-custom h-100 d-flex align-items-center">
+                <i class="bi bi-plus-circle me-2"></i>Thêm người dùng mới
+            </a>
         </div>
-        <div class="card-body">
-            <p>
-                <a asp-action="Create" class="btn btn-primary">Thêm người dùng mới</a>
-            </p>
-
-            <form asp-action="Index" method="get">
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Tìm kiếm..."
-                           name="searchString" value="@ViewData["CurrentFilter"]" />
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="submit">Tìm kiếm</button>
-                        <a asp-action="Index" class="btn btn-outline-secondary">Đặt lại</a>
-                    </div>
-                </div>
+        
+        <div class="ms-auto d-flex">
+            <form asp-action="Index" method="get" class="d-flex h-100">
+            <div class="input-group h-100">
+            <input type="text" class="form-control search-input11 h-100" placeholder="Tìm kiếm người dùng..."
+               name="searchString" value="@ViewData["CurrentFilter"]" />
+            <button class="btn search-button11 h-100" type="submit">
+            <i class="bi bi-search me-1"></i> Tìm kiếm
+            </button>
+            </div>
             </form>
-
-            <div class="table-responsive">
-                <table class="table table-bordered" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Username</th>
-                            <th>Họ tên</th>
-                            <th>Email</th>
-                            <th>Số điện thoại</th>
-                            <th>Tùy chọn</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var user in Model)
-                        {
-                            <tr>
-                                <td>@user.Id</td>
-                                <td>@user.UserName</td>
-                                <td>@user.HoTen</td>
-                                <td>@user.Email</td>
-                                <td>@user.PhoneNumber</td>
-                                <td>
-                                    <a asp-action="Details" asp-route-id="@user.Id" class="btn btn-info btn-sm">Chi tiết</a>
-                                    <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-primary btn-sm">Sửa</a>
-                                    <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-danger btn-sm">Xóa</a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-
-            @{
-                var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-                var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-            }
-
-            <div class="d-flex justify-content-between mt-3">
-                <a asp-action="Index"
-                   asp-route-pageNumber="@(Model.PageIndex - 1)"
-                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
-                   class="btn btn-outline-primary @prevDisabled">
-                    Trang trước
-                </a>
-
-                <div>
-                    Trang @Model.PageIndex trên @Model.TotalPages
-                </div>
-
-                <a asp-action="Index"
-                   asp-route-pageNumber="@(Model.PageIndex + 1)"
-                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
-                   class="btn btn-outline-primary @nextDisabled">
-                    Trang tiếp
-                </a>
-            </div>
+            <a asp-action="Index" class="btn reset-button h-100 ms-3">
+            <i class="bi bi-arrow-repeat me-1"></i> Đặt lại
+            </a>
         </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Họ tên</th>
+                    <th>Email</th>
+                    <th>Số điện thoại</th>
+                    <th>Tùy chọn</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.Id</td>
+                        <td>@user.UserName</td>
+                        <td>@user.HoTen</td>
+                        <td>@user.Email</td>
+                        <td>@user.PhoneNumber</td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@user.Id" class="btn-action btn-info text-decoration-none">
+                                <i class="bi bi-info-circle me-1"></i>Chi tiết
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@user.Id" class="btn-action btn-edit text-decoration-none">
+                                <i class="bi bi-pencil me-1"></i>Sửa
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@user.Id" class="btn-action btn-delete text-decoration-none">
+                                <i class="bi bi-trash me-1"></i>Xóa
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>    @{
+        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    }
+    <div class="pagination-container">
+        <a asp-action="Index"
+           asp-route-pageNumber="@(Model.PageIndex - 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="pagination-button @prevDisabled">
+            <i class="bi bi-chevron-left me-1"></i>Trang trước
+        </a>
+
+        <div class="pagination-info">
+            Trang <strong>@Model.PageIndex</strong> / <strong>@Model.TotalPages</strong>
+        </div>
+
+        <a asp-action="Index"
+           asp-route-pageNumber="@(Model.PageIndex + 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="pagination-button @nextDisabled">
+            Trang tiếp<i class="bi bi-chevron-right ms-1"></i>
+        </a>
     </div>
 </div>

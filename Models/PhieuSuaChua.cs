@@ -13,7 +13,7 @@ public partial class PhieuSuaChua
     [Column("PhieuSuaChuaID")]
     [StringLength(20)]
     [Unicode(false)]
-    [Display(Name="Mã phiếu sửa chữa")]
+    [Display(Name="Mã phiếu")]
     public string PhieuSuaChuaId { get; set; }
 
     [Column("KhachHangID")]
