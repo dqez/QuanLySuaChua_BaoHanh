@@ -1,11 +1,11 @@
-﻿@model QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Models.PaginatedList<QuanLySuaChua_BaoHanh.Models.LinhKien>
+﻿@model QuanLySuaChua_BaoHanh.Models.LinhKien
 
 @{
-    ViewData["Title"] = "Chi tiết";
+    ViewData["Title"] = "Details";
     Layout = "~/Areas/NhanVienKho/Views/Shared/_LayoutStashEmployee.cshtml";
 }
 
-<h1>Danh sách linh kiện</h1>
+<h1>Danh sách chi tiết phiếu</h1>
 
 <div class="mb-3">
     <a asp-action="Create" class="btn btn-primary">Thêm linh kiện mới</a>
@@ -38,23 +38,23 @@
             </tr>
         </thead>
         <tbody>
-        @foreach (var lk in Model)
-        {
-            <tr>
-                <td>@lk.LinhKienId</td>
-                <td>@lk.DanhMucId</td>
-                <td>@lk.TenLinhKien</td>
-                <td>@lk.SoLuongTon</td>
-                <td>@lk.DonGia</td>
-                <td>@lk.PhamViSuDung</td>
-                <td>@lk.GhiChu</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@lk.LinhKienId" class="btn btn-info btn-sm">Chi tiết</a>
-                    <a asp-action="Edit" asp-route-id="@lk.LinhKienId" class="btn btn-primary btn-sm">Sửa</a>
-                    <a asp-action="Delete" asp-route-id="@lk.LinhKienId" class="btn btn-danger btn-sm">Xóa</a>
-                </td>
-            </tr>
-        }
+            @foreach (var lk in Model)
+            {
+                <tr>
+                    <td>@lk.LinhKienId</td>
+                    <td>@lk.DanhMucId</td>
+                    <td>@lk.TenLinhKien</td>
+                    <td>@lk.SoLuongTon</td>
+                    <td>@lk.DonGia</td>
+                    <td>@lk.PhamViSuDung</td>
+                    <td>@lk.GhiChu</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@lk.LinhKienId" class="btn btn-info btn-sm">Chi tiết</a>
+                        <a asp-action="Edit" asp-route-id="@lk.LinhKienId" class="btn btn-primary btn-sm">Sửa</a>
+                        <a asp-action="Delete" asp-route-id="@lk.LinhKienId" class="btn btn-danger btn-sm">Xóa</a>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>

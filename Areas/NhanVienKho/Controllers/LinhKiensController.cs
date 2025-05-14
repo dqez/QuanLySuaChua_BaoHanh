@@ -1,33 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Models;
 using QuanLySuaChua_BaoHanh.Models;
+using QuanLySuaChua_BaoHanh.Services;
 
 namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
 {
     [Area("NhanVienKho")]
+    [Authorize(Roles = "NhanVienKho")]
     public class LinhKiensController : Controller
     {
         private readonly BHSC_DbContext _context;
+        private readonly IDGenerator _idGenerator;
 
-        public LinhKiensController(BHSC_DbContext context)
+        public LinhKiensController(BHSC_DbContext context, IDGenerator idGenerator)
         {
             _context = context;
+            _idGenerator = idGenerator;
         }
-
         // GET: NhanVienKho/LinhKiens
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, int? pageNumber)
         {
-            var bHSC_DbContext = _context.LinhKiens.Include(l => l.DanhMuc);
-            return View(await bHSC_DbContext.ToListAsync());
+            int pageSize = 10;
+            var linhKienQuery = _context.LinhKiens.AsQueryable();
+
+            ViewData["CurrentFilter"] = searchString;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                linhKienQuery = linhKienQuery.Where(lk =>
+                    lk.LinhKienId.Contains(searchString) ||
+                    lk.TenLinhKien.Contains(searchString));
+            }
+
+            linhKienQuery = linhKienQuery.OrderBy(lk => lk.TenLinhKien);
+
+            return View(await PaginatedList<LinhKien>.CreateAsync(
+                linhKienQuery.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: NhanVienKho/LinhKiens/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string id)
         {
             if (id == null)
             {
@@ -70,7 +85,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         }
 
         // GET: NhanVienKho/LinhKiens/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
             {
@@ -91,7 +106,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("LinhKienId,DanhMucId,TenLinhKien,SoLuongTon,DonGia,PhamViSuDung,GhiChu")] LinhKien linhKien)
+        public async Task<IActionResult> Edit(string id, [Bind("LinhKienId,DanhMucId,TenLinhKien,SoLuongTon,DonGia,PhamViSuDung,GhiChu")] LinhKien linhKien)
         {
             if (id != linhKien.LinhKienId)
             {
@@ -123,7 +138,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         }
 
         // GET: NhanVienKho/LinhKiens/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
             {
@@ -144,7 +159,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         // POST: NhanVienKho/LinhKiens/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var linhKien = await _context.LinhKiens.FindAsync(id);
             if (linhKien != null)
@@ -156,7 +171,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool LinhKienExists(int id)
+        private bool LinhKienExists(string id)
         {
             return _context.LinhKiens.Any(e => e.LinhKienId == id);
         }
