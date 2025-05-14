@@ -1,29 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Models;
 using QuanLySuaChua_BaoHanh.Models;
+using QuanLySuaChua_BaoHanh.Services;
 
 namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
 {
     [Area("NhanVienKho")]
+    [Authorize(Roles = "NhanVienKho")]
     public class LinhKiensController : Controller
     {
         private readonly BHSC_DbContext _context;
+        private readonly IDGenerator _idGenerator;
 
-        public LinhKiensController(BHSC_DbContext context)
+        public LinhKiensController(BHSC_DbContext context, IDGenerator idGenerator)
         {
             _context = context;
+            _idGenerator = idGenerator;
         }
-
         // GET: NhanVienKho/LinhKiens
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, int? pageNumber)
         {
-            var bHSC_DbContext = _context.LinhKiens.Include(l => l.DanhMuc);
-            return View(await bHSC_DbContext.ToListAsync());
+            int pageSize = 10;
+            var linhKienQuery = _context.LinhKiens.AsQueryable();
+
+            ViewData["CurrentFilter"] = searchString;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                linhKienQuery = linhKienQuery.Where(lk =>
+                    lk.LinhKienId.Contains(searchString) ||
+                    lk.TenLinhKien.Contains(searchString));
+            }
+
+            linhKienQuery = linhKienQuery.OrderBy(lk => lk.TenLinhKien);
+
+            return View(await PaginatedList<LinhKien>.CreateAsync(
+                linhKienQuery.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: NhanVienKho/LinhKiens/Details/5

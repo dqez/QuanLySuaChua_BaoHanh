@@ -88,10 +88,13 @@ namespace QuanLySuaChua_BaoHanh.Areas.KhachHang.Controllers
             }
             var order = await _context.PhieuSuaChuas
                 .Include(p => p.KhachHang)
+                .Include(p => p.KyThuat)
+                .Include(p => p.Phuong)
                 .Include(p => p.ChiTietSuaChuas)
                     .ThenInclude(c => c.LinhKien)
                 .Include(p => p.ChiTietSuaChuas)
                     .ThenInclude(c => c.SanPham)
+                        .ThenInclude(s => s.DanhMuc) 
                 .FirstOrDefaultAsync(p => p.PhieuSuaChuaId == id && p.KhachHangId == user.Id);
             if (order == null)
             {

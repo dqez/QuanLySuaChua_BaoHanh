@@ -37,6 +37,8 @@ public partial class SanPham
 
     public int ThoiGianBaoHanh { get; set; }
 
+    public string? UrlHinhAnh { get; set; }
+
     [Column("NgayHetHanBH")]
     public DateOnly NgayHetHanBh { get; set; }
 

@@ -18,6 +18,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +32,7 @@
     <Folder Include="Areas\NhanVienKho\Controllers\" />
     <Folder Include="Areas\NhanVienKho\Models\" />
     <Folder Include="Areas\NhanVienKho\Views\" />
+    <Folder Include="Areas\KhachHang\Models\" />
   </ItemGroup>
 
 </Project>

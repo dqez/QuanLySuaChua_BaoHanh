@@ -15,19 +15,19 @@ namespace QuanLySuaChua_BaoHanh.Controllers
         private readonly UserManager<NguoiDung> _userManager;
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly BHSC_DbContext _context;
-        private readonly IDGenerator idGenerator;
+        private readonly IDGenerator _idGenerator;
 
 
         public AccountController(
             UserManager<NguoiDung> userManager,
             SignInManager<NguoiDung> signInManager,
             BHSC_DbContext context,
-            IDGenerator iDGenerator)
+            IDGenerator idGenerator)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
-            idGenerator = iDGenerator;
+            _idGenerator = idGenerator;
         }
 
 
@@ -45,10 +45,9 @@ namespace QuanLySuaChua_BaoHanh.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userId = await idGenerator.GenerateNguoiDungIDAsync("KhachHang");
                 var user = new NguoiDung
                 {
-                    Id = userId,
+                    Id = await _idGenerator.GenerateNguoiDungIDAsync("KhachHang"),
                     UserName = model.UserName,
                     Email = model.Email,
                     HoTen = model.HoTen,
