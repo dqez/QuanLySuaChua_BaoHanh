@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="~/css/nguoidung.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Inter:wght@400;500&display=swap">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/notification.css" asp-append-version="true">
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <!-- Header -->
@@ -48,13 +50,36 @@
                 }
             </div>
         </div>
-
+        @{
+            var currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
+            var currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
+        }
         <nav class="nav-menu">
             <ul>
-                <li><a asp-area="KhachHang" asp-controller="Home" asp-action="Index" class="active"><i class="bi bi-house-door me-1"></i>Trang chủ</a></li>
-                <li><a asp-area="KhachHang" asp-controller="Home" asp-action="About">Giới thiệu</a></li>
-                <li><a asp-area="KhachHang" asp-controller="PhieuSuaChua" asp-action="Create">Đăng ký dịch vụ</a></li>
-                <li><a asp-area="KhachHang" asp-controller="RepairOrder" asp-action="Index">Đơn sửa chữa</a></li>
+                <li>
+                    <a asp-area="KhachHang" asp-controller="Home" asp-action="Index" 
+                       class="@(currentController == "Home" && currentAction == "Index" ? "active" : "")">
+                        <i class="bi bi-house-door me-1"></i>Trang chủ
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="KhachHang" asp-controller="Home" asp-action="About"
+                       class="@(currentController == "Home" && currentAction == "About" ? "active" : "")">
+                        Giới thiệu
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="KhachHang" asp-controller="PhieuSuaChua" asp-action="Create"
+                       class="@(currentController == "PhieuSuaChua" && currentAction == "Create" ? "active" : "")">
+                        Đăng ký dịch vụ
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="KhachHang" asp-controller="DonSuaChua" asp-action="Index"
+                       class="@(currentController == "DonSuaChua" && currentAction == "Index" ? "active" : "")">
+                        Đơn sửa chữa
+                    </a>
+                </li>
             </ul>
         </nav>
     </header>
@@ -68,6 +93,9 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/notification.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    
+    <partial name="_Notification" />
 </body>
 </html>

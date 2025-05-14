@@ -202,6 +202,6 @@ body {
 
 /* Adjust main content to account for fixed header */
 .container {
-    margin-top: 150px;
+    margin-top: 90px;
     margin-bottom: 40px;
 }

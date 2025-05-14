@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\KhachHang\Services\" />
     <Folder Include="Areas\KyThuatVien\Controllers\" />
     <Folder Include="Areas\KyThuatVien\Models\" />
     <Folder Include="Areas\KyThuatVien\Views\" />

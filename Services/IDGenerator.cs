@@ -150,7 +150,21 @@ namespace QuanLySuaChua_BaoHanh.Services
             int maxId = await GetMaxIdForPrefixAsync<ChiTietSuaChua>(ct => ct.ChiTietId, prefix);
             return $"{prefix}{maxId + 1:D3}";
         }
+        public async Task<string> GenerateIdAsync_Date(string nameTable)
+        {
 
+            string timestamp = DateTime.Now.ToString("yyMMddHHmmssff"); 
+            string newId = $"{nameTable}{timestamp}";
+
+            while (await _context.PhieuSuaChuas.AnyAsync(p => p.PhieuSuaChuaId == newId))
+            {
+                await Task.Delay(1);
+                timestamp = DateTime.Now.ToString("yyMMddHHmmssff");
+                newId = $"{nameTable}{timestamp}";
+            }
+
+            return newId;
+        }
 
         private async Task<int> GetMaxIdForPrefixAsync<TEntity>(Func<TEntity, string> idSelector, string prefix) where TEntity : class
         {
