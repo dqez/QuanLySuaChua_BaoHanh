@@ -205,30 +205,21 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-image text-center mb-3">
-            <i class="bi bi-person-fill-gear"></i>
+            <i class="bi bi-person-fill-gear" style="font-size: 48px;"></i>
         </div>
-
         <nav>
             <a href="@Url.Action("Index", "Home")" class="nav-item">
                 <i class="bi bi-house-door"></i>
                 <span>Trang chủ</span>
             </a>
-            <a href="@Url.Action("ComponentView", "DataHandler")" class="nav-item">
+            <a href="@Url.Action("Index", "LinhKiens")" class="nav-item">
                 <i class="bi bi-gear-fill"></i>
                 <span>Linh kiện</span>
             </a>
-            <a href="@Url.Action("Reports", "Statistics")" class="nav-item">
+            <a href="@Url.Action("Reports", "PhieuNhapXuats")" class="nav-item">
                 <i class="bi bi-bookmark-check-fill"></i>
                 <span>Phiếu nhập xuất</span>
-            </a>
-            <a href="@Url.Action("RepairOrders", "Orders")" class="nav-item">
-                <i class="bi bi-bookmark-dash"></i>
-                <span>Cập nhật phiếu nhập</span>
-            </a>
-            <a href="@Url.Action("Index", "ManageAccounts", new { area = "NhanVienKho" })" class="nav-item">
-                <i class="bi bi-bookmark-dash-fill"></i>
-                <span>Cập nhật phiếu xuất</span>
-            </a>
+            </a>      
         </nav>
     </aside>
 
