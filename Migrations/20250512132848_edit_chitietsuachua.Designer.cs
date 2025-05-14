@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuanLySuaChua_BaoHanh.Models;
 
@@ -11,9 +12,11 @@ using QuanLySuaChua_BaoHanh.Models;
 namespace QuanLySuaChua_BaoHanh.Migrations
 {
     [DbContext(typeof(BHSC_DbContext))]
-    partial class BHSC_DbContextModelSnapshot : ModelSnapshot
+    [Migration("20250512132848_edit_chitietsuachua")]
+    partial class edit_chitietsuachua
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
