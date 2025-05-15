@@ -54,7 +54,7 @@
                             {
                                 <tr>
                                     <td>@item.NgayXuat.ToString("dd/MM/yyyy")</td>
-                                    <td>@item.TongTien.ToString("N0") ₫</td>
+                                    <td>@item.TongTien</td>
                                     <td>
                                         <span class="badge @(item.TrangThai == "Đã duyệt" ? "bg-success" : "bg-warning text-dark")">
                                             @item.TrangThai
@@ -66,7 +66,7 @@
                                         <a asp-action="Edit" asp-route-id="@item.PhieuXuatId" class="btn btn-primary btn-sm me-1">
                                             <i class="bi bi-pencil"></i> Sửa
                                         </a>
-                                        <a asp-action="Delete" asp-route-id="@lk.LinhKienId" class="btn btn-danger btn-sm">Xóa</a>
+                                        <a asp-action="Delete" asp-route-id="@item.PhieuXuatId" class="btn btn-danger btn-sm">Xóa</a>
                                     </td>
                                 </tr>
                             }
