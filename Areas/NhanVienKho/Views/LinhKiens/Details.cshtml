@@ -36,10 +36,10 @@
                     </dl>
                 </div>
                 <div class="card-footer text-end">
-                    <a asp-action="Edit" asp-route-id="@Model?.LinhKienId" class="btn btn-warning me-2">
+                    <a asp-area="NhanVienKho" asp-controller="LinhKiens" asp-action="Edit" asp-route-id="@Model?.LinhKienId" class="btn btn-warning me-2">
                         <i class="bi bi-pencil"></i> Sửa
                     </a>
-                    <a asp-action="Index" class="btn btn-secondary">
+                    <a asp-area="NhanVienKho" asp-controller="LinhKiens" asp-action="Index" class="btn btn-secondary">
                         <i class="bi bi-arrow-left"></i> Quay lại danh sách
                     </a>
                 </div>

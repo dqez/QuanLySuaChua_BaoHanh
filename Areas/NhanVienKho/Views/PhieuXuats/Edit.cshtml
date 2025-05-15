@@ -15,7 +15,7 @@
                     </h4>
                 </div>
                 <div class="card-body">
-                    <form asp-action="Edit" autocomplete="off">
+                    <form asp-area="NhanVienKho" asp-controller="PhieuXuats" asp-action="Edit" autocomplete="off">
                         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
                         <input type="hidden" asp-for="PhieuXuatId" />
 
@@ -48,7 +48,7 @@
                             <button type="submit" class="btn btn-warning me-2">
                                 <i class="bi bi-save"></i> Lưu thay đổi
                             </button>
-                            <a asp-action="Index" class="btn btn-secondary">
+                            <a asp-area="NhanVienKho" asp-controller="PhieuXuats" asp-action="Index" class="btn btn-secondary">
                                 <i class="bi bi-arrow-left"></i> Quay lại
                             </a>
                         </div>
