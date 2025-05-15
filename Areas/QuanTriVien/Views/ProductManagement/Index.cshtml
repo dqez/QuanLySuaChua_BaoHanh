@@ -1,0 +1,305 @@
+@model QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers.ProductsOverviewViewModel
+@{
+    ViewData["Title"] = "Quản lý sản phẩm và danh mục";
+    Layout = "_LayoutAdmin";
+}
+
+<style>
+    .page-title {
+        font-family: 'Baloo 2', cursive;
+        font-weight: 700;
+        color: var(--blue-primary);
+        margin-bottom: 25px;
+    }
+    
+    .content-card {
+        background-color: var(--white);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        margin-bottom: 30px;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .card-header-custom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    .header-title {
+        font-family: 'Baloo 2', cursive;
+        font-weight: 600;
+        font-size: 1.25rem;
+        color: var(--blue-primary);
+        margin: 0;
+    }
+    
+    .custom-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    
+    .custom-table th {
+        background-color: #f8f9fa;
+        color: #495057;
+        font-weight: 600;
+        padding: 12px 15px;
+        border-bottom: 2px solid #dee2e6;
+    }
+    
+    .custom-table td {
+        padding: 10px 15px;
+        border-bottom: 1px solid #dee2e6;
+        vertical-align: middle;
+    }
+    
+    .custom-table tr:hover {
+        background-color: rgba(49, 155, 197, 0.05);
+    }
+    
+    .btn-primary-custom {
+        background-color: var(--blue-primary);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 16px;
+        text-decoration: none;
+        font-size: 14px;
+        transition: background-color 0.2s;
+    }
+    
+    .btn-primary-custom:hover {
+        background-color: #2580a3;
+        color: white;
+    }
+    
+    .btn-action {
+        padding: 6px 10px;
+        margin-right: 3px;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 13px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-info {
+        background-color: #17a2b8;
+    }
+    
+    .btn-info:hover {
+        background-color: #138496;
+        color: white;
+    }
+    
+    .btn-edit {
+        background-color: #ffc107;
+    }
+    
+    .btn-edit:hover {
+        background-color: #e0a800;
+        color: white;
+    }
+    
+    .btn-delete {
+        background-color: #dc3545;
+    }
+    
+    .btn-delete:hover {
+        background-color: #c82333;
+        color: white;
+    }
+    
+    .view-all-btn {
+        display: inline-block;
+        color: var(--blue-primary);
+        font-weight: 600;
+        text-decoration: none;
+        padding: 8px 15px;
+        border: 2px solid var(--blue-primary);
+        border-radius: 5px;
+        transition: all 0.2s ease;
+    }
+    
+    .view-all-btn:hover {
+        background-color: var(--blue-primary);
+        color: white;
+    }
+    
+    .alert-custom {
+        border-radius: 5px;
+        padding: 12px 15px;
+        margin-bottom: 20px;
+    }
+    
+    .alert-success {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        color: #155724;
+    }
+    
+    .alert-danger {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        color: #721c24;
+    }
+
+    .truncate-cell {
+        max-width: 200px; /* hoặc bao nhiêu tùy ý */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+</style>
+
+<h1 class="page-title"><i class="bi bi-box-seam me-2"></i>Quản lý sản phẩm và danh mục</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-custom alert-success">
+        <i class="bi bi-check-circle me-2"></i> @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-custom alert-danger">
+        <i class="bi bi-exclamation-triangle me-2"></i> @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="row">
+    <!-- Danh mục Card -->
+    <div class="col-md-6 mb-4">
+        <div class="content-card">
+            <div class="card-header-custom">
+                <h5 class="header-title"><i class="bi bi-grid me-2"></i>Quản lý danh mục sản phẩm</h5>
+                <a asp-area="QuanTriVien" asp-controller="DanhMucs" asp-action="Create" class="btn-primary-custom btn-sm">
+                    <i class="bi bi-plus-circle me-1"></i>Thêm danh mục
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Mã danh mục</th>
+                            <th>Tên danh mục</th>
+                            <th>Phân loại</th>
+                            <th>Tùy chọn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var danhMuc in Model.DanhMucs)
+                        {
+                            <tr>
+                                <td>@danhMuc.DanhMucId</td>
+                                <td>@danhMuc.TenDanhMuc</td>
+                                <td>@danhMuc.PhanLoai</td>
+                                <td>
+                                    <a asp-area="QuanTriVien" asp-controller="DanhMucs" asp-action="Details" asp-route-id="@danhMuc.DanhMucId" class="btn-action btn-info">
+                                        <i class="bi bi-info-circle"></i>
+                                    </a>
+                                    <a asp-area="QuanTriVien" asp-controller="DanhMucs" asp-action="Edit" asp-route-id="@danhMuc.DanhMucId" class="btn-action btn-edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-area="QuanTriVien" asp-controller="DanhMucs" asp-action="Delete" asp-route-id="@danhMuc.DanhMucId" class="btn-action btn-delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-center mt-4">
+                <a asp-area="QuanTriVien" asp-controller="DanhMucs" asp-action="Index" class="view-all-btn">
+                    <i class="bi bi-list-ul me-1"></i> Xem tất cả danh mục
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sản phẩm Card -->
+    <div class="col-md-6 mb-4">
+        <div class="content-card">
+            <div class="card-header-custom">
+                <h5 class="header-title"><i class="bi bi-box me-2"></i>Quản lý sản phẩm</h5>
+                <a asp-area="QuanTriVien" asp-controller="SanPhams" asp-action="Create" class="btn-primary-custom btn-sm">
+                    <i class="bi bi-plus-circle me-1"></i>Thêm sản phẩm
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Mã sản phẩm</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Danh mục</th>
+                            <th>Tùy chọn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var sanPham in Model.SanPhams)
+                        {
+                            <tr>
+                                <td>@sanPham.SanPhamId</td>
+                                <td class="truncate-cell">@sanPham.TenSanPham</td>
+                                <td>@(sanPham.DanhMuc?.TenDanhMuc ?? "Không có")</td>
+                                <td>
+                                    <a asp-area="QuanTriVien" asp-controller="SanPhams" asp-action="Details" asp-route-id="@sanPham.SanPhamId" class="btn-action btn-info">
+                                        <i class="bi bi-info-circle"></i>
+                                    </a>
+                                    <a asp-area="QuanTriVien" asp-controller="SanPhams" asp-action="Edit" asp-route-id="@sanPham.SanPhamId" class="btn-action btn-edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-area="QuanTriVien" asp-controller="SanPhams" asp-action="Delete" asp-route-id="@sanPham.SanPhamId" class="btn-action btn-delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-center mt-4">
+                <a asp-area="QuanTriVien" asp-controller="SanPhams" asp-action="Index" class="view-all-btn">
+                    <i class="bi bi-list-ul me-1"></i> Xem tất cả sản phẩm
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Thống kê sản phẩm Card -->
+<div class="row">
+    <div class="col-12">
+        <div class="content-card">
+            <div class="card-header-custom">
+                <h5 class="header-title"><i class="bi bi-bar-chart me-2"></i>Thống kê sản phẩm theo danh mục</h5>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <p class="mb-0" style="font-size: 15px; line-height: 1.6;">
+                        Xem thống kê chi tiết về sản phẩm theo danh mục, bao gồm thông tin về tổng số sản phẩm trong từng danh mục,
+                        tổng số sản phẩm đang trong thời gian bảo hành, đã hết hạn bảo hành và các chỉ số quan trọng khác.
+                    </p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <a asp-area="QuanTriVien" asp-controller="Statistics" asp-action="ProductStats" class="btn-primary-custom" style="padding: 10px 20px;">
+                        <i class="bi bi-graph-up me-1"></i> Xem thống kê chi tiết
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

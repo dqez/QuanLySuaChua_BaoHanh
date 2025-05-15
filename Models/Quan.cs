@@ -13,14 +13,17 @@ public partial class Quan
     [Column("QuanID")]
     [StringLength(20)]
     [Unicode(false)]
+    [Display(Name = "Mã quận")]
     public string QuanId { get; set; }
 
     [StringLength(100)]
+    [Display(Name = "Tên quận")]
     public string TenQuan { get; set; } = null!;
 
     [Column("ThanhPhoID")]
     [StringLength(20)]
     [Unicode(false)]
+    [Display(Name = "Mã thành phố")]
     public string ThanhPhoId { get; set; }
 
     [InverseProperty("Quan")]
@@ -28,5 +31,5 @@ public partial class Quan
 
     [ForeignKey("ThanhPhoId")]
     [InverseProperty("Quans")]
-    public virtual ThanhPho ThanhPho { get; set; } = null!;
+    public virtual ThanhPho? ThanhPho { get; set; }
 }

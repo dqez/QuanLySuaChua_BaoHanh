@@ -37,7 +37,7 @@ namespace QuanLySuaChua_BaoHanh.Services
                     break;
                 case "KhachHang":
                     prefix = "KH";
-                    maxDigits = 4;
+                    maxDigits = 3;  //3: KH001 | 4:KH0001
                     break;
                 default:
                     prefix = "USER";

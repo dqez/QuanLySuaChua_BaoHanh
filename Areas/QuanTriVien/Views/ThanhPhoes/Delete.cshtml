@@ -1,0 +1,48 @@
+﻿@model QuanLySuaChua_BaoHanh.Models.ThanhPho
+
+@{
+    ViewData["Title"] = "Xóa Thành Phố";
+    Layout = "~/Areas/QuanTriVien/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid p-0">
+    <div class="mb-4">
+        <h1 style="font-family: 'Baloo 2', cursive; color: var(--blue-primary); font-weight: 600;">Xóa Thành Phố</h1>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                Bạn có chắc chắn muốn xóa thành phố này không?
+            </div>
+            
+            <dl class="row mb-4">
+                <dt class="col-sm-3 col-md-2 text-md-end">
+                    @Html.DisplayNameFor(model => model.ThanhPhoId)
+                </dt>
+                <dd class="col-sm-9 col-md-10">
+                    <span class="badge bg-secondary">@Html.DisplayFor(model => model.ThanhPhoId)</span>
+                </dd>
+                <dt class="col-sm-3 col-md-2 text-md-end">
+                    @Html.DisplayNameFor(model => model.TenThanhPho)
+                </dt>
+                <dd class="col-sm-9 col-md-10">
+                    @Html.DisplayFor(model => model.TenThanhPho)
+                </dd>
+            </dl>
+            
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="ThanhPhoId" />
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash me-1"></i> Xác Nhận Xóa
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Quay Lại
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

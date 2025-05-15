@@ -11,7 +11,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-           
+
         }
 
         /// <inheritdoc />
