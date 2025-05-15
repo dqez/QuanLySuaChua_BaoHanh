@@ -1,0 +1,47 @@
+﻿@model QuanLySuaChua_BaoHanh.Models.Quan
+
+@{
+    ViewData["Title"] = "Chi Tiết Quận/Huyện";
+    Layout = "~/Areas/QuanTriVien/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid p-0">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 style="font-family: 'Baloo 2', cursive; color: var(--blue-primary); font-weight: 600;">Chi Tiết Quận/Huyện</h1>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3 col-md-2 text-md-end">
+                    @Html.DisplayNameFor(model => model.QuanId)
+                </dt>
+                <dd class="col-sm-9 col-md-10">
+                    <span class="badge bg-secondary">@Html.DisplayFor(model => model.QuanId)</span>
+                </dd>
+                <dt class="col-sm-3 col-md-2 text-md-end">
+                    @Html.DisplayNameFor(model => model.TenQuan)
+                </dt>
+                <dd class="col-sm-9 col-md-10">
+                    @Html.DisplayFor(model => model.TenQuan)
+                </dd>
+                <dt class="col-sm-3 col-md-2 text-md-end">
+                    @Html.DisplayNameFor(model => model.ThanhPho)
+                </dt>
+                <dd class="col-sm-9 col-md-10">
+                    <span class="badge" style="background-color: var(--blue-primary);">@Model.ThanhPho.ThanhPhoId</span> - 
+                    @Model.ThanhPho.TenThanhPho
+                </dd>
+            </dl>
+
+            <div class="d-flex gap-2 mt-3">
+                <a asp-action="Edit" asp-route-id="@Model?.QuanId" class="btn" style="background-color: #ffc107; color: white;">
+                    <i class="bi bi-pencil-square me-1"></i> Chỉnh Sửa
+                </a>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left me-1"></i> Quay Lại
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,83 @@
+﻿@model QuanLySuaChua_BaoHanh.Models.SanPham
+
+@{
+    ViewData["Title"] = "Thêm Sản Phẩm";
+    Layout = "~/Areas/QuanTriVien/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid p-0">
+    <div class="mb-4">
+        <h1 style="font-family: 'Baloo 2', cursive; color: var(--blue-primary); font-weight: 600;">Thêm Sản Phẩm Mới</h1>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="KhachHangId" class="form-label fw-bold">Khách Hàng</label>
+                            <select asp-for="KhachHangId" class="form-select" asp-items="ViewBag.KhachHangId"></select>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label asp-for="DanhMucId" class="form-label fw-bold">Danh Mục</label>
+                            <select asp-for="DanhMucId" class="form-select" asp-items="ViewBag.DanhMucId"></select>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label asp-for="MaBh" class="form-label fw-bold">Mã Bảo Hành</label>
+                            <input asp-for="MaBh" class="form-control" placeholder="Nhập mã bảo hành" />
+                            <span asp-validation-for="MaBh" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label asp-for="TenSanPham" class="form-label fw-bold">Tên Sản Phẩm</label>
+                            <input asp-for="TenSanPham" class="form-control" placeholder="Nhập tên sản phẩm" />
+                            <span asp-validation-for="TenSanPham" class="text-danger"></span>
+                        </div>                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="NgayMua" class="form-label fw-bold">Ngày Mua</label>
+                            <input asp-for="NgayMua" type="date" class="form-control" />
+                            <span asp-validation-for="NgayMua" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label asp-for="ThoiGianBaoHanh" class="form-label fw-bold">Thời Gian Bảo Hành (tháng)</label>
+                            <input asp-for="ThoiGianBaoHanh" class="form-control" placeholder="Nhập số tháng bảo hành" />
+                            <span asp-validation-for="ThoiGianBaoHanh" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label asp-for="NgayHetHanBh" class="form-label fw-bold">Ngày Hết Hạn Bảo Hành</label>
+                            <input asp-for="NgayHetHanBh" type="date" class="form-control" />
+                            <span asp-validation-for="NgayHetHanBh" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label asp-for="MoTa" class="form-label fw-bold">Mô Tả</label>
+                            <textarea asp-for="MoTa" class="form-control" rows="3" placeholder="Mô tả chi tiết sản phẩm"></textarea>
+                            <span asp-validation-for="MoTa" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group d-flex gap-2 mt-4">
+                    <button type="submit" class="btn" style="background-color: var(--blue-primary); color: white;">
+                        <i class="bi bi-check-circle me-1"></i> Lưu
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Quay Lại
+                    </a>
+                </div>            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

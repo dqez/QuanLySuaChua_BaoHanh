@@ -1,35 +1,35 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace QuanLySuaChua_BaoHanh.Enums
 {
     public enum TrangThaiPhieu
     {
         //Khachhang đăng ký phiếu sửa chữa
-        [Display(Name = "Chờ xác nhận")]
+        [Display(Name = "Chờ xác nhận")] 
         ChoXacNhan,
-
+        
         //tư vấn viên xác nhận
         [Display(Name = "Đã xác nhận")]
         DaXacNhan,
-
+        
         //quản trị viên phân công (KythuatID) 
-        [Display(Name = "Đã phân công")]
+        [Display(Name = "Đã phân công")] 
         DaPhanCong,
 
         //kỹ thuât viên chọn ngày hẹn
         [Display(Name = "Chờ kiểm tra")]
         ChoKiemTra,
 
-        ////kythuatvien xác nhận, không -> đã hủy
-        //[Display(Name = "Khách đồng ý sửa")]
-        //KhachDongY,
-
+        //kythuatvien xác nhận, không -> đã hủy
+        [Display(Name = "Khách đồng ý sửa")] 
+        KhachDongY,
+        
         //ky thuat viên cập nhật linh kiện 
         [Display(Name = "Đang sửa chữa")]
         DangSuaChua,
-
+        
         //ky thuât viên cập nhật trạng thái sửa chữa
-        [Display(Name = "Đã sửa xong")]
+        [Display(Name = "Đã sửa xong")] 
         DaSuaXong,
 
         //khachhang thanh toán.

@@ -1,0 +1,57 @@
+﻿@model QuanLySuaChua_BaoHanh.Models.PhieuXuat
+@{
+    ViewData["Title"] = "Xóa phiếu xuất";
+    Layout = "~/Areas/NhanVienKho/Views/Shared/_LayoutStashEmployee.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-danger">
+        <i class="bi bi-exclamation-triangle-fill"></i> Xóa phiếu xuất
+    </h2>
+
+    <div class="card shadow mb-4">
+        <div class="card-header bg-danger text-white">
+            <i class="bi bi-exclamation-circle"></i>
+            Xác nhận xóa phiếu xuất
+        </div>
+        <div class="card-body">
+            <h5 class="mb-3">Bạn có chắc chắn muốn xóa phiếu xuất này?</h5>
+            <div class="alert alert-warning d-flex align-items-center" role="alert">
+                <i class="bi bi-exclamation-diamond-fill me-2"></i>
+                <div>
+                    Cảnh báo: Hành động này không thể hoàn tác. Tất cả dữ liệu liên quan đến phiếu xuất này sẽ bị xóa.
+                </div>
+            </div>
+
+            <dl class="row mb-0">
+                <dt class="col-sm-4">Mã phiếu xuất:</dt>
+                <dd class="col-sm-8">@Model.PhieuXuatId</dd>
+
+                <dt class="col-sm-4">Ngày xuất:</dt>
+                <dd class="col-sm-8">@Model.NgayXuat.ToString("dd/MM/yyyy")</dd>
+
+                <dt class="col-sm-4">Tổng tiền:</dt>
+                <dd class="col-sm-8">@Model.TongTien</dd>
+
+                <dt class="col-sm-4">Trạng thái:</dt>
+                <dd class="col-sm-8">@Model.TrangThai</dd>
+
+                <dt class="col-sm-4">Ghi chú:</dt>
+                <dd class="col-sm-8">@Model.GhiChu</dd>
+
+                <dt class="col-sm-4">Mã kho:</dt>
+                <dd class="col-sm-8">@Model.Kho?.Id</dd>
+            </dl>
+
+            <form asp-area="NhanVienKho" asp-controller="PhieuXuats" asp-action="Delete" method="post" class="mt-4">
+                <input type="hidden" name="id" value="@Model.PhieuXuatId" />
+                <button type="submit" class="btn btn-danger me-2">
+                    <i class="bi bi-trash"></i> Xác nhận xóa
+                </button>
+                <a href="/NhanVienKho/PhieuXuats/Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Hủy
+                </a>
+            </form>
+        </div>
+    </div>
+</div>

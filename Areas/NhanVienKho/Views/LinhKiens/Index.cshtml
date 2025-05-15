@@ -8,10 +8,11 @@
 <h1>Danh sách linh kiện</h1>
 
 <div class="mb-3">
-    <a asp-action="Create" class="btn btn-primary">Thêm linh kiện mới</a>
+    @* <a asp-area="NhanVienKho" asp-controller="LinhKiens" asp-action="Create" class="btn btn-primary">Thêm linh kiện mới</a> *@
+    <a href="/NhanVienKho/LinhKiens/Create" class="btn btn-primary">Thêm linh kiện mới</a>
 </div>
 
-<form asp-action="Index" method="get" class="mb-4">
+<form asp-area="NhanVienKho" asp-controller="LinhKiens" asp-action="Index" method="get" class="mb-4">
     <div class="input-group">
         <input type="text"
                name="searchString"
@@ -19,7 +20,7 @@
                placeholder="Tìm kiếm..."
                value="@(ViewData["CurrentFilter"] ?? "")" />
         <button class="btn btn-outline-secondary" type="submit">Tìm kiếm</button>
-        <a asp-action="Index" class="btn btn-outline-secondary">Đặt lại</a>
+        <a href="/NhanVienKho/LinhKiens/Index" class="btn btn-outline-secondary">Đặt lại</a>
     </div>
 </form>
 
@@ -49,9 +50,9 @@
                 <td>@lk.PhamViSuDung</td>
                 <td>@lk.GhiChu</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@lk.LinhKienId" class="btn btn-info btn-sm">Chi tiết</a>
-                    <a asp-action="Edit" asp-route-id="@lk.LinhKienId" class="btn btn-primary btn-sm">Sửa</a>
-                    <a asp-action="Delete" asp-route-id="@lk.LinhKienId" class="btn btn-danger btn-sm">Xóa</a>
+                        <a href="/NhanVienKho/LinhKiens/Details/@lk.LinhKienId" class="btn btn-info btn-sm">Chi tiết</a>
+                        <a href="/NhanVienKho/LinhKiens/Edit/@lk.LinhKienId" class="btn btn-primary btn-sm">Sửa</a>
+                        <a href="/NhanVienKho/LinhKiens/Delete/@lk.LinhKienId" class="btn btn-danger btn-sm">Xóa</a>
                 </td>
             </tr>
         }
@@ -64,7 +65,7 @@
         @if (Model.HasPreviousPage)
         {
             <li class="page-item">
-                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">« Trước</a>
+                <a class="page-link" href="/NhanVienKho/LinhKiens/Index" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">« Trước</a>
             </li>
         }
         else
@@ -81,7 +82,7 @@
         @if (Model.HasNextPage)
         {
             <li class="page-item">
-                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">Tiếp »</a>
+                <a class="page-link" href="/NhanVienKho/LinhKiens/Index" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">Tiếp »</a>
             </li>
         }
         else
