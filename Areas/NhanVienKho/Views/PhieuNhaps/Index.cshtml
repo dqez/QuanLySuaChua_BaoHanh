@@ -8,12 +8,12 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="mb-0">Danh sách phiếu nhập</h2>
-        <a asp-action="Create" class="btn btn-success">
+        <a href="/NhanVienKho/PhieuNhaps/Create" class="btn btn-success">
             <i class="bi bi-plus-circle"></i> Thêm phiếu nhập mới
         </a>
     </div>
 
-    <form asp-action="Index" method="get" class="mb-4">
+    <form asp-area="NhanVienKho" asp-controller="PhieuNhaps" asp-action="Index" method="get" class="mb-4">
         <div class="input-group">
             <input type="text"
                    name="searchString"
@@ -23,7 +23,7 @@
             <button class="btn btn-primary" type="submit">
                 <i class="bi bi-search"></i> Tìm kiếm
             </button>
-            <a asp-action="Index" class="btn btn-outline-secondary">Đặt lại</a>
+            <a href="/NhanVienKho/PhieuNhaps/Index" class="btn btn-outline-secondary">Đặt lại</a>
         </div>
     </form>
 
@@ -63,10 +63,10 @@
                                     <td>@item.GhiChu</td>
                                     <td>@item.Kho?.Id</td>
                                     <td class="text-center">
-                                        <a asp-action="Edit" asp-route-id="@item.PhieuNhapId" class="btn btn-primary btn-sm me-1">
+                                        <a href="/NhanVienKho/PhieuNhaps/Edit/@item.PhieuNhapId" class="btn btn-primary btn-sm me-1">
                                             <i class="bi bi-pencil"></i> Sửa
                                         </a>
-                                        <a asp-action="Delete" asp-route-id="@item.PhieuNhapId" class="btn btn-danger btn-sm">Xóa</a>
+                                        <a href="/NhanVienKho/PhieuNhaps/Delete/@item.PhieuNhapId" class="btn btn-danger btn-sm">Xóa</a>
                                     </td>
                                 </tr>
                             }
@@ -82,7 +82,7 @@
             @if (Model.HasPreviousPage)
             {
                 <li class="page-item">
-                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">« Trước</a>
+                    <a class="page-link" href="/NhanVienKho/PhieuNhaps/Index" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">« Trước</a>
                 </li>
             }
             else
@@ -99,7 +99,7 @@
             @if (Model.HasNextPage)
             {
                 <li class="page-item">
-                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">Tiếp »</a>
+                    <a class="page-link" href="/NhanVienKho/PhieuNhaps/Index" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">Tiếp »</a>
                 </li>
             }
             else

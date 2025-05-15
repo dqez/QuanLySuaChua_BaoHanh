@@ -43,12 +43,12 @@
                 <dd class="col-sm-8">@Model.Kho?.Id</dd>
             </dl>
 
-            <form asp-action="Delete" method="post" class="mt-4">
+            <form asp-area="NhanVienKho" asp-controller="PhieuNhaps" asp-action="Delete" method="post" class="mt-4">
                 <input type="hidden" name="id" value="@Model.PhieuNhapId" />
                 <button type="submit" class="btn btn-danger me-2">
                     <i class="bi bi-trash"></i> Xác nhận xóa
                 </button>
-                <a asp-action="Index" class="btn btn-secondary">
+                <a href="/NhanVienKho/PhieuNhaps/Index" class="btn btn-secondary">
                     <i class="bi bi-arrow-left"></i> Hủy
                 </a>
             </form>
