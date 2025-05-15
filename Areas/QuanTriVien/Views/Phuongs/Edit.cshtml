@@ -20,11 +20,10 @@
                     <div class="col-md-6">
                         <div class="form-group mb-3">
                             <label class="form-label fw-bold">Thành Phố</label>
-                            <select id="thanhPhoDropdown" class="form-select">
-                                <option value="">-- Chọn Thành Phố --</option>
+                            <select id="ThanhPhoSelect" asp-for="Phuong.Quan.ThanhPhoId" class="form-control">
                                 @foreach (var tp in Model.ThanhPhos)
                                 {
-                                    <option value="@tp.Value" @(tp.Selected ? "selected" : "")>@tp.Text</option>
+                                    <option value="@tp.Value">@tp.Text</option>
                                 }
                             </select>
                         </div>
@@ -32,11 +31,10 @@
                     <div class="col-md-6">
                         <div class="form-group mb-3">
                             <label asp-for="Phuong.QuanId" class="form-label fw-bold">Quận/Huyện</label>
-                            <select asp-for="Phuong.QuanId" class="form-select" id="quanDropdown">
-                                <option value="">-- Chọn Quận/Huyện --</option>
+                            <select id="QuanSelect" asp-for="Phuong.QuanId" class="form-control">
                                 @foreach (var q in Model.Quans)
                                 {
-                                    <option value="@q.Value" @(q.Selected ? "selected" : "")>@q.Text</option>
+                                    <option value="@q.Value">@q.Text</option>
                                 }
                             </select>
                             <span asp-validation-for="Phuong.QuanId" class="text-danger"></span>
@@ -67,22 +65,28 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $('#thanhPhoDropdown').change(function () {
-                var thanhPhoId = $(this).val();
+    $(document).ready(function () {
+        $('#ThanhPhoSelect').change(function () {
+            var selectedThanhPhoId = $(this).val();
 
-                if (thanhPhoId) {
-                    $.getJSON('/QuanTriVien/Phuongs/GetQuansByThanhPho', { thanhPhoId: thanhPhoId }, function (data) {
-                        var quanDropdown = $('#quanDropdown');
-                        quanDropdown.empty();
-                        quanDropdown.append('<option value="">-- Chọn Quận/Huyện --</option>');
-                        $.each(data, function (i, quan) {
-                            quanDropdown.append('<option value="' + quan.quanId + '">' + quan.quanId + ' - ' + quan.tenQuan + '</option>');
-                        });
+            $.ajax({
+                url: '/QuanTriVien/Phuongs/GetQuansByThanhPho',
+                type: 'GET',
+                data: { thanhPhoId: selectedThanhPhoId },
+                success: function (data) {
+                    var quanSelect = $('#QuanSelect');
+                    quanSelect.empty(); // Clear old options
+                    $.each(data, function (index, item) {
+                        quanSelect.append($('<option>', {
+                            value: item.quanId,
+                            text: item.quanId + " - " + item.tenQuan
+                        }));
                     });
                 }
             });
         });
-    </script>
+    });
+</script>
 }

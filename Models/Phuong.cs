@@ -13,14 +13,17 @@ public partial class Phuong
     [Column("PhuongID")]
     [StringLength(20)]
     [Unicode(false)]
+    [Display(Name = "Mã phường")]
     public string PhuongId { get; set; }
 
     [StringLength(100)]
+    [Display(Name = "Tên phường")]
     public string TenPhuong { get; set; } = null!;
 
     [Column("QuanID")]
     [StringLength(20)]
     [Unicode(false)]
+    [Display(Name = "Mã quận")]
     public string QuanId { get; set; }
 
     [InverseProperty("Phuong")]
@@ -31,5 +34,6 @@ public partial class Phuong
 
     [ForeignKey("QuanId")]
     [InverseProperty("Phuongs")]
+    [Display(Name = "Quận")]
     public virtual Quan? Quan { get; set; }
 }
