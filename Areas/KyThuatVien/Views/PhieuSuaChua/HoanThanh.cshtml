@@ -1,0 +1,323 @@
+@model IEnumerable<QuanLySuaChua_BaoHanh.Models.PhieuSuaChua>
+
+@{
+    ViewData["Title"] = "Đơn sửa chữa đã hoàn thành";
+}
+
+<style>
+    .completed-card {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+    }
+    
+    .completed-card:hover {
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        transform: translateY(-5px);
+    }
+    
+    .completed-header {
+        background: linear-gradient(135deg, #DCFCE7, #A7F3D0);
+        padding: 16px 20px;
+        border-bottom: 1px solid #86EFAC;
+    }
+    
+    .completed-body {
+        padding: 20px;
+        flex: 1;
+    }
+    
+    .completed-footer {
+        padding: 16px 20px;
+        background-color: #F9FAFB;
+        border-top: 1px solid #E5E7EB;
+    }
+    
+    .badge-completed {
+        background-color: #DCFCE7;
+        color: #166534;
+        font-weight: 600;
+        font-size: 0.75rem;
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 10px;
+        border-radius: 6px;
+    }
+    
+    .badge-completed i {
+        margin-right: 4px;
+    }
+    
+    .completed-info {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .info-item {
+        display: flex;
+        align-items: flex-start;
+    }
+    
+    .info-icon {
+        width: 28px;
+        height: 28px;
+        background-color: #F3F4F6;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+        color: #4B5563;
+        flex-shrink: 0;
+    }
+    
+    .info-content {
+        flex: 1;
+    }
+    
+    .info-label {
+        display: block;
+        color: #6B7280;
+        font-size: 0.8rem;
+        margin-bottom: 2px;
+    }
+    
+    .info-value {
+        font-weight: 500;
+        color: #1F2937;
+    }
+    
+    .price-tag {
+        color: #047857;
+        font-weight: 600;
+    }
+    
+    .components-tag {
+        display: inline-flex;
+        align-items: center;
+        background-color: #F3F4F6;
+        color: #4B5563;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+    
+    .components-tag i {
+        margin-right: 6px;
+        color: #6B7280;
+    }
+    
+    .components-tag.has-components {
+        background-color: #DCFCE7;
+        color: #166534;
+    }
+    
+    .detail-btn {
+        background-color: #EFF6FF;
+        color: #1D4ED8;
+        border: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .detail-btn:hover {
+        background-color: #DBEAFE;
+        color: #1E40AF;
+        transform: translateY(-2px);
+    }
+    
+    .detail-btn i {
+        margin-right: 8px;
+    }
+    
+    .empty-state {
+        background-color: #F9FAFB;
+        border: 1px dashed #CBD5E1;
+        border-radius: 12px;
+        padding: 50px 20px;
+        text-align: center;
+    }
+    
+    .empty-icon {
+        font-size: 48px;
+        color: #94A3B8;
+        margin-bottom: 16px;
+    }
+    
+    .search-box {
+        position: relative;
+        margin-bottom: 24px;
+    }
+    
+    .search-box input {
+        padding-left: 40px;
+        border-radius: 8px;
+        border: 1px solid #E5E7EB;
+    }
+    
+    .search-icon {
+        position: absolute;
+        left: 14px;
+        top: calc(50% - 8px);
+        color: #9CA3AF;
+    }
+    
+    .date-badge {
+        display: inline-flex;
+        align-items: center;
+        background-color: #F3F4F6;
+        padding: 4px 8px;
+        border-radius: 6px;
+        color: #4B5563;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+    
+    .date-badge i {
+        margin-right: 4px;
+        color: #4B5563;
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fs-1 fw-bold mb-0">Đơn sửa chữa đã hoàn thành</h2>
+</div>
+
+
+<div class="search-box">
+    <i class="bi bi-search search-icon"></i>
+    <input type="text" id="completedSearchInput" class="form-control" placeholder="Tìm kiếm đơn đã hoàn thành..." />
+</div>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <i class="bi bi-check2-circle empty-icon d-block"></i>
+        <h5 class="fw-semibold">Không có đơn sửa chữa nào đã hoàn thành</h5>
+        <p class="text-muted">Hiện tại bạn không có đơn sửa chữa nào đã hoàn thành.</p>
+    </div>
+}
+else
+{
+    <div class="row completed-items">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 col-lg-4 mb-4 completed-item">
+                <div class="completed-card">
+                    <div class="completed-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 fw-bold text-success">@item.PhieuSuaChuaId</h5>
+                            <span class="badge-completed">
+                                <i class="bi bi-check2-circle"></i>
+                                Hoàn thành
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="completed-body">
+                        <div class="completed-info">
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="bi bi-person"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Khách hàng</span>
+                                    <span class="info-value">@item.KhachHang.HoTen</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="bi bi-calendar-check"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Ngày hoàn thành</span>
+                                    <span class="info-value">
+                                        <span class="date-badge">
+                                            <i class="bi bi-clock"></i>
+                                            @(item.NgayTra?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="bi bi-cash"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Tổng tiền</span>
+                                    <span class="info-value price-tag">
+                                        @(item.TongTien?.ToString("#,##0 VND") ?? "Chưa tính")
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="bi bi-tools"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Linh kiện sử dụng</span>
+                                    <span class="info-value">
+                                        @if (item.ChiTietSuaChuas.Count > 0)
+                                        {
+                                            <span class="components-tag has-components">
+                                                <i class="bi bi-gear-fill"></i>
+                                                @item.ChiTietSuaChuas.Count loại
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="components-tag">
+                                                <i class="bi bi-dash-circle"></i>
+                                                Không sử dụng linh kiện
+                                            </span>
+                                        }
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="completed-footer">
+                        <a asp-action="ChiTiet" asp-route-id="@item.PhieuSuaChuaId" class="btn detail-btn w-100">
+                            <i class="bi bi-eye"></i> Xem chi tiết
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Search functionality
+            const searchInput = document.getElementById('completedSearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    const items = document.querySelectorAll('.completed-item');
+                    
+                    items.forEach(item => {
+                        const itemContent = item.textContent.toLowerCase();
+                        if (itemContent.includes(searchTerm)) {
+                            item.style.display = '';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+}
