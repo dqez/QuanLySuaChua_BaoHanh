@@ -1,0 +1,48 @@
+﻿@model IEnumerable<QuanLySuaChua_BaoHanh.Models.Quan>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/QuanTriVien/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.QuanId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TenQuan)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ThanhPho)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuanId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TenQuan)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ThanhPho.ThanhPhoId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.QuanId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.QuanId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.QuanId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
