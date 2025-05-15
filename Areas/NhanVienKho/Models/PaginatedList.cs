@@ -14,7 +14,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Models
         public PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
         {
             PageIndex = pageIndex;
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+            TotalPages = Math.Max(1, (int)Math.Ceiling(count / (double)pageSize));
 
             this.AddRange(items);
         }
