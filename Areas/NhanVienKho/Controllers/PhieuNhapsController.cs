@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Models;
 using QuanLySuaChua_BaoHanh.Models;
 using QuanLySuaChua_BaoHanh.Services;
 
@@ -23,10 +24,24 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         }
 
         // GET: NhanVienKho/PhieuNhaps
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, int? pageNumber)
         {
-            var bHSC_DbContext = _context.PhieuNhaps.Include(p => p.Kho);
-            return View(await bHSC_DbContext.ToListAsync());
+            int pageSize = 10;
+            var phieuNhapQuery = _context.PhieuNhaps.AsQueryable();
+
+            ViewData["CurrentFilter"] = searchString;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                phieuNhapQuery = phieuNhapQuery.Where(pn =>
+                    pn.PhieuNhapId.Contains(searchString) ||
+                    pn.KhoId.Contains(searchString));
+            }
+
+            phieuNhapQuery = phieuNhapQuery.OrderBy(pn => pn.KhoId);
+            
+            return View(await PaginatedList<PhieuNhap>.CreateAsync(
+                phieuNhapQuery.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: NhanVienKho/PhieuNhaps/Details/5
