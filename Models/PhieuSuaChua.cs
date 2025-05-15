@@ -92,7 +92,7 @@ public partial class PhieuSuaChua
     [ForeignKey("KhachHangId")]
     [InverseProperty("PhieuSuaChuaKhachHangs")]
     [Display(Name="Mã Khách hàng")]
-    public virtual NguoiDung KhachHang { get; set; } = null!;
+    public virtual NguoiDung? KhachHang { get; set; }
 
     [ForeignKey("KyThuatId")]
     [InverseProperty("PhieuSuaChuaKyThuats")]
@@ -101,5 +101,5 @@ public partial class PhieuSuaChua
 
     [ForeignKey("PhuongId")]
     [InverseProperty("PhieuSuaChuas")]
-    public virtual Phuong Phuong { get; set; } = null!;
+    public virtual Phuong? Phuong { get; set; }
 }

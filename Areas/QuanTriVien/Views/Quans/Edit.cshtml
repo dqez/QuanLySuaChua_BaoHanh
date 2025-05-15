@@ -1,39 +1,56 @@
 ﻿@model QuanLySuaChua_BaoHanh.Models.Quan
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Chỉnh Sửa Quận/Huyện";
     Layout = "~/Areas/QuanTriVien/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>Edit</h1>
+<div class="container-fluid p-0">
+    <div class="mb-4">
+        <h1 style="font-family: 'Baloo 2', cursive; color: var(--blue-primary); font-weight: 600;">Chỉnh Sửa Quận/Huyện</h1>
+    </div>
 
-<h4>Quan</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="QuanId" />
-            <div class="form-group">
-                <label asp-for="TenQuan" class="control-label"></label>
-                <input asp-for="TenQuan" class="form-control" />
-                <span asp-validation-for="TenQuan" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ThanhPhoId" class="control-label"></label>
-                <select asp-for="ThanhPhoId" class="form-control" asp-items="ViewBag.ThanhPhoId"></select>
-                <span asp-validation-for="ThanhPhoId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="QuanId" />
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="QuanId" class="form-label fw-bold">Mã Quận/Huyện</label>
+                            <input asp-for="QuanId" class="form-control" readonly style="background-color: #e9ecef;" />
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label asp-for="TenQuan" class="form-label fw-bold">Tên Quận/Huyện</label>
+                            <input asp-for="TenQuan" class="form-control" />
+                            <span asp-validation-for="TenQuan" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="ThanhPhoId" class="form-label fw-bold">Thành Phố</label>
+                            <select asp-for="ThanhPhoId" class="form-select" asp-items="ViewBag.ThanhPhoId"></select>
+                            <span asp-validation-for="ThanhPhoId" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group d-flex gap-2 mt-3">
+                    <button type="submit" class="btn" style="background-color: var(--blue-primary); color: white;">
+                        <i class="bi bi-check-circle me-1"></i> Lưu Thay Đổi
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Quay Lại
+                    </a>
+                </div>            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

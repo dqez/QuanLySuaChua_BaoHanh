@@ -28,5 +28,5 @@ public partial class Quan
 
     [ForeignKey("ThanhPhoId")]
     [InverseProperty("Quans")]
-    public virtual ThanhPho ThanhPho { get; set; } = null!;
+    public virtual ThanhPho? ThanhPho { get; set; }
 }

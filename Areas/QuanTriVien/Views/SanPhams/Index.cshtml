@@ -1,46 +1,48 @@
 ﻿@model IEnumerable<QuanLySuaChua_BaoHanh.Models.SanPham>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Sản Phẩm";
     Layout = "~/Areas/QuanTriVien/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>Index</h1>
+<div class="container-fluid p-0">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 style="font-family: 'Baloo 2', cursive; color: var(--blue-primary); font-weight: 600;">Danh Sách Sản Phẩm</h1>
+        <a asp-action="Create" class="btn" style="background-color: var(--blue-primary); color: white;">
+            <i class="bi bi-plus-circle"></i> Thêm Mới
+        </a>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.MaBh)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TenSanPham)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NgayMua)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ThoiGianBaoHanh)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NgayHetHanBh)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MoTa)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DanhMuc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.KhachHang)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead style="background-color: var(--blue-primary); color: white;">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.MaBh)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TenSanPham)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.NgayMua)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ThoiGianBaoHanh)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.NgayHetHanBh)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.DanhMuc)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.KhachHang)
+                            </th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>    <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
@@ -59,20 +61,27 @@
                 @Html.DisplayFor(modelItem => item.NgayHetHanBh)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MoTa)
+                @Html.DisplayFor(modelItem => item.DanhMuc.TenDanhMuc)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DanhMuc.DanhMucId)
+                @Html.DisplayFor(modelItem => item.KhachHang.HoTen)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.KhachHang.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.SanPhamId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.SanPhamId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.SanPhamId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.SanPhamId" class="btn btn-sm" style="background-color: #ffc107; color: white;">
+                    <i class="bi bi-pencil-square"></i>
+                </a>
+                <a asp-action="Details" asp-route-id="@item.SanPhamId" class="btn btn-sm" style="background-color: var(--blue-primary); color: white;">
+                    <i class="bi bi-info-circle"></i>
+                </a>
+                <a asp-action="Delete" asp-route-id="@item.SanPhamId" class="btn btn-sm btn-danger">
+                    <i class="bi bi-trash"></i>
+                </a>
             </td>
         </tr>
 }
     </tbody>
-</table>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

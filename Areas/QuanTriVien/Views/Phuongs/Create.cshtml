@@ -1,38 +1,88 @@
-﻿@model QuanLySuaChua_BaoHanh.Models.Phuong
+﻿@model QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models.PhuongViewModel
+
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Thêm Phường/Xã";
     Layout = "~/Areas/QuanTriVien/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>Create</h1>
-
-<h4>Phuong</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="TenPhuong" class="control-label"></label>
-                <input asp-for="TenPhuong" class="form-control" />
-                <span asp-validation-for="TenPhuong" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="QuanId" class="control-label"></label>
-                <select asp-for="QuanId" class ="form-control" asp-items="ViewBag.QuanId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="container-fluid p-0">
+    <div class="mb-4">
+        <h1 style="font-family: 'Baloo 2', cursive; color: var(--blue-primary); font-weight: 600;">Thêm Phường/Xã Mới</h1>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-bold">Thành Phố</label>
+                            <select id="thanhPhoDropdown" class="form-select">
+                                <option value="">-- Chọn Thành Phố --</option>
+                                @foreach (var tp in Model.ThanhPhos)
+                                {
+                                    <option value="@tp.Value">@tp.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="Phuong.QuanId" class="form-label fw-bold">Quận/Huyện</label>
+                            <select asp-for="Phuong.QuanId" class="form-select" id="quanDropdown">
+                                <option value="">-- Chọn Quận/Huyện --</option>
+                                @foreach (var q in Model.Quans)
+                                {
+                                    <option value="@q.Value">@q.Text</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Phuong.QuanId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="Phuong.TenPhuong" class="form-label fw-bold">Tên Phường/Xã</label>
+                            <input asp-for="Phuong.TenPhuong" class="form-control" placeholder="Nhập tên phường/xã" />
+                            <span asp-validation-for="Phuong.TenPhuong" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group d-flex gap-2 mt-3">
+                    <button type="submit" class="btn" style="background-color: var(--blue-primary); color: white;">
+                        <i class="bi bi-check-circle me-1"></i> Lưu
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Quay Lại
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            $('#thanhPhoDropdown').change(function () {
+                var thanhPhoId = $(this).val();
+
+                if (thanhPhoId) {
+                    $.getJSON('/QuanTriVien/Phuongs/GetQuansByThanhPho', { thanhPhoId: thanhPhoId }, function (data) {
+                        var quanDropdown = $('#quanDropdown');
+                        quanDropdown.empty();
+                        quanDropdown.append('<option value="">-- Chọn Quận/Huyện --</option>');
+                        $.each(data, function (i, quan) {
+                            quanDropdown.append('<option value="' + quan.quanId + '">' + quan.quanId + ' - ' + quan.tenQuan + '</option>');
+                        });
+                    });
+                }
+            });
+        });
+    </script>
 }

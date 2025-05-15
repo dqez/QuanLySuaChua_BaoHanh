@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models;
 using QuanLySuaChua_BaoHanh.Models;
 using QuanLySuaChua_BaoHanh.Services;
 
@@ -25,7 +26,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         // GET: QuanTriVien/Phuongs
         public async Task<IActionResult> Index()
         {
-            var bHSC_DbContext = _context.Phuongs.Include(p => p.Quan);
+            var bHSC_DbContext = _context.Phuongs.Include(p => p.Quan).ThenInclude(q => q.ThanhPho);
             return View(await bHSC_DbContext.ToListAsync());
         }
 
@@ -39,6 +40,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
 
             var phuong = await _context.Phuongs
                 .Include(p => p.Quan)
+                .ThenInclude(q => q.ThanhPho)
                 .FirstOrDefaultAsync(m => m.PhuongId == id);
             if (phuong == null)
             {
@@ -51,8 +53,22 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         // GET: QuanTriVien/Phuongs/Create
         public IActionResult Create()
         {
-            ViewData["QuanId"] = new SelectList(_context.Quans, "QuanId", "QuanId");
-            return View();
+            var PviewModel = new PhuongViewModel
+            {
+                Phuong = new Phuong(),
+                Quans = _context.Quans.Select(q => new SelectListItem
+                {
+                    Value = q.QuanId,
+                    Text = q.QuanId + " - " + q.TenQuan
+                }),
+                ThanhPhos = _context.ThanhPhos.Select(tp => new SelectListItem
+                {
+                    Value = tp.ThanhPhoId,
+                    Text = tp.ThanhPhoId + " - " + tp.TenThanhPho
+                })
+            };
+            
+            return View(PviewModel);
         }
 
         // POST: QuanTriVien/Phuongs/Create
@@ -60,19 +76,34 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TenPhuong,QuanId")] Phuong phuong)
+        public async Task<IActionResult> Create(PhuongViewModel phuongViewModel)
         {
-            phuong.PhuongId = await _idGenerator.GeneratePhuongIdAsync();
+            phuongViewModel.Phuong.PhuongId = await _idGenerator.GeneratePhuongIdAsync();
+            ModelState.Remove("Phuong.PhuongId");
+            ModelState.Remove("Phuong.ThanhPhos");
+            ModelState.Remove("Phuong.Quans");
+            ModelState.Remove("ThanhPhos");
+            ModelState.Remove("Quans");
 
             ModelState.Remove("PhuongId");
             if (ModelState.IsValid)
             {
-                _context.Add(phuong);
+                _context.Add(phuongViewModel.Phuong);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["QuanId"] = new SelectList(_context.Quans, "QuanId", "QuanId", phuong.QuanId);
-            return View(phuong);
+            phuongViewModel.Quans = _context.Quans.Select(q => new SelectListItem
+            {
+                Value = q.QuanId,
+                Text = q.QuanId + " - " + q.TenQuan
+            });
+
+            phuongViewModel.ThanhPhos = _context.ThanhPhos.Select(tp => new SelectListItem
+            {
+                Value = tp.ThanhPhoId,
+                Text = tp.ThanhPhoId + " - " + tp.TenThanhPho
+            });
+            return View(phuongViewModel);
         }
 
         // GET: QuanTriVien/Phuongs/Edit/5
@@ -83,13 +114,35 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
                 return NotFound();
             }
 
-            var phuong = await _context.Phuongs.FindAsync(id);
+            var phuong = await _context.Phuongs
+                .Include(p => p.Quan)
+                .ThenInclude(q => q.ThanhPho)
+                .FirstOrDefaultAsync(m => m.PhuongId == id);
+                
             if (phuong == null)
             {
                 return NotFound();
             }
-            ViewData["QuanId"] = new SelectList(_context.Quans, "QuanId", "QuanId", phuong.QuanId);
-            return View(phuong);
+            
+            // Create view model for edit
+            var viewModel = new PhuongViewModel
+            {
+                Phuong = phuong,
+                ThanhPhos = _context.ThanhPhos.Select(tp => new SelectListItem
+                {
+                    Value = tp.ThanhPhoId,
+                    Text = tp.ThanhPhoId + " - " + tp.TenThanhPho,
+                    Selected = tp.ThanhPhoId == phuong.Quan.ThanhPhoId
+                }),
+                Quans = _context.Quans.Where(q => q.ThanhPhoId == phuong.Quan.ThanhPhoId).Select(q => new SelectListItem
+                {
+                    Value = q.QuanId,
+                    Text = q.QuanId + " - " + q.TenQuan,
+                    Selected = q.QuanId == phuong.QuanId
+                })
+            };
+            
+            return View(viewModel);
         }
 
         // POST: QuanTriVien/Phuongs/Edit/5
@@ -97,23 +150,27 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("PhuongId,TenPhuong,QuanId")] Phuong phuong)
+        public async Task<IActionResult> Edit(string id, PhuongViewModel viewModel)
         {
-            if (id != phuong.PhuongId)
+            if (id != viewModel.Phuong.PhuongId)
             {
                 return NotFound();
             }
+
+            ModelState.Remove("Phuong.Quan");
+            ModelState.Remove("ThanhPhos");
+            ModelState.Remove("Quans");
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(phuong);
+                    _context.Update(viewModel.Phuong);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PhuongExists(phuong.PhuongId))
+                    if (!PhuongExists(viewModel.Phuong.PhuongId))
                     {
                         return NotFound();
                     }
@@ -124,8 +181,26 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["QuanId"] = new SelectList(_context.Quans, "QuanId", "QuanId", phuong.QuanId);
-            return View(phuong);
+            
+            // Reload dropdown items
+            viewModel.ThanhPhos = _context.ThanhPhos.Select(tp => new SelectListItem
+            {
+                Value = tp.ThanhPhoId,
+                Text = tp.ThanhPhoId + " - " + tp.TenThanhPho
+            });
+
+            var thanhPhoId = viewModel.Phuong.Quan?.ThanhPhoId;
+
+            viewModel.Quans = _context.Quans
+                .Where(q => q.ThanhPhoId == thanhPhoId)
+                .Select(q => new SelectListItem
+                {
+                    Value = q.QuanId,
+                    Text = q.QuanId + " - " + q.TenQuan
+                });
+
+
+            return View(viewModel);
         }
 
         // GET: QuanTriVien/Phuongs/Delete/5
@@ -138,6 +213,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
 
             var phuong = await _context.Phuongs
                 .Include(p => p.Quan)
+                .ThenInclude(q => q.ThanhPho)
                 .FirstOrDefaultAsync(m => m.PhuongId == id);
             if (phuong == null)
             {
@@ -165,6 +241,18 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         private bool PhuongExists(string id)
         {
             return _context.Phuongs.Any(e => e.PhuongId == id);
+        }
+
+
+        [HttpGet]
+        public JsonResult GetQuansByThanhPho(string thanhPhoId)
+        {
+            var quans = _context.Quans
+                .Where(q => q.ThanhPhoId == thanhPhoId)
+                .Select(q => new { q.QuanId, q.TenQuan })
+                .ToList();
+
+            return Json(quans);
         }
     }
 }
