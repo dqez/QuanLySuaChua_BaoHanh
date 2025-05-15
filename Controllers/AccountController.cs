@@ -23,7 +23,6 @@ namespace QuanLySuaChua_BaoHanh.Controllers
             SignInManager<NguoiDung> signInManager,
             BHSC_DbContext context,
             IDGenerator idGenerator)
-
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -93,7 +92,35 @@ namespace QuanLySuaChua_BaoHanh.Controllers
         [HttpGet]
         public async Task<IActionResult> Login()
         {
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                // string[] roleNames = { "QuanTriVien", "KhachHang", "KyThuatVien", "NhanVienKho", "TuVanVien" };
+                if (await _userManager.IsInRoleAsync(user, "KhachHang"))
+                {
+                    return RedirectToAction("Index", "Home", new { area = "KhachHang" });
+                }
+                else if (await _userManager.IsInRoleAsync(user, "QuanTriVien"))
+                {
+                    return RedirectToAction("Index", "Home", new { area = "QuanTriVien" });
+                }
+                else if (await _userManager.IsInRoleAsync(user, "KyThuatVien"))
+                {
+                    return RedirectToAction("Index", "Home", new { area = "KyThuatVien" });
+                }
+                else if (await _userManager.IsInRoleAsync(user, "NhanVienKho"))
+                {
+                    return RedirectToAction("Index", "Home", new { area = "NhanVienKho" });
+                }
+                else if (await _userManager.IsInRoleAsync(user, "TuVanVien"))
+                {
+                    return RedirectToAction("Index", "Home", new { area = "TuVanVien" });
+                }
+                else
+                {
+                    return RedirectToAction("index", "home");
+                }
+            }
             return View();
         }
 

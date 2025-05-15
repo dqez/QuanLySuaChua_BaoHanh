@@ -1,0 +1,21 @@
+@if (TempData["Success"] != null)
+{
+    <div class="notification success">
+        <div class="notification-content">
+            <i class="bi bi-check-circle"></i>
+            <span>@TempData["Success"]</span>
+        </div>
+        <button class="notification-close">&times;</button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="notification error">
+        <div class="notification-content">
+            <i class="bi bi-exclamation-circle"></i>
+            <span>@TempData["Error"]</span>
+        </div>
+        <button class="notification-close">&times;</button>
+    </div>
+}

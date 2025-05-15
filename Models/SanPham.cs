@@ -44,6 +44,8 @@ public partial class SanPham
     [Display(Name = "Ngày bảo hành")]
     public int ThoiGianBaoHanh { get; set; }
 
+    public string? UrlHinhAnh { get; set; }
+
     [Column("NgayHetHanBH")]
     [Display(Name = "Ngày hết hạn bảo hành")]
     public DateOnly NgayHetHanBh { get; set; }

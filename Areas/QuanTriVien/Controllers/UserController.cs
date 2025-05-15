@@ -37,7 +37,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         // get: quantrivien/user
         public async Task<IActionResult> Index(string searchString, int? pageNumber)
         {
-             var pageSize = 10;
+            var pageSize = 10;
             var usersQuery = _userManager.Users.AsQueryable();
     
             ViewData["CurrentFilter"] = searchString;

@@ -1,55 +1,49 @@
 ﻿@model QuanLySuaChua_BaoHanh.Models.LinhKien
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Chi tiết linh kiện";
     Layout = "~/Areas/NhanVienKho/Views/Shared/_LayoutStashEmployee.cshtml";
 }
 
-<h1>Details</h1>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-info-circle"></i> Thông tin linh kiện
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Tên linh kiện</dt>
+                        <dd class="col-sm-8">@Model.TenLinhKien</dd>
 
-<div>
-    <h4>LinhKien</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TenLinhKien)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TenLinhKien)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SoLuongTon)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SoLuongTon)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DonGia)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DonGia)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PhamViSuDung)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PhamViSuDung)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GhiChu)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GhiChu)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DanhMuc)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DanhMuc.DanhMucId)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.LinhKienId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+                        <dt class="col-sm-4">Số lượng tồn</dt>
+                        <dd class="col-sm-8">@Model.SoLuongTon</dd>
+
+                        <dt class="col-sm-4">Đơn giá</dt>
+                        <dd class="col-sm-8">@Model.DonGia</dd>
+
+                        <dt class="col-sm-4">Phạm vi sử dụng</dt>
+                        <dd class="col-sm-8">@Model.PhamViSuDung</dd>
+
+                        <dt class="col-sm-4">Ghi chú</dt>
+                        <dd class="col-sm-8">@Model.GhiChu</dd>
+
+                        <dt class="col-sm-4">Danh mục</dt>
+                        <dd class="col-sm-8">@Model.DanhMuc?.DanhMucId</dd>
+                    </dl>
+                </div>
+                <div class="card-footer text-end">
+                    <a asp-action="Edit" asp-route-id="@Model?.LinhKienId" class="btn btn-warning me-2">
+                        <i class="bi bi-pencil"></i> Sửa
+                    </a>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Quay lại danh sách
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
