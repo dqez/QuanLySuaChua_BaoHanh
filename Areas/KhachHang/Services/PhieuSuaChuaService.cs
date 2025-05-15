@@ -28,13 +28,12 @@ namespace QuanLySuaChua_BaoHanh.Areas.KhachHang.Services
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
-            {
-                var phieuSuaChua = new PhieuSuaChua
+            {                var phieuSuaChua = new PhieuSuaChua
                 {
                     PhieuSuaChuaId = await _idGenerator.GenerateIdAsync_Date("PSC"),
                     KhachHangId = userId,
                     NgayGui = DateTime.Now,
-                    TrangThai = TrangThaiPhieu.ChoXacNhan.ToString(),
+                    TrangThai = QuanLySuaChua_BaoHanh.Enums.TrangThaiPhieu.ChoXacNhan.ToString(),
                     MoTaKhachHang = model.MoTaKhachHang,
                     DiaChiNhanTraSanPham = model.DiaChiNhanTraSanPham,
                     PhuongId = model.PhuongId

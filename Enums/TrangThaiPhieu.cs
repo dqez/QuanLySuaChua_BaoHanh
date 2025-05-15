@@ -20,9 +20,9 @@ namespace QuanLySuaChua_BaoHanh.Enums
         [Display(Name = "Chờ kiểm tra")]
         ChoKiemTra,
 
-        //kythuatvien xác nhận, không -> đã hủy
-        [Display(Name = "Khách đồng ý sửa")] 
-        KhachDongY,
+        // //kythuatvien xác nhận, không -> đã hủy
+        // [Display(Name = "Khách đồng ý sửa")] 
+        // KhachDongY,
         
         //ky thuat viên cập nhật linh kiện 
         [Display(Name = "Đang sửa chữa")]

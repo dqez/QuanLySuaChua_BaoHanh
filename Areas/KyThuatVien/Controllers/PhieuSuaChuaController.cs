@@ -36,7 +36,8 @@ namespace QuanLySuaChua_BaoHanh.Areas.KyThuatVien.Controllers
             }
             var phieuSuaChuas = await _context.PhieuSuaChuas
                 .Where(p => p.KyThuatId == user.Id &&
-                      (p.TrangThai == TrangThaiPhieu.DaPhanCong.ToString() || p.TrangThai == TrangThaiPhieu.ChoKiemTra.ToString()))
+                      (p.TrangThai == TrangThaiPhieu.DaPhanCong.ToString() ||
+                       p.TrangThai == TrangThaiPhieu.ChoKiemTra.ToString()))
                 .Include(p => p.KhachHang)
                 .Include(p => p.ChiTietSuaChuas)
                     .ThenInclude(c => c.LinhKien)
@@ -176,13 +177,13 @@ namespace QuanLySuaChua_BaoHanh.Areas.KyThuatVien.Controllers
             }
 
             var chiTietSuaChuaOlds = await _context.ChiTietSuaChuas
-                .FirstOrDefaultAsync(c => c.PhieuSuaChuaId == phieuSuaChuaId && c.SanPhamId == sanPhamId && linhKienId == null);
+                .FirstOrDefaultAsync(c => c.PhieuSuaChuaId == phieuSuaChuaId && c.SanPhamId == sanPhamId && c.LinhKienId == null);
            if(chiTietSuaChuaOlds != null)
            {
                 chiTietSuaChuaOlds.LinhKienId = linhKienId;
                 chiTietSuaChuaOlds.SoLuongLinhKien += soLuongLinhKien;
                 chiTietSuaChuaOlds.LoaiDon = sanPham.NgayHetHanBh > DateOnly.FromDateTime(DateTime.Now) ? "SuaChua" : "BaoHanh";
-                _context.ChiTietSuaChuas.Add(chiTietSuaChuaOlds);
+                _context.ChiTietSuaChuas.Update(chiTietSuaChuaOlds);
             }
             else
             {
@@ -195,12 +196,13 @@ namespace QuanLySuaChua_BaoHanh.Areas.KyThuatVien.Controllers
                     SoLuongLinhKien = soLuongLinhKien,
                     LoaiDon = sanPham.NgayHetHanBh > DateOnly.FromDateTime(DateTime.Now) ? "SuaChua" : "BaoHanh"
                 };
+
+                _context.ChiTietSuaChuas.Add(chiTietSuaChuaOlds);
             }               
 
             // Cập nhật số lượng tồn của linh kiện
             linhKien.SoLuongTon -= soLuongLinhKien;            
 
-            _context.ChiTietSuaChuas.Add(chiTietSuaChuaOlds);
             _context.Update(linhKien);
             await _context.SaveChangesAsync();
 

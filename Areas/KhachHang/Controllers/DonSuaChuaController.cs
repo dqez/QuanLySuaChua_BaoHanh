@@ -38,14 +38,13 @@ namespace QuanLySuaChua_BaoHanh.Areas.KhachHang.Controllers
                     .ThenInclude(c => c.SanPham)
                 .Where(p => p.KhachHangId == user.Id)
                 .OrderByDescending(p => p.NgayGui)
-                .ToListAsync();
-
-            ViewBag.AllOrders = allOrders;
-            ViewBag.PendingOrders = allOrders.Where(o => o.TrangThai == "ChoXacNhan").ToList();
-            ViewBag.ConfirmedOrders = allOrders.Where(o => o.TrangThai == "DaTiepNhan").ToList();
-            ViewBag.RepairingOrders = allOrders.Where(o => o.TrangThai == "DangSuaChua").ToList();
-            ViewBag.CompletedOrders = allOrders.Where(o => o.TrangThai == "HoanThanh").ToList();
-            ViewBag.CancelledOrders = allOrders.Where(o => o.TrangThai == "DaHuy").ToList();
+                .ToListAsync();            ViewBag.AllOrders = allOrders;
+            ViewBag.PendingOrders = allOrders.Where(o => o.TrangThai == Enums.TrangThaiPhieu.ChoXacNhan.ToString()).ToList();
+            ViewBag.ConfirmedOrders = allOrders.Where(o => o.TrangThai == Enums.TrangThaiPhieu.DaXacNhan.ToString() || o.TrangThai == Enums.TrangThaiPhieu.DaPhanCong.ToString()).ToList();
+            ViewBag.WaitingForInspectionOrders = allOrders.Where(o => o.TrangThai == Enums.TrangThaiPhieu.ChoKiemTra.ToString()).ToList();
+            ViewBag.RepairingOrders = allOrders.Where(o => o.TrangThai == Enums.TrangThaiPhieu.DangSuaChua.ToString()).ToList();
+            ViewBag.CompletedOrders = allOrders.Where(o => o.TrangThai == Enums.TrangThaiPhieu.HoanThanh.ToString() || o.TrangThai == Enums.TrangThaiPhieu.DaSuaXong.ToString() || o.TrangThai == Enums.TrangThaiPhieu.DaThanhToan.ToString()).ToList();
+            ViewBag.CancelledOrders = allOrders.Where(o => o.TrangThai == Enums.TrangThaiPhieu.DaHuy.ToString()).ToList();
 
          
             return View();
@@ -69,16 +68,25 @@ namespace QuanLySuaChua_BaoHanh.Areas.KhachHang.Controllers
                 return Json(new { success = false, message = "Không tìm thấy đơn sửa chữa" });
             }
 
-            if (order.TrangThai != "Chờ xác nhận")
+            if (order.TrangThai != Enums.TrangThaiPhieu.ChoXacNhan.ToString())
             {
                 return Json(new { success = false, message = "Chỉ có thể hủy đơn sửa chữa đang chờ xác nhận" });
             }
-
-            order.TrangThai = "Đã hủy";
-            await _context.SaveChangesAsync();
-
-            return Json(new { success = true });
+            
+            // Update trạng thái phiếu sửa chữa thành Đã Hủy
+            order.TrangThai = Enums.TrangThaiPhieu.DaHuy.ToString();
+            
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = "Hủy đơn sửa chữa thành công" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Lỗi khi hủy đơn sửa chữa: {ex.Message}" });
+            }
         }
+
         public async Task<IActionResult> ChiTiet(string id)
         {
             var user = await _userManager.GetUserAsync(User);
