@@ -47,7 +47,8 @@
             </dl>
 
             <form asp-area="NhanVienKho" asp-controller="LinhKiens" asp-action="Delete" method="post" class="mt-4">
-                <input type="hidden" name="id" value="@Model.LinhKienId" />
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="LinhKienId" />
                 <button type="submit" class="btn btn-danger me-2">
                     <i class="bi bi-trash"></i> Xác nhận xóa
                 </button>
