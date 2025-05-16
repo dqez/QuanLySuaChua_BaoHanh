@@ -1,0 +1,129 @@
+@model IEnumerable<QuanLySuaChua_BaoHanh.Models.LinhKien>
+
+@{
+    ViewData["Title"] = "Danh sách linh kiện";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fs-1 fw-bold mb-0">Quản lý linh kiện</h2>
+    <a href="#" class="btn btn-sm btn-info" id="btnShowStats">
+        <i class="bi bi-bar-chart"></i> Xem thống kê sử dụng
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm linh kiện...">
+                    <button class="btn btn-primary" type="button" id="btnSearch">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="d-flex justify-content-md-end">
+                    <select class="form-select w-50" id="categoryFilter">
+                        <option value="">Tất cả danh mục</option>
+                        @{
+                            var categories = Model.Where(l => l.DanhMuc != null)
+                                .Select(l => l.DanhMuc)
+                                .GroupBy(d => d.DanhMucId)
+                                .Select(g => g.First());
+                        }
+                        @foreach (var category in categories)
+                        {
+                            <option value="@category.TenDanhMuc">@category.TenDanhMuc</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover" id="componentsTable">
+                <thead class="table-light">
+                    <tr>
+                        <th>Mã linh kiện</th>
+                        <th>Tên linh kiện</th>
+                        <th>Danh mục</th>
+                        <th>Số lượng tồn</th>
+                        <th>Đơn giá</th>
+                        <th>Phạm vi sử dụng</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="@(item.SoLuongTon < 5 ? "table-danger" : "")">
+                            <td>@item.LinhKienId</td>
+                            <td>@item.TenLinhKien</td>
+                            <td>@(item.DanhMuc?.TenDanhMuc ?? "Không có danh mục")</td>
+                            <td>
+                                @item.SoLuongTon
+                                @if (item.SoLuongTon < 5)
+                                {
+                                    <span class="badge bg-danger ms-2">Sắp hết</span>
+                                }
+                            </td>
+                            <td>@item.DonGia.ToString("#,##0 VND")</td>
+                            <td>@(item.PhamViSuDung ?? "Không có")</td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.LinhKienId" class="btn btn-sm btn-info">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const btnSearch = document.getElementById('btnSearch');
+            const btnShowStats = document.getElementById('btnShowStats');
+            const table = document.getElementById('componentsTable');
+            const rows = table.querySelectorAll('tbody tr');
+
+            // Function to filter table rows
+            function filterTable() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const category = categoryFilter.value.toLowerCase();
+
+                rows.forEach(row => {
+                    const name = row.cells[1].textContent.toLowerCase();
+                    const code = row.cells[0].textContent.toLowerCase();
+                    const rowCategory = row.cells[2].textContent.toLowerCase();
+                    
+                    const matchesSearch = name.includes(searchTerm) || code.includes(searchTerm);
+                    const matchesCategory = category === '' || rowCategory.includes(category);
+                    
+                    row.style.display = matchesSearch && matchesCategory ? '' : 'none';
+                });
+            }
+
+            // Event listeners
+            btnSearch.addEventListener('click', filterTable);
+            searchInput.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    filterTable();
+                }
+            });
+            categoryFilter.addEventListener('change', filterTable);
+
+            // Stats button
+            btnShowStats.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.location.href = '@Url.Action("ThongKeSuDung", "LinhKien", new { area = "KyThuatVien" })';
+            });
+        });
+    </script>
+}

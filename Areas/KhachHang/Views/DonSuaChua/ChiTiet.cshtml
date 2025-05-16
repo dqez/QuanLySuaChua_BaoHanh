@@ -1,4 +1,5 @@
-﻿@model QuanLySuaChua_BaoHanh.Models.PhieuSuaChua
+﻿@using QuanLySuaChua_BaoHanh.Enums
+@model QuanLySuaChua_BaoHanh.Models.PhieuSuaChua
 @{
     ViewData["Title"] = "Chi tiết đơn sửa chữa #" + Model.PhieuSuaChuaId;
 }
@@ -14,9 +15,7 @@
     <!-- Nút quay lại -->
     <div class="mb-4">
         <a href="/KhachHang/DonSuaChua" class="btn btn-outline-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left me-2" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
-            </svg>
+            <i class="bi bi-arrow-left me-1"></i>
             Quay lại danh sách
         </a>
     </div>
@@ -25,67 +24,33 @@
     <div class="card mb-4 border-0 shadow-sm">
         <div class="card-header bg-white border-0 py-3">
             <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h4 class="mb-0">Đơn sửa chữa <span class="fw-bold text-primary">#@Model.PhieuSuaChuaId</span></h4>
-                    <p class="text-muted mb-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-event me-1" viewBox="0 0 16 16">
-                            <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
-                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
-                        </svg>
-                        Ngày gửi: @Model.NgayGui.ToString("dd/MM/yyyy HH:mm")
-                    </p>
-                </div>
-                <div class="status-badge @(Model.TrangThai switch {
-                    "ChoXacNhan" => "status-waiting",
-                    "DaTiepNhan" => "status-received",
-                    "DangSuaChua" => "status-repairing",
-                    "HoanThanh" => "status-completed",
-                    "DaHuy" => "status-cancelled",
-                    _ => "status-default"
-                })">
-                    @switch (Model.TrangThai)
+                <h3 class="mb-0 fw-bold">Phiếu sửa chữa #@Model.PhieuSuaChuaId</h3>
+                
+                @{
+                    string statusClass = Model.TrangThai switch
                     {
-                        case "ChoXacNhan":
-                            <svg class="status-icon me-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-                                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
-                            </svg>
-                            <span>Chờ xác nhận</span>
-                            break;
-                        case "DaTiepNhan":
-                            <svg class="status-icon me-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-                            </svg>
-                            <span>Đã tiếp nhận</span>
-                            break;
-                        case "DangSuaChua":
-                            <svg class="status-icon me-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M11.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-9.05 3.636a2 2 0 0 1 2.828 0l.144.144.742-.742a3 3 0 0 1 4.243 0l2.121 2.121a1 1 0 0 1-1.414 1.414l-2.121-2.121a1 1 0 0 0-1.414 0l-.742.742.147.146a2 2 0 1 1-2.828 0A3 3 0 0 1 10 3.969L12.031 6 11 7.031l-2.121-2.121a1 1 0 0 0-1.414 0L5.051 7.051a1 1 0 0 1-1.832-.748 2 2 0 0 1 .832-.664l4.945-2.613A3 3 0 0 0 8.88 2h.17a3 3 0 0 1 2.113.88l.1.1a1.99 1.99 0 0 1 .247.294 1 1 0 1 1-1.552 1.262 3.018 3.018 0 0 0-.363-.396l-1.131 1.131A1 1 0 0 1 9 6a1 1 0 0 1 .555.168l1.384-1.028a3 3 0 0 1 4.579 2.284 5.027 5.027 0 0 1-1.779 4.5l-1.9 1.773a1 1 0 1 1-1.366-1.463l1.9-1.773a3.026 3.026 0 0 0 1.078-2.533 1 1 0 0 0-1.527-.855L10 8l.478 2.874A1 1 0 0 1 9.1 12h-.17a3 3 0 0 1-2.112-.879l-.1-.099a1.982 1.982 0 0 1-.247-.295 1 1 0 1 1 1.551-1.262 3.016 3.016 0 0 0 .363.396l1.132-1.132A1 1 0 0 1 7 7.5a1 1 0 0 1-.555-.168L5.062 8.36a3 3 0 0 1-4.58-2.284 5.026 5.026 0 0 1 1.78-4.5l1.899-1.772a1 1 0 1 1 1.366 1.463l-1.9 1.773a3.026 3.026 0 0 0-1.078 2.533 1 1 0 0 0 1.527.855l1.023-.76L5 3l2.45 2.45z"/>
-                            </svg>
-                            <span>Đang sửa chữa</span>
-                            break;
-                        case "HoanThanh":
-                            <svg class="status-icon me-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0l7-7zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0z"/>
-                                <path d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708z"/>
-                            </svg>
-                            <span>Hoàn thành</span>
-                            break;
-                        case "DaHuy":
-                            <svg class="status-icon me-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
-                            </svg>
-                            <span>Đã hủy</span>
-                            break;
-                        default:
-                            <svg class="status-icon me-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
-                            </svg>
-                            <span>Không xác định</span>
-                            break;
+                        nameof(TrangThaiPhieu.ChoXacNhan) => "bg-warning text-dark",
+                        nameof(TrangThaiPhieu.DaXacNhan) => "bg-info text-white",
+                        nameof(TrangThaiPhieu.DaPhanCong) => "bg-primary text-white",
+                        nameof(TrangThaiPhieu.ChoKiemTra) => "bg-secondary text-white",
+                        nameof(TrangThaiPhieu.DangSuaChua) => "bg-primary text-white",
+                        nameof(TrangThaiPhieu.DaSuaXong) => "bg-success text-white",
+                        nameof(TrangThaiPhieu.DaThanhToan) => "bg-info text-white",
+                        nameof(TrangThaiPhieu.DangVanChuyen) => "bg-info text-white",
+                        nameof(TrangThaiPhieu.HoanThanh) => "bg-success text-white",
+                        nameof(TrangThaiPhieu.DaHuy) => "bg-danger text-white",
+                        _ => "bg-secondary text-white"
+                    };
+
+                    string statusText = "";
+                    foreach (var prop in typeof(TrangThaiPhieu).GetField(Model.TrangThai).GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.DisplayAttribute), false))
+                    {
+                        var displayAttr = (System.ComponentModel.DataAnnotations.DisplayAttribute)prop;
+                        statusText = displayAttr.Name;
                     }
-                </div>
+                }
+                
+                <span class="badge @statusClass px-3 py-2">@statusText</span>
             </div>
         </div>
     </div>
@@ -93,182 +58,194 @@
     <div class="row">
         <!-- Thông tin chung -->
         <div class="col-md-6 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
+            <div class="card border-0 shadow-sm h-100">
                 <div class="card-header bg-white border-0">
                     <h5 class="card-title mb-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-info-circle text-primary me-2" viewBox="0 0 16 16">
-                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-                        </svg>
+                        <i class="bi bi-info-circle me-2 text-primary"></i>
                         Thông tin chung
                     </h5>
                 </div>
                 <div class="card-body">
-                    <table class="table table-borderless">
-                        <tbody>
-                            <tr>
-                                <td class="fw-medium" style="width: 40%">Khách hàng:</td>
-                                <td>@Model.KhachHang.HoTen</td>
-                            </tr>
-                            <tr>
-                                <td class="fw-medium">Địa chỉ nhận/trả:</td>
-                                <td>@Model.DiaChiNhanTraSanPham</td>
-                            </tr>
-                            <tr>
-                                <td class="fw-medium">Kỹ thuật viên:</td>
-                                <td>@(Model.KyThuat != null ? Model.KyThuat.HoTen : "Chưa phân công")</td>
-                            </tr>
-                            <tr>
-                                <td class="fw-medium">Ngày hẹn:</td>
-                                <td>@(Model.NgayHen.HasValue ? Model.NgayHen.Value.ToString("dd/MM/yyyy HH:mm") : "Chưa xác định")</td>
-                            </tr>
-                            <tr>
-                                <td class="fw-medium">Ngày trả:</td>
-                                <td>@(Model.NgayTra.HasValue ? Model.NgayTra.Value.ToString("dd/MM/yyyy HH:mm") : "Chưa hoàn thành")</td>
-                            </tr>
-                            @if (Model.TrangThai == "HoanThanh" && Model.NgayThanhToan.HasValue)
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between px-0">
+                            <span class="text-muted">Ngày gửi:</span>
+                            <strong>@Model.NgayGui.ToString("dd/MM/yyyy HH:mm")</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between px-0">
+                            <span class="text-muted">Khách hàng:</span>
+                            <strong>@Model.KhachHang.HoTen</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between px-0">
+                            <span class="text-muted">Số điện thoại:</span>
+                            <strong>@Model.KhachHang.PhoneNumber</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between px-0">
+                            <span class="text-muted">Địa chỉ nhận/trả:</span>
+                            <strong>@Model.DiaChiNhanTraSanPham</strong>
+                        </li>                        
+                        @if (Model.NgayHen.HasValue)
+                        {
+                            @if (Model.TrangThai == nameof(TrangThaiPhieu.ChoKiemTra))
                             {
-                                <tr>
-                                    <td class="fw-medium">Ngày thanh toán:</td>
-                                    <td>@Model.NgayThanhToan.Value.ToString("dd/MM/yyyy HH:mm")</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-medium">Phương thức thanh toán:</td>
-                                    <td>@Model.PhuongThucThanhToan</td>
-                                </tr>
+                                <li class="list-group-item d-flex justify-content-between px-0 bg-warning-subtle">
+                                    <span class="text-muted">
+                                        <i class="bi bi-clock-history text-warning me-1"></i>
+                                        <strong class="text-warning">Ngày hẹn kiểm tra:</strong>
+                                    </span>
+                                    <strong class="text-warning">@Model.NgayHen.Value.ToString("dd/MM/yyyy HH:mm")</strong>
+                                </li>
                             }
-                        </tbody>
-                    </table>
+                            else
+                            {
+                                <li class="list-group-item d-flex justify-content-between px-0">
+                                    <span class="text-muted">Ngày hẹn kiểm tra:</span>
+                                    <strong>@Model.NgayHen.Value.ToString("dd/MM/yyyy HH:mm")</strong>
+                                </li>
+                            }
+                        }
+                    </ul>
                 </div>
             </div>
         </div>
 
         <!-- Mô tả và ghi chú -->
         <div class="col-md-6 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
+            <div class="card border-0 shadow-sm h-100">
                 <div class="card-header bg-white border-0">
                     <h5 class="card-title mb-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chat-left-text text-primary me-2" viewBox="0 0 16 16">
-                            <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-2.5a2 2 0 0 0-1.6.8L8 14.333 6.1 11.8a2 2 0 0 0-1.6-.8H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-                            <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
-                        </svg>
-                        Mô tả vấn đề
+                        <i class="bi bi-chat-left-text me-2 text-primary"></i>
+                        Mô tả và ghi chú
                     </h5>
                 </div>
                 <div class="card-body">
-                    <div class="mb-4">
-                        <h6 class="fw-medium text-muted mb-2">Mô tả của khách hàng:</h6>
-                        <p class="border-start border-3 border-primary ps-3 py-1">@Model.MoTaKhachHang</p>
+                    <div class="mb-3">
+                        <label class="text-muted mb-2">Mô tả vấn đề:</label>
+                        <p class="border rounded p-3 mb-0 bg-light">@(string.IsNullOrEmpty(Model.MoTaKhachHang) ? "Không có mô tả" : Model.MoTaKhachHang)</p>
                     </div>
                     
-                    @if (!string.IsNullOrEmpty(Model.GhiChu))
-                    {
-                        <div>
-                            <h6 class="fw-medium text-muted mb-2">Ghi chú của nhân viên:</h6>
-                            <p class="border-start border-3 border-warning ps-3 py-1">@Model.GhiChu</p>
-                        </div>
-                    }
+                    @* @if (!string.IsNullOrEmpty(Model.DanhGiaKyThuat)) *@
+                    @* { *@
+                    @*     <div> *@
+                    @*         <label class="text-muted mb-2">Đánh giá kỹ thuật:</label> *@
+                    @*         <p class="border rounded p-3 mb-0 bg-light">@Model.DanhGiaKyThuat</p> *@
+                    @*     </div> *@
+                    @* } *@
                 </div>
             </div>
         </div>
-    </div>    <!-- Tiến trình xử lý -->
-    @if (Model.TrangThai != "DaHuy")
+    </div>
+
+    <!-- Tiến trình xử lý -->
+    @if (Model.TrangThai != nameof(TrangThaiPhieu.DaHuy))
     {
         <div class="card mb-4 border-0 shadow-sm">
             <div class="card-header bg-white border-0">
                 <h5 class="card-title mb-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bar-chart-steps text-primary me-2" viewBox="0 0 16 16">
-                        <path d="M.5 0a.5.5 0 0 1 .5.5v15a.5.5 0 0 1-1 0V.5A.5.5 0 0 1 .5 0zM2 1.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-6a.5.5 0 0 1-.5-.5v-1zm2 4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1z"/>
-                    </svg>
+                    <i class="bi bi-arrow-repeat me-2 text-primary"></i>
                     Tiến trình xử lý
                 </h5>
             </div>
             <div class="card-body">
-            <!-- Visual progress bar -->
-                <div class="progress-tracker mb-4">
-                    <div class="progress-step @(Model.TrangThai != "ChoXacNhan" && Model.TrangThai != "DaHuy" ? "completed" : (Model.TrangThai == "ChoXacNhan" ? "active" : ""))">
-                        <div class="step-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
-                                <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-                                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
-                            </svg>
-                        </div>
-                        <div class="step-label">Chờ xác nhận</div>
-                    </div>
-                    <div class="progress-step @(Model.TrangThai == "DaTiepNhan" || Model.TrangThai == "DangSuaChua" || Model.TrangThai == "HoanThanh" ? "completed" : "")">
-                        <div class="step-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
-                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-                            </svg>
-                        </div>
-                        <div class="step-label">Đã tiếp nhận</div>
-                    </div>
-                    <div class="progress-step @(Model.TrangThai == "DangSuaChua" || Model.TrangThai == "HoanThanh" ? "completed" : "")">
-                        <div class="step-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-tools" viewBox="0 0 16 16">
-                                <path d="M1 0 0 1l2.2 3.081a1 1 0 0 0 .815.419h.07a1 1 0 0 1 .708.293l2.675 2.675-2.617 2.654A3.003 3.003 0 0 0 0 13a3 3 0 1 0 5.878-.851l2.654-2.617.968.968-.305.914a1 1 0 0 0 .242 1.023l3.27 3.27a.997.997 0 0 0 1.414 0l1.586-1.586a.997.997 0 0 0 0-1.414l-3.27-3.27a1 1 0 0 0-1.023-.242L10.5 9.5l-.96-.96 2.68-2.643A3.005 3.005 0 0 0 16 3c0-.269-.035-.53-.102-.777l-2.14 2.141L12 4l-.364-1.757L13.777.102a3 3 0 0 0-3.675 3.68L7.462 6.46 4.793 3.793a1 1 0 0 1-.293-.707v-.071a1 1 0 0 0-.419-.814L1 0zm9.646 10.646a.5.5 0 0 1 .708 0l2.914 2.915a.5.5 0 0 1-.707.707l-2.915-2.914a.5.5 0 0 1 0-.708zM3 11l.471.242.529.026.287.445.445.287.026.529L5 13l-.242.471-.026.529-.445.287-.287.445-.529.026L3 15l-.471-.242L2 14.732l-.287-.445L1.268 14l-.026-.529L1 13l.242-.471.026-.529.445-.287.287-.445.529-.026L3 11z"/>
-                            </svg>
-                        </div>
-                        <div class="step-label">Đang sửa chữa</div>
-                    </div>
-                    <div class="progress-step @(Model.TrangThai == "HoanThanh" ? "completed" : "")">
-                        <div class="step-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-seam" viewBox="0 0 16 16">
-                                <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2l-2.218-.887zm3.564 1.426L5.596 5 8 5.961 14.154 3.5l-2.404-.961zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z"/>
-                            </svg>
-                        </div>
-                        <div class="step-label">Hoàn thành</div>
-                    </div>
-                </div>
+                <div class="repair-timeline">
+                    @{
+                        bool isChoXacNhanActive = true;
+                        bool isDaXacNhanActive = Model.TrangThai != nameof(TrangThaiPhieu.ChoXacNhan) && Model.TrangThai != nameof(TrangThaiPhieu.DaHuy);
+                        bool isDaPhanCongActive = Model.TrangThai != nameof(TrangThaiPhieu.ChoXacNhan) && Model.TrangThai != nameof(TrangThaiPhieu.DaXacNhan) && Model.TrangThai != nameof(TrangThaiPhieu.DaHuy);
+                        bool isChoKiemTraActive = Model.TrangThai == nameof(TrangThaiPhieu.ChoKiemTra) || Model.TrangThai == nameof(TrangThaiPhieu.DangSuaChua) || Model.TrangThai == nameof(TrangThaiPhieu.DaSuaXong) || Model.TrangThai == nameof(TrangThaiPhieu.DaThanhToan) || Model.TrangThai == nameof(TrangThaiPhieu.DangVanChuyen) || Model.TrangThai == nameof(TrangThaiPhieu.HoanThanh);
+                        bool isDangSuaChuaActive = Model.TrangThai == nameof(TrangThaiPhieu.DangSuaChua) || Model.TrangThai == nameof(TrangThaiPhieu.DaSuaXong) || Model.TrangThai == nameof(TrangThaiPhieu.DaThanhToan) || Model.TrangThai == nameof(TrangThaiPhieu.DangVanChuyen) || Model.TrangThai == nameof(TrangThaiPhieu.HoanThanh);
+                        bool isDaSuaXongActive = Model.TrangThai == nameof(TrangThaiPhieu.DaSuaXong) || Model.TrangThai == nameof(TrangThaiPhieu.DaThanhToan) || Model.TrangThai == nameof(TrangThaiPhieu.DangVanChuyen) || Model.TrangThai == nameof(TrangThaiPhieu.HoanThanh);
+                        bool isDaThanhToanActive = Model.TrangThai == nameof(TrangThaiPhieu.DaThanhToan) || Model.TrangThai == nameof(TrangThaiPhieu.DangVanChuyen) || Model.TrangThai == nameof(TrangThaiPhieu.HoanThanh);
+                        bool isDangVanChuyenActive = Model.TrangThai == nameof(TrangThaiPhieu.DangVanChuyen) || Model.TrangThai == nameof(TrangThaiPhieu.HoanThanh);
+                        bool isHoanThanhActive = Model.TrangThai == nameof(TrangThaiPhieu.HoanThanh);
+                    }
 
-                <div class="process-timeline">
-                    <div class="timeline-item @(Model.TrangThai != "ChoXacNhan" && Model.TrangThai != "DaHuy" ? "completed" : (Model.TrangThai == "ChoXacNhan" ? "active" : ""))">
-                        <div class="timeline-badge">
-                            <i class="bi bi-1-circle"></i>
+                    <div class="timeline-item @(isChoXacNhanActive ? "active" : "")">
+                        <div class="timeline-icon">
+                            <i class="bi bi-hourglass-split"></i>
                         </div>
                         <div class="timeline-content">
                             <h6>Chờ xác nhận</h6>
-                            <p class="timeline-date">@Model.NgayGui.ToString("dd/MM/yyyy HH:mm")</p>
-                            <p class="timeline-desc">Đơn sửa chữa đã được gửi và đang chờ xác nhận từ cửa hàng</p>
+                            <p>Phiếu sửa chữa đang chờ tư vấn viên xác nhận.</p>
                         </div>
                     </div>
                     
-                    <div class="timeline-item @(Model.TrangThai == "DaTiepNhan" || Model.TrangThai == "DangSuaChua" || Model.TrangThai == "HoanThanh" ? "completed" : "")">
-                        <div class="timeline-badge">
-                            <i class="bi bi-2-circle"></i>
+                    <div class="timeline-item @(isDaXacNhanActive ? "active" : "")">
+                        <div class="timeline-icon">
+                            <i class="bi bi-check-circle"></i>
                         </div>
                         <div class="timeline-content">
-                            <h6>Đã tiếp nhận</h6>
-                            <p class="timeline-desc">Đơn hàng đã được tiếp nhận, kỹ thuật viên sẽ liên hệ với bạn</p>
-                            @if (Model.TrangThai != "ChoXacNhan" && Model.NgayHen.HasValue)
-                            {
-                                <p class="timeline-date">Ngày hẹn: @Model.NgayHen.Value.ToString("dd/MM/yyyy HH:mm")</p>
-                            }
+                            <h6>Đã xác nhận</h6>
+                            <p>Phiếu sửa chữa đã được tư vấn viên xác nhận.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item @(isDaPhanCongActive ? "active" : "")">
+                        <div class="timeline-icon">
+                            <i class="bi bi-person-check"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Đã phân công</h6>
+                            <p>Đơn sửa chữa đã được phân công cho kỹ thuật viên.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item @(isChoKiemTraActive ? "active" : "")">
+                        <div class="timeline-icon">
+                            <i class="bi bi-tools"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Chờ kiểm tra</h6>
+                            <p>Kỹ thuật viên đang chờ kiểm tra sản phẩm.</p>
                         </div>
                     </div>
 
-                    <div class="timeline-item @(Model.TrangThai == "DangSuaChua" || Model.TrangThai == "HoanThanh" ? "completed" : "")">
-                        <div class="timeline-badge">
-                            <i class="bi bi-3-circle"></i>
+                    <div class="timeline-item @(isDangSuaChuaActive ? "active" : "")">
+                        <div class="timeline-icon">
+                            <i class="bi bi-gear-wide-connected"></i>
                         </div>
                         <div class="timeline-content">
                             <h6>Đang sửa chữa</h6>
-                            <p class="timeline-desc">Sản phẩm của bạn đang được sửa chữa</p>
+                            <p>Sản phẩm đang được sửa chữa.</p>
                         </div>
                     </div>
                     
-                    <div class="timeline-item @(Model.TrangThai == "HoanThanh" ? "completed" : "")">
-                        <div class="timeline-badge">
-                            <i class="bi bi-4-circle"></i>
+                    <div class="timeline-item @(isDaSuaXongActive ? "active" : "")">
+                        <div class="timeline-icon">
+                            <i class="bi bi-check-all"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Đã sửa xong</h6>
+                            <p>Sản phẩm đã được sửa chữa xong.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item @(isDaThanhToanActive ? "active" : "")">
+                        <div class="timeline-icon">
+                            <i class="bi bi-credit-card"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Đã thanh toán</h6>
+                            <p>Khách hàng đã thanh toán chi phí sửa chữa.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item @(isDangVanChuyenActive ? "active" : "")">
+                        <div class="timeline-icon">
+                            <i class="bi bi-truck"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Đang vận chuyển</h6>
+                            <p>Sản phẩm đang được vận chuyển về cho khách hàng.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item @(isHoanThanhActive ? "active" : "")">
+                        <div class="timeline-icon">
+                            <i class="bi bi-trophy"></i>
                         </div>
                         <div class="timeline-content">
                             <h6>Hoàn thành</h6>
-                            <p class="timeline-desc">Đơn sửa chữa đã hoàn thành và sẵn sàng để giao</p>
-                            @if (Model.TrangThai == "HoanThanh" && Model.NgayTra.HasValue)
-                            {
-                                <p class="timeline-date">Ngày trả: @Model.NgayTra.Value.ToString("dd/MM/yyyy HH:mm")</p>
-                            }
+                            <p>Quá trình sửa chữa đã hoàn tất.</p>
                         </div>
                     </div>
                 </div>
@@ -280,143 +257,42 @@
     <div class="card mb-4 border-0 shadow-sm">
         <div class="card-header bg-white border-0">
             <h5 class="card-title mb-0">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-seam text-primary me-2" viewBox="0 0 16 16">
-                    <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2l-2.218-.887zm3.564 1.426L5.596 5 8 5.961 14.154 3.5l-2.404-.961zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z"/>
-                </svg>
-                Sản phẩm cần sửa chữa
+                <i class="bi bi-box-seam me-2 text-primary"></i>
+                Sản phẩm cần sửa
             </h5>
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover product-table">
-                    <thead class="table-light">
+                <table class="table table-hover">
+                    <thead class="bg-light">
                         <tr>
-                            <th scope="col">STT</th>
+                            <th scope="col">Mã SP</th>
                             <th scope="col">Tên sản phẩm</th>
-                            <th scope="col">Danh mục</th>
-                            <th scope="col">Ngày mua</th>
+                            <th scope="col">Loại</th>
                             <th scope="col">Bảo hành</th>
-                            <th scope="col">Trạng thái BH</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @{int i = 1;}
                         @foreach (var item in Model.ChiTietSuaChuas)
                         {
-                            <tr class="product-row">
-                                <td>@(i++)</td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="product-icon me-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-laptop" viewBox="0 0 16 16">
-                                                <path d="M13.5 3a.5.5 0 0 1 .5.5V11H2V3.5a.5.5 0 0 1 .5-.5h11zm-11-1A1.5 1.5 0 0 0 1 3.5V12h14V3.5A1.5 1.5 0 0 0 13.5 2h-11zM0 12.5h16a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5z"/>
-                                            </svg>
-                                        </div>
-                                        <span>@item.SanPham.TenSanPham</span>
-                                    </div>
-                                </td>
-                                <td>@item.SanPham.DanhMuc.TenDanhMuc</td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-calendar-check me-1 text-primary" viewBox="0 0 16 16">
-                                            <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
-                                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
-                                        </svg>
-                                        @item.SanPham.NgayMua.ToString("dd/MM/yyyy")
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-shield-check me-1 text-primary" viewBox="0 0 16 16">
-                                            <path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z"/>
-                                            <path d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
-                                        </svg>
-                                        @item.SanPham.ThoiGianBaoHanh tháng
-                                    </div>
-                                </td>
+                            <tr>
+                                <td>@item.SanPhamId</td>
+                                <td>@item.SanPham.TenSanPham</td>
+                                <td>@item.LoaiDon</td>
                                 <td>
                                     @{
-                                        bool conBaoHanh = DateOnly.FromDateTime(DateTime.Now) <= item.SanPham.NgayHetHanBh;
-                                        <span class="badge @(conBaoHanh ? "bg-success" : "bg-danger") warranty-badge">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-patch-check me-1" viewBox="0 0 16 16">
-                                                <path fill-rule="evenodd" d="M10.354 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
-                                                <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911l-1.318.016z"/>
-                                            </svg>
-                                            @(conBaoHanh ? "Còn bảo hành" : "Hết bảo hành")
-                                        </span>
+                                        bool conBaoHanh = item.SanPham.NgayHetHanBh > DateOnly.FromDateTime(DateTime.Now);
+                                    }
+                                    @if (conBaoHanh)
+                                    {
+                                        <span class="badge bg-success">Còn bảo hành</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Hết bảo hành</span>
                                     }
                                 </td>
                             </tr>
-                            
-                            @if (Model.TrangThai == "DangSuaChua" || Model.TrangThai == "HoanThanh")
-                            {
-                                <tr>
-                                    <td colspan="6" class="bg-light repair-details">
-                                        <div class="p-3">
-                                            <h6 class="mb-3">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tools me-1" viewBox="0 0 16 16">
-                                                    <path d="M1 0 0 1l2.2 3.081a1 1 0 0 0 .815.419h.07a1 1 0 0 1 .708.293l2.675 2.675-2.617 2.654A3.003 3.003 0 0 0 0 13a3 3 0 1 0 5.878-.851l2.654-2.617.968.968-.305.914a1 1 0 0 0 .242 1.023l3.27 3.27a.997.997 0 0 0 1.414 0l1.586-1.586a.997.997 0 0 0 0-1.414l-3.27-3.27a1 1 0 0 0-1.023-.242L10.5 9.5l-.96-.96 2.68-2.643A3.005 3.005 0 0 0 16 3c0-.269-.035-.53-.102-.777l-2.14 2.141L12 4l-.364-1.757L13.777.102a3 3 0 0 0-3.675 3.68L7.462 6.46 4.793 3.793a1 1 0 0 1-.293-.707v-.071a1 1 0 0 0-.419-.814L1 0zm9.646 10.646a.5.5 0 0 1 .708 0l2.914 2.915a.5.5 0 0 1-.707.707l-2.915-2.914a.5.5 0 0 1 0-.708zM3 11l.471.242.529.026.287.445.445.287.026.529L5 13l-.242.471-.026.529-.445.287-.287.445-.529.026L3 15l-.471-.242L2 14.732l-.287-.445L1.268 14l-.026-.529L1 13l.242-.471.026-.529.445-.287.287-.445.529-.026L3 11z"/>
-                                                </svg>
-                                                Thông tin sửa chữa
-                                            </h6>
-                                            <div class="row g-3">
-                                                <div class="col-md-4">
-                                                    <div class="info-card">
-                                                        <div class="info-icon">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-tag" viewBox="0 0 16 16">
-                                                                <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0z"/>
-                                                                <path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1zm0 5.586 7 7L13.586 9l-7-7H2v4.586z"/>
-                                                            </svg>
-                                                        </div>
-                                                        <div class="info-content">
-                                                            <span class="info-label">Loại đơn</span>
-                                                            <span class="info-value">@item.LoaiDon</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                
-                                                @if (item.LinhKienId != null)
-                                                {
-                                                    <div class="col-md-4">
-                                                        <div class="info-card">
-                                                            <div class="info-icon">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cpu-fill" viewBox="0 0 16 16">
-                                                                    <path d="M6.5 6a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
-                                                                    <path d="M5.5.5a.5.5 0 0 0-1 0V2A2.5 2.5 0 0 0 2 4.5H.5a.5.5 0 0 0 0 1H2v1H.5a.5.5 0 0 0 0 1H2v1H.5a.5.5 0 0 0 0 1H2v1H.5a.5.5 0 0 0 0 1H2A2.5 2.5 0 0 0 4.5 14v1.5a.5.5 0 0 0 1 0V14h1v1.5a.5.5 0 0 0 1 0V14h1v1.5a.5.5 0 0 0 1 0V14h1v1.5a.5.5 0 0 0 1 0V14a2.5 2.5 0 0 0 2.5-2.5h1.5a.5.5 0 0 0 0-1H14v-1h1.5a.5.5 0 0 0 0-1H14v-1h1.5a.5.5 0 0 0 0-1H14v-1h1.5a.5.5 0 0 0 0-1H14A2.5 2.5 0 0 0 11.5 2V.5a.5.5 0 0 0-1 0V2h-1V.5a.5.5 0 0 0-1 0V2h-1V.5a.5.5 0 0 0-1 0V2h-1V.5zm1 4.5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5v-3A1.5 1.5 0 0 1 6.5 5z"/>
-                                                                </svg>
-                                                            </div>
-                                                            <div class="info-content">
-                                                                <span class="info-label">Linh kiện thay thế</span>
-                                                                <span class="info-value">@item.LinhKien.TenLinhKien</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="info-card">
-                                                            <div class="info-icon">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-123" viewBox="0 0 16 16">
-                                                                    <path d="M2.873 11.297V4.142H1.699L0 5.379v1.137l1.64-1.18h.06v5.961h1.174Zm3.213-5.09v-.063c0-.618.44-1.169 1.196-1.169.676 0 1.174.44 1.174 1.106 0 .624-.42 1.101-.807 1.526L4.99 10.553v.744h4.78v-.99H6.643v-.069L8.41 8.252c.65-.724 1.237-1.332 1.237-2.27C9.646 4.849 8.723 4 7.308 4c-1.573 0-2.36 1.064-2.36 2.15v.057h1.138Zm6.559 1.883h.786c.823 0 1.374.481 1.379 1.179.01.707-.55 1.216-1.421 1.21-.77-.005-1.326-.419-1.379-.953h-1.095c.042 1.053.938 1.918 2.464 1.918 1.478 0 2.642-.839 2.62-2.144-.02-1.143-.922-1.651-1.551-1.714v-.063c.535-.09 1.347-.66 1.326-1.678-.026-1.053-.933-1.855-2.359-1.845-1.5.005-2.317.88-2.348 1.898h1.116c.032-.498.498-.944 1.206-.944.703 0 1.206.435 1.206 1.07.005.64-.504 1.106-1.2 1.106h-.75v.96Z"/>
-                                                                </svg>
-                                                            </div>
-                                                            <div class="info-content">
-                                                                <span class="info-label">Số lượng</span>
-                                                                <span class="info-value">@item.SoLuongLinhKien</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                }
-                                            </div>
-                                            @if (!string.IsNullOrEmpty(item.DanhGiaKyThuat))
-                                            {
-                                                <div class="mt-3 pt-2 border-top">
-                                                    <h6 class="text-muted mb-2">Đánh giá kỹ thuật:</h6>
-                                                    <div class="tech-evaluation">@item.DanhGiaKyThuat</div>
-                                                </div>
-                                            }
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
                         }
                     </tbody>
                 </table>
@@ -428,56 +304,68 @@
     <div class="card mb-4 border-0 shadow-sm">
         <div class="card-header bg-white border-0">
             <h5 class="card-title mb-0">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-currency-dollar text-primary me-2" viewBox="0 0 16 16">
-                    <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718H4zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73l.348.086z"/>
-                </svg>
+                <i class="bi bi-currency-dollar me-2 text-primary"></i>
                 Thông tin chi phí
             </h5>
         </div>
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <table class="table table-borderless">
-                        <tbody>
+            @if (Model.ChiTietSuaChuas.Any(c => c.LinhKien != null))
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="bg-light">
                             <tr>
-                                <td style="width: 50%">Phí vận chuyển:</td>
-                                <td class="text-end">@(Model.PhiVanChuyen.HasValue ? $"{Model.PhiVanChuyen.Value:N0} VNĐ" : "0 VNĐ")</td>
+                                <th>Tên linh kiện</th>
+                                <th>Số lượng</th>
+                                <th class="text-end">Đơn giá</th>
+                                <th class="text-end">Thành tiền</th>
                             </tr>
-                            @if (Model.KhoangCach.HasValue)
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.ChiTietSuaChuas.Where(c => c.LinhKienId != null))
                             {
                                 <tr>
-                                    <td>Khoảng cách:</td>
-                                    <td class="text-end">@Model.KhoangCach.Value.ToString("F1") km</td>
+                                    <td>@item.LinhKien.TenLinhKien</td>
+                                    <td>@item.SoLuongLinhKien</td>
+                                    <td class="text-end">@item.LinhKien.DonGia.ToString("N0") đ</td>
+                                    <td class="text-end">@((item.SoLuongLinhKien * item.LinhKien.DonGia).ToString("N0")) đ</td>
                                 </tr>
                             }
-                            <tr class="fw-bold">
-                                <td>Tổng chi phí:</td>
-                                <td class="text-end">@(Model.TongTien.HasValue ? $"{Model.TongTien.Value:N0} VNĐ" : "Chưa có thông tin")</td>
+                            <tr class="fw-bold bg-light">
+                                <td colspan="3" class="text-end">Tổng cộng:</td>
+                                <td class="text-end">@((Model.TongTien?.ToString("N0") ?? "0") + " đ")</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Thông tin chi phí sẽ được cập nhật sau khi kỹ thuật viên kiểm tra sản phẩm.
+                </div>
+            }
         </div>
-    </div>    <!-- Hành động -->
+    </div>
+
+    <!-- Hành động -->
     <div class="d-flex justify-content-end my-4 gap-2">       
         
-        @if (Model.TrangThai == "ChoXacNhan")
+        @if (Model.TrangThai == nameof(TrangThaiPhieu.ChoXacNhan))
         {
-            <button class="btn btn-danger cancel-order" data-id="@Model.PhieuSuaChuaId">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle me-2" viewBox="0 0 16 16">
-                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                </svg>
+            <button 
+                type="button" 
+                class="btn btn-danger cancel-order"
+                data-id="@Model.PhieuSuaChuaId">
+                <i class="bi bi-x-circle me-1"></i>
                 Hủy đơn
             </button>
         }
-        @if (Model.TrangThai == "HoanThanh")
+        @if (Model.TrangThai == nameof(TrangThaiPhieu.HoanThanh))
         {
-            <button class="btn btn-primary open-rating-modal" data-id="@Model.PhieuSuaChuaId">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star me-2" viewBox="0 0 16 16">
-                    <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
-                </svg>
+            <button type="button" class="btn btn-primary open-rating-modal">
+                <i class="bi bi-star me-1"></i>
                 Đánh giá dịch vụ
             </button>
         }
@@ -489,252 +377,68 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // --- RATING FUNCTIONALITY ---
-        const stars = document.querySelectorAll('.star');
-        const ratingStars = document.querySelectorAll('input[name="rating"]');
-        const ratingText = document.getElementById('rating-text');
-        const ratingDescriptions = [
-            'Rất không hài lòng', // 1 star
-            'Không hài lòng',     // 2 stars
-            'Bình thường',       // 3 stars
-            'Hài lòng',          // 4 stars
-            'Rất hài lòng'       // 5 stars
-        ];
-        
-        // Set up star rating hover effects
-        stars.forEach(function(star, index) {
-            star.addEventListener('mouseenter', function() {
-                // Fill in this star and all previous stars
-                for (let i = 0; i <= index; i++) {
-                    stars[i].classList.add('hovered');
-                }
+        // --- CANCEL ORDER FUNCTIONALITY ---
+        const cancelBtns = document.querySelectorAll('.cancel-order');
+        cancelBtns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const orderId = this.getAttribute('data-id');
                 
-                // Show rating description
-                ratingText.textContent = ratingDescriptions[index];
-                ratingText.classList.add('active');
-            });
-            
-            star.addEventListener('mouseleave', function() {
-                // Remove hover effect
-                stars.forEach(s => s.classList.remove('hovered'));
-                
-                // Reset rating text or show selected rating
-                let selectedIndex = -1;
-                ratingStars.forEach((rs, i) => {
-                    if (rs.checked) {
-                        selectedIndex = i;
+                Swal.fire({
+                    title: 'Xác nhận hủy đơn',
+                    text: "Bạn có chắc chắn muốn hủy đơn sửa chữa này?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Có, hủy đơn!',
+                    cancelButtonText: 'Không, giữ lại'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Get CSRF token
+                        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+                        
+                        // Send AJAX request to cancel order
+                        fetch('/KhachHang/DonSuaChua/Cancel', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'RequestVerificationToken': token
+                            },
+                            body: new URLSearchParams({
+                                'id': orderId,
+                                '__RequestVerificationToken': token
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire({
+                                    title: 'Thành công!',
+                                    text: data.message,
+                                    icon: 'success'
+                                }).then(() => {
+                                    window.location.href = '/KhachHang/DonSuaChua';
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Lỗi!',
+                                    text: data.message,
+                                    icon: 'error'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                title: 'Lỗi!',
+                                text: 'Có lỗi xảy ra, vui lòng thử lại sau.',
+                                icon: 'error'
+                            });
+                        });
                     }
                 });
-                
-                if (selectedIndex !== -1) {
-                    ratingText.textContent = ratingDescriptions[selectedIndex];
-                } else {
-                    ratingText.textContent = 'Chưa đánh giá';
-                    ratingText.classList.remove('active');
-                }
-            });
-            
-            // Handle click event
-            star.addEventListener('click', function() {
-                ratingStars[index].checked = true;
-                ratingText.textContent = ratingDescriptions[index];
-                ratingText.classList.add('active');
             });
         });
-        
-        // Open rating modal
-        document.querySelector('.open-rating-modal')?.addEventListener('click', function() {
-            const modal = new bootstrap.Modal(document.getElementById('ratingModal'));
-            modal.show();
-        });
-        
-        // Submit rating
-        document.getElementById('submit-rating')?.addEventListener('click', function() {
-            const rating = document.querySelector('input[name="rating"]:checked');
-            const comment = document.getElementById('comment').value;
-            
-            if (!rating) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Thiếu thông tin',
-                    text: 'Vui lòng chọn số sao đánh giá!'
-                });
-                return;
-            }
-            
-            // Get selected tech attributes
-            const techAttributes = [];
-            document.querySelectorAll('input[type="checkbox"]:checked').forEach(function(checkbox) {
-                techAttributes.push(checkbox.value);
-            });
-            
-            // Here you would normally send this data to the server via AJAX
-            console.log({
-                orderId: document.getElementById('order-id').value,
-                rating: rating.value,
-                comment: comment,
-                techAttributes: techAttributes
-            });
-            
-            // Show success message
-            Swal.fire({
-                icon: 'success',
-                title: 'Cảm ơn bạn!',
-                text: 'Đánh giá của bạn đã được gửi thành công.',
-                confirmButtonText: 'Đóng'
-            }).then(() => {
-                const modal = bootstrap.Modal.getInstance(document.getElementById('ratingModal'));
-                modal.hide();
-            });
-        });
-        
-        // Cancel order
-        document.querySelector('.cancel-order')?.addEventListener('click', function() {
-            const orderId = this.getAttribute('data-id');
-            
-            Swal.fire({
-                title: 'Bạn có chắc chắn?',
-                text: "Bạn sẽ không thể hoàn tác hành động này!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#dc3545',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Xác nhận hủy đơn',
-                cancelButtonText: 'Quay lại'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Here you would normally send cancel request via AJAX
-                    // Example AJAX request:
-                    /*
-                    fetch('/KhachHang/DonSuaChua/Cancel', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-                        },
-                        body: JSON.stringify({ id: orderId })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            Swal.fire(
-                                'Đã hủy!',
-                                'Đơn sửa chữa của bạn đã được hủy.',
-                                'success'
-                            ).then(() => {
-                                window.location.href = '/KhachHang/DonSuaChua';
-                            });
-                        } else {
-                            Swal.fire(
-                                'Lỗi!',
-                                data.message,
-                                'error'
-                            );
-                        }
-                    })
-                    .catch(error => {
-                        Swal.fire(
-                            'Lỗi!',
-                            'Có lỗi xảy ra khi hủy đơn sửa chữa',
-                            'error'
-                        );
-                    });
-                    */
-                    
-                    // For demo purposes
-                    console.log('Cancelling order:', orderId);
-                    
-                    // Show success message
-                    Swal.fire(
-                        'Đã hủy!',
-                        'Đơn sửa chữa của bạn đã được hủy.',
-                        'success'
-                    ).then(() => {
-                        // Redirect to order list
-                        window.location.href = '/KhachHang/DonSuaChua';
-                    });
-                }
-            });
-        });
-        
-        // --- HELP FUNCTIONALITY ---
-        // Send question in help modal
-        document.getElementById('send-question')?.addEventListener('click', function() {
-            const question = document.getElementById('question').value;
-            
-            if (!question || question.trim() === '') {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Thiếu thông tin',
-                    text: 'Vui lòng nhập câu hỏi của bạn!'
-                });
-                return;
-            }
-            
-            // Here you would normally send this data to the server
-            console.log({
-                orderId: '@Model.PhieuSuaChuaId',
-                question: question
-            });
-            
-            // Show success message
-            Swal.fire({
-                icon: 'success',
-                title: 'Đã gửi câu hỏi!',
-                text: 'Câu hỏi của bạn đã được gửi. Chúng tôi sẽ phản hồi sớm nhất có thể.',
-                confirmButtonText: 'Đóng'
-            }).then(() => {
-                document.getElementById('question').value = '';
-                const modal = bootstrap.Modal.getInstance(document.getElementById('helpModal'));
-                modal.hide();
-            });
-        });
-        
-        // --- ANIMATION EFFECTS ---
-        // Add fade-in effect when scrolling
-        const animateOnScroll = function() {
-            const elements = document.querySelectorAll('.card, .progress-tracker, .process-timeline, .product-row');
-            
-            elements.forEach(element => {
-                const elementTop = element.getBoundingClientRect().top;
-                const elementVisible = 150;
-                
-                if (elementTop < window.innerHeight - elementVisible) {
-                    element.classList.add('animate__animated', 'animate__fadeIn');
-                }
-            });
-        };
-        
-        // Run once on load
-        animateOnScroll();
-        
-        // Run on scroll
-        window.addEventListener('scroll', animateOnScroll);
-        
-        // Add hover effect to product rows
-        const productRows = document.querySelectorAll('.product-row');
-        productRows.forEach(row => {
-            row.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-3px)';
-                this.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
-            });
-            
-            row.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
-                this.style.boxShadow = 'none';
-            });
-        });
-        
-        // Add button pulse effect
-        const helpButton = document.querySelector('.btn-help');
-        if (helpButton) {
-            setInterval(() => {
-                helpButton.classList.add('animate__animated', 'animate__pulse');
-                setTimeout(() => {
-                    helpButton.classList.remove('animate__animated', 'animate__pulse');
-                }, 1000);
-            }, 5000);
-        }
     });
 </script>
 }

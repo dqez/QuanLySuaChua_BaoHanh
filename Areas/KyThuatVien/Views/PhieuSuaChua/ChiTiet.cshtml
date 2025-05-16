@@ -1,0 +1,1052 @@
+@model QuanLySuaChua_BaoHanh.Models.PhieuSuaChua
+
+@{
+    ViewData["Title"] = "Chi tiết đơn sửa chữa";
+}
+
+<style>
+    /* Modern component card styling */
+    .component-card {
+        border: none;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        background-color: #fff;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.3s ease;
+    }
+
+    .component-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+    }
+    
+    /* Improved divider styling */
+    .divider-text {
+        position: relative;
+        text-align: center;
+        margin: 30px 0;
+    }
+
+    .divider-text span {
+        padding: 0 20px;
+        background-color: var(--gray-light);
+        position: relative;
+        z-index: 2;
+        color: #64748B;
+        font-weight: 500;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .divider-text:after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        border-bottom: 1px solid var(--gray-border);
+        top: 50%;
+        left: 0;
+        z-index: 1;
+    }
+    
+    /* Form control enhancements */
+    .form-floating > .form-select {
+        padding-top: 1.625rem;
+        padding-bottom: .25rem;
+        box-shadow: none;
+        border-color: #CBD5E1;
+        transition: all 0.3s ease;
+    }
+    
+    .form-floating > .form-select:focus {
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+        border-color: #3B82F6;
+    }
+
+    /* Enhanced step progress indicator */
+    .steps {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 2.5rem 0;
+        position: relative;
+        padding: 0 10px;
+    }
+
+    .steps::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(to right, #E2E8F0, #E2E8F0);
+        z-index: 1;
+        border-radius: 3px;
+    }
+
+    .step-item {
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        position: relative;
+        padding: 0 15px;
+        transition: all 0.3s ease;
+    }
+    
+    .step-item:hover .step-title {
+        color: var(--blue-primary);
+    }
+
+    .step-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: white;
+        border: 3px solid #E2E8F0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 8px;
+        font-size: 1.25rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+    
+    .step-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-align: center;
+        color: #64748B;
+        transition: all 0.3s ease;
+        max-width: 100px;
+        margin: 0 auto;
+    }
+
+    .step-active .step-icon {
+        background: linear-gradient(135deg, #3B82F6, #2563EB);
+        border-color: #BFDBFE;
+        color: white;
+        transform: scale(1.1);
+        box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+    }
+    
+    .step-active .step-title {
+        color: var(--blue-primary);
+    }
+
+    .step-complete .step-icon {
+        background: linear-gradient(135deg, #10B981, #059669);
+        border-color: #A7F3D0;
+        color: white;
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+    }
+    
+    .step-complete .step-title {
+        color: var(--green);
+    }
+    
+    /* Order detail page header */
+    .order-detail-header {
+        background: linear-gradient(to right, #F0F9FF, #EFF6FF);
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: var(--shadow-sm);
+        position: relative;
+        animation: fadeInTop 0.5s ease-out;
+    }
+    
+    .order-detail-header .order-id {
+        font-weight: 700;
+        font-size: 1.75rem;
+        color: #1E293B;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .order-detail-header .order-id i {
+        color: var(--blue-primary);
+        font-size: 1.5rem;
+    }
+    
+    .order-detail-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    
+    .order-detail-badge i {
+        margin-right: 6px;
+    }
+    
+
+      .pulse-animation {
+        animation: pulseEffect 2s infinite;
+    }
+    
+    /* Customer & Order Info Styling */
+    .info-icon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        color: var(--blue-primary);
+    }
+    
+    .info-label {
+        font-size: 0.8rem;
+        color: #64748B;
+        margin-bottom: 2px;
+    }
+    
+    .info-value {
+        color: #1E293B;
+    }
+    
+    .status-badge.status-pending {
+        background-color: rgba(249, 115, 22, 0.1);
+        color: #F59E0B;
+    }
+    
+    .status-badge.status-inprogress {
+        background-color: rgba(59, 130, 246, 0.1);
+        color: #3B82F6;
+    }
+    
+    .status-badge.status-completed {
+        background-color: rgba(16, 185, 129, 0.1);
+        color: #10B981;
+    }
+      .status-badge.status-cancelled {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: #EF4444;
+    }
+    
+    /* Product and Component Items */
+    .product-row {
+        transition: all 0.2s ease;
+    }
+    
+    .product-row:hover {
+        background-color: rgba(59, 130, 246, 0.05);
+    }
+    
+    .fs-7 {
+        font-size: 0.8rem;
+    }
+    
+    .component-item {
+        transition: all 0.3s ease;
+    }
+    
+    .hover-shadow:hover {
+        box-shadow: var(--shadow-md) !important;
+        transform: translateY(-2px);
+    }
+    
+    .transition {
+        transition: all 0.3s ease;
+    }
+    
+    .technical-evaluation {
+        position: relative;
+    }
+    
+    .technical-evaluation:before {
+        content: '';
+        position: absolute;
+        left: -10px;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--green);
+        border-radius: 3px;
+    }
+    
+    /* Styles mới cho component search */
+    .component-select-container {
+        position: relative;
+    }
+    
+    #linhKienId {
+        transition: all 0.3s ease;
+    }
+    
+    #linhKienId:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+    
+    .price-info {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+    }
+    
+    .price-info .info-item {
+        display: flex;
+        align-items: center;
+        padding: 5px 10px;
+    }
+    
+    .highlight {
+        animation: highlight 0.5s ease;
+    }
+    
+   
+    
+    #searchLinhKien {
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        padding-left: 40px;
+        transition: all 0.3s ease;
+    }
+    
+    #searchLinhKien:focus {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+    
+    .input-group-text {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    
+    #clearSearch {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        padding: 0 10px;
+    }
+    
+    #clearSearch i {
+        font-size: 12px;
+    }
+</style>
+
+
+<!-- Tiêu đề và Trạng thái -->
+<div class="order-detail-header d-flex justify-content-between align-items-center">
+    <h2 class="order-id mb-0"><i class="bi bi-clipboard-data"></i> Đơn sửa chữa #@Model.PhieuSuaChuaId</h2>
+    @{
+        string statusIcon;
+        string pulseClass = "";
+        
+        var statusClass = Model.TrangThai switch
+        {
+            "DaPhanCong" => "status-pending",
+            "ChoKiemTra" => "status-pending",
+            "DangSuaChua" => "status-inprogress",
+            "DaSuaXong" => "status-completed",
+            "DaThanhToan" => "status-completed",
+            "DangVanChuyen" => "status-completed",
+            "HoanThanh" => "status-completed",   
+            "DaHuy" => "status-cancelled",
+            _ => "status-pending"
+        };
+        
+        statusIcon = Model.TrangThai switch
+        {
+            "DaPhanCong" => "bi-clipboard-check",
+            "ChoKiemTra" => "bi-clipboard-data",
+            "DangSuaChua" => "bi-tools",
+            "DaSuaXong" => "bi-check-circle",
+            "DaThanhToan" => "bi-cash-coin",
+            "DangVanChuyen" => "bi-truck",
+            "HoanThanh" => "bi-check-all",   
+            "DaHuy" => "bi-x-circle",
+            _ => "bi-clipboard"
+        };
+        
+        if (Model.TrangThai == "DangSuaChua") {
+            pulseClass = "pulse-animation";
+        }
+
+        var statusText = Model.TrangThai switch
+        {
+            "DaPhanCong" => "Đã phân công",
+            "ChoKiemTra" => "Chờ kiểm tra",
+            "DangSuaChua" => "Đang sửa chữa",
+            "DaSuaXong" => "Đã sửa xong",
+            "DaThanhToan" => "Đã thanh toán",
+            "DangVanChuyen" => "Đang vận chuyển",
+            "HoanThanh" => "Hoàn thành",
+            "DaHuy" => "Đã hủy",
+            _ => "Chờ xử lý"
+        };    }
+    <span class="order-detail-badge @statusClass @pulseClass">
+        <i class="bi @statusIcon"></i>
+        @statusText
+    </span>
+</div>
+
+@* <!-- Tiến trình đơn hàng --> *@
+@* <div class="steps"> *@
+@*     <div class="step-item @(Model.TrangThai != null ? "step-complete" : "")"> *@
+@*         <div class="step-icon"> *@
+@*             <i class="bi bi-file-earmark-text"></i> *@
+@*         </div> *@
+@*         <div class="step-title">Đã tiếp nhận</div> *@
+@*     </div> *@
+@*     <div class="step-item @(Model.TrangThai == "DangSuaChua" || Model.TrangThai == "DaSuaXong" || Model.TrangThai == "DaThanhToan" || Model.TrangThai == "DangVanChuyen" || Model.TrangThai == "HoanThanh" ? "step-complete" : (Model.TrangThai == "DaPhanCong" || Model.TrangThai == "ChoKiemTra" ? "step-active" : ""))"> *@
+@*         <div class="step-icon"> *@
+@*             <i class="bi bi-tools"></i> *@
+@*         </div> *@
+@*         <div class="step-title">Đang sửa chữa</div> *@
+@*     </div> *@
+@*     <div class="step-item @(Model.TrangThai == "DaSuaXong" || Model.TrangThai == "DaThanhToan" || Model.TrangThai == "DangVanChuyen" || Model.TrangThai == "HoanThanh" ? "step-complete" : (Model.TrangThai == "DangSuaChua" ? "step-active" : ""))"> *@
+@*         <div class="step-icon"> *@
+@*             <i class="bi bi-check2-all"></i> *@
+@*         </div> *@
+@*         <div class="step-title">Đã hoàn thành</div> *@
+@*     </div> *@
+@* </div> *@
+
+<div class="row g-4">
+    <!-- Thông tin khách hàng và đơn hàng -->
+    <div class="col-lg-4">
+        <div class="card component-card mb-4">
+            <div class="d-flex align-items-center mb-3">
+                <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                    <i class="bi bi-person text-primary fs-4"></i>
+                </div>
+                <h5 class="fw-bold mb-0">Thông tin khách hàng</h5>
+            </div>
+            
+            <div class="customer-info">
+                <div class="info-item d-flex align-items-center mb-3">
+                    <div class="info-icon me-3">
+                        <i class="bi bi-person-badge text-primary"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-label text-muted">Họ tên</div>
+                        <div class="info-value fw-medium">@Model.KhachHang.HoTen</div>
+                    </div>
+                </div>
+                
+                <div class="info-item d-flex align-items-center mb-3">
+                    <div class="info-icon me-3">
+                        <i class="bi bi-telephone text-primary"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-label text-muted">Số điện thoại</div>
+                        <div class="info-value fw-medium">@Model.KhachHang.PhoneNumber</div>
+                    </div>
+                </div>
+                
+                <div class="info-item d-flex align-items-center mb-3">
+                    <div class="info-icon me-3">
+                        <i class="bi bi-envelope text-primary"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-label text-muted">Email</div>
+                        <div class="info-value fw-medium">@Model.KhachHang.Email</div>
+                    </div>
+                </div>
+                
+                <div class="info-item d-flex align-items-center mb-3">
+                    <div class="info-icon me-3">
+                        <i class="bi bi-geo-alt text-primary"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-label text-muted">Địa chỉ</div>
+                        <div class="info-value fw-medium">@Model.DiaChiNhanTraSanPham</div>
+                    </div>
+                </div>
+                
+                <div class="info-item d-flex align-items-center">
+                    <div class="info-icon me-3">
+                        <i class="bi bi-building text-primary"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-label text-muted">Thành phố/Quận/Phường</div>
+                        <div class="info-value fw-medium">
+                            @Model.Phuong.TenPhuong, 
+                            @Model.Phuong.Quan.TenQuan, 
+                            @Model.Phuong.Quan.ThanhPho.TenThanhPho
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card component-card mb-4">
+            <div class="d-flex align-items-center mb-3">
+                <div class="rounded-circle bg-info bg-opacity-10 p-3 me-3">
+                    <i class="bi bi-info-circle text-info fs-4"></i>
+                </div>
+                <h5 class="fw-bold mb-0">Thông tin đơn hàng</h5>
+            </div>
+            
+            <div class="order-info">
+                <div class="info-item d-flex align-items-center mb-3">
+                    <div class="info-icon me-3">
+                        <i class="bi bi-calendar-check text-info"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-label text-muted">Ngày gửi</div>
+                        <div class="info-value fw-medium">@Model.NgayGui.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+                </div>
+                
+                @if (Model.NgayHen.HasValue)
+                {
+                    <div class="info-item d-flex align-items-center mb-3">
+                        <div class="info-icon me-3">
+                            <i class="bi bi-calendar-event text-info"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label text-muted">Ngày hẹn</div>
+                            <div class="info-value fw-medium">@Model.NgayHen.Value.ToString("dd/MM/yyyy HH:mm")</div>
+                        </div>
+                    </div>
+                }
+                
+                @if (Model.NgayTra.HasValue)
+                {
+                    <div class="info-item d-flex align-items-center mb-3">
+                        <div class="info-icon me-3">
+                            <i class="bi bi-calendar2-check text-info"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label text-muted">Ngày trả</div>
+                            <div class="info-value fw-medium">@Model.NgayTra.Value.ToString("dd/MM/yyyy HH:mm")</div>
+                        </div>
+                    </div>
+                }
+                
+                <div class="info-item d-flex align-items-center mb-3">
+                    <div class="info-icon me-3">
+                        <i class="bi bi-truck text-info"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-label text-muted">Phí vận chuyển</div>
+                        <div class="info-value fw-medium">@(Model.PhiVanChuyen?.ToString("#,##0 VND") ?? "Chưa tính")</div>
+                    </div>
+                </div>
+                
+                <div class="info-item d-flex align-items-center mb-3">
+                    <div class="info-icon me-3">
+                        <i class="bi bi-cash-stack text-info"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-label text-muted">Tổng tiền</div>
+                        <div class="info-value fw-bold fs-5">@(Model.TongTien?.ToString("#,##0 VND") ?? "Chưa tính")</div>
+                    </div>
+                </div>
+                
+                @if (!string.IsNullOrEmpty(Model.GhiChu))
+                {
+                    <div class="info-item d-flex align-items-start">
+                        <div class="info-icon me-3 mt-1">
+                            <i class="bi bi-chat-left-text text-info"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label text-muted">Ghi chú</div>
+                            <div class="info-value fw-medium">@Model.GhiChu</div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+          @if (Model.TrangThai == "DaPhanCong")
+        {
+            <div class="card component-card mb-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="rounded-circle bg-warning bg-opacity-10 p-3 me-3">
+                        <i class="bi bi-calendar-check text-warning fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold mb-0">Đặt lịch hẹn kiểm tra</h5>
+                </div>
+                
+                <div class="alert alert-info d-flex align-items-center mb-4">
+                    <i class="bi bi-info-circle-fill me-2 fs-5"></i>
+                    <div>Vui lòng chọn ngày giờ hẹn đến kiểm tra sản phẩm của khách hàng</div>
+                </div>
+                
+                <form asp-action="CapNhatNgayHen" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.PhieuSuaChuaId" />
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="date" class="form-control" id="ngayHen" name="ngayHen" required 
+                                       min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                <label for="ngayHen">Ngày hẹn</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="time" class="form-control" id="gioHen" name="gioHen" required />
+                                <label for="gioHen">Giờ hẹn</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-warning w-100 py-2 fw-medium">
+                        <i class="bi bi-calendar-plus me-2"></i>Xác nhận lịch hẹn
+                    </button>
+                </form>
+            </div>
+        }
+        @if (Model.TrangThai == "DangSuaChua")
+        {
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-check-circle me-2"></i>Hoàn thành sửa chữa</h5>
+                </div>
+                <div class="card-body">
+                    <p>Khi bạn đã hoàn thành quá trình sửa chữa và đánh giá kỹ thuật, hãy nhấn nút bên dưới để đánh dấu đơn đã hoàn thành.</p>
+                    <form asp-action="HoanThanhDon" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@Model.PhieuSuaChuaId" />
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="bi bi-check-circle me-2"></i>Hoàn thành đơn sửa chữa
+                        </button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Thông tin sản phẩm và linh kiện -->
+    <div class="col-lg-8">        <div class="card component-card mb-4">
+            <div class="d-flex align-items-center mb-3">
+                <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                    <i class="bi bi-box-seam text-primary fs-4"></i>
+                </div>
+                <h5 class="fw-bold mb-0">Thông tin sản phẩm</h5>
+            </div>
+            
+            <div class="customer-description mb-4">
+                <h6 class="fw-semibold d-flex align-items-center mb-3">
+                    <i class="bi bi-chat-quote me-2 text-primary"></i>
+                    Mô tả từ khách hàng:
+                </h6>
+                <div class="p-3 bg-light rounded-3 border border-1 border-light position-relative">
+                    <i class="bi bi-quote position-absolute text-primary opacity-25" style="font-size: 2rem; top: 0.5rem; left: 0.5rem;"></i>
+                    <div class="ps-4 pt-2">
+                        @Model.MoTaKhachHang
+                    </div>
+                </div>
+            </div>
+            
+            <div class="product-list">
+                <h6 class="fw-semibold d-flex align-items-center mb-3">
+                    <i class="bi bi-list-check me-2 text-primary"></i>
+                    Danh sách sản phẩm:
+                </h6>
+                
+                @if (Model.ChiTietSuaChuas.Count == 0)
+                {
+                    <div class="alert alert-warning d-flex align-items-center">
+                        <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                        <div>Chưa có sản phẩm nào được thêm vào đơn hàng.</div>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive rounded-3 border overflow-hidden">
+                        <table class="table table-hover mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="fw-semibold text-uppercase fs-7 px-3 py-3 text-secondary">Mã sản phẩm</th>
+                                    <th class="fw-semibold text-uppercase fs-7 px-3 py-3 text-secondary">Tên sản phẩm</th>
+                                    <th class="fw-semibold text-uppercase fs-7 px-3 py-3 text-secondary">Loại đơn</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ChiTietSuaChuas.GroupBy(c => c.SanPhamId).Select(g => g.First()))
+                                {
+                                    <tr class="product-row">
+                                        <td class="px-3 py-3 fw-medium">
+                                            <span class="d-inline-flex align-items-center">
+                                                <i class="bi bi-upc me-2 text-primary"></i>
+                                                @item.SanPham.SanPhamId
+                                            </span>
+                                        </td>
+                                        <td class="px-3 py-3 fw-medium">@item.SanPham.TenSanPham</td>
+                                        <td class="px-3 py-3">
+                                            @if (string.IsNullOrEmpty(item.LoaiDon))
+                                            {
+                                                <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2">
+                                                    <i class="bi bi-dash-circle me-1"></i> N/A
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                string badgeClass = item.LoaiDon.ToLower().Contains("bảo hành") ? "bg-success bg-opacity-10 text-success" : "bg-primary bg-opacity-10 text-primary";
+                                                string icon = item.LoaiDon.ToLower().Contains("bảo hành") ? "bi-shield-check" : "bi-tools";
+                                                
+                                                <span class="badge @badgeClass px-3 py-2">
+                                                    <i class="bi @icon me-1"></i> @item.LoaiDon
+                                                </span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>        <div class="card component-card mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle bg-info bg-opacity-10 p-3 me-3">
+                        <i class="bi bi-tools text-info fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold mb-0">Linh kiện sửa chữa</h5>
+                </div>
+                @if (Model.TrangThai == "DangSuaChua")
+                {
+                    <button type="button" class="btn btn-primary btn-sm rounded-pill" data-bs-toggle="modal" data-bs-target="#addComponentModal">
+                        <i class="bi bi-plus-lg me-1"></i> Thêm linh kiện
+                    </button>
+                }
+            </div>
+            
+            @if (!Model.ChiTietSuaChuas.Any(c => c.LinhKienId != null))
+            {
+                <div class="empty-component-state p-4 text-center">
+                    <div class="rounded-circle bg-light mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:80px;height:80px;">
+                        <i class="bi bi-box fs-1 text-secondary opacity-50"></i>
+                    </div>
+                    <h6 class="text-secondary">Chưa có linh kiện nào được thêm vào đơn sửa chữa</h6>
+                    @if (Model.TrangThai == "DangSuaChua")
+                    {
+                        <button class="btn btn-outline-primary btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#addComponentModal">
+                            <i class="bi bi-plus-lg me-1"></i> Thêm linh kiện ngay
+                        </button>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="components-list">
+                    @foreach (var item in Model.ChiTietSuaChuas.Where(c => c.LinhKienId != null))
+                    {
+                        <div class="component-item bg-white mb-3 p-4 rounded-3 border border-1 border-light shadow-sm transition hover-shadow">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="d-flex">
+                                    <div class="component-icon rounded-circle bg-info bg-opacity-10 p-2 me-3 d-flex align-items-center justify-content-center" style="width:48px;height:48px;">
+                                        <i class="bi bi-cpu text-info fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="fw-bold mb-1">@item.LinhKien.TenLinhKien</h5>
+                                        <div class="text-muted d-flex align-items-center">
+                                            <i class="bi bi-upc me-1"></i>
+                                            <span>Mã linh kiện: @item.LinhKien.LinhKienId</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-column align-items-end">
+                                    <span class="badge bg-primary bg-opacity-10 text-primary fs-6 mb-2 px-3 py-2 rounded-pill">
+                                        <i class="bi bi-123 me-1"></i> Số lượng: @item.SoLuongLinhKien
+                                    </span>
+                                    <span class="badge bg-success bg-opacity-10 text-success fs-6 px-3 py-2 rounded-pill">
+                                        <i class="bi bi-currency-dollar me-1"></i> @((item.LinhKien.DonGia * item.SoLuongLinhKien).ToString("#,##0 VND"))
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="component-divider my-3 border-top"></div>
+
+                            @if (!string.IsNullOrEmpty(item.DanhGiaKyThuat))
+                            {
+                                <div class="technical-evaluation mb-3">
+                                    <h6 class="fw-semibold d-flex align-items-center mb-2">
+                                        <i class="bi bi-clipboard-check text-success me-2"></i>Đánh giá kỹ thuật:
+                                    </h6>
+                                    <div class="p-3 bg-light rounded-3 border border-light">
+                                        @item.DanhGiaKyThuat
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="technical-evaluation-empty text-muted fst-italic mb-3">
+                                    <i class="bi bi-clipboard text-secondary me-2"></i>Chưa có đánh giá kỹ thuật
+                                </div>
+                            }
+                            
+                            @if (Model.TrangThai == "DangSuaChua")
+                            {
+                                <div class="mt-2">
+                                    <button type="button" class="btn @(string.IsNullOrEmpty(item.DanhGiaKyThuat) ? "btn-outline-primary" : "btn-outline-success") btn-sm rounded-pill" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#evaluateModal" 
+                                            data-chitiet-id="@item.ChiTietId"
+                                            data-linhkien="@item.LinhKien.TenLinhKien"
+                                            data-danhgia="@(string.IsNullOrEmpty(item.DanhGiaKyThuat) ? "" : item.DanhGiaKyThuat)">
+                                        <i class="bi @(string.IsNullOrEmpty(item.DanhGiaKyThuat) ? "bi-pencil-square" : "bi-pencil") me-1"></i> 
+                                        @(string.IsNullOrEmpty(item.DanhGiaKyThuat) ? "Thêm đánh giá" : "Sửa đánh giá")
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm Linh Kiện -->
+@if (Model.TrangThai == "DangSuaChua")
+{
+    <div class="modal fade" id="addComponentModal" tabindex="-1" aria-labelledby="addComponentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="addComponentModalLabel">Thêm linh kiện</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form asp-action="ThemLinhKien" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="modal-body">
+                        <input type="hidden" name="PhieuSuaChuaId" value="@Model.PhieuSuaChuaId" />
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select name="SanPhamId" id="SanPhamId" class="form-select" required>
+                                        <option value="">-- Chọn sản phẩm --</option>
+                                        @foreach (var item in Model.ChiTietSuaChuas.GroupBy(c => c.SanPhamId).Select(g => g.First()))
+                                        {
+                                            <option value="@item.SanPhamId">@item.SanPham.SanPhamId - @item.SanPham.TenSanPham</option>
+                                        }
+                                    </select>
+                                    <label for="SanPhamId">Sản phẩm cần sửa</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="number" name="soLuongLinhKien" id="soLuongLinhKien" class="form-control" min="1" value="1" required />
+                                    <label for="soLuongLinhKien">Số lượng</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Thêm ô tìm kiếm linh kiện -->
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-primary text-white">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input type="text" id="searchLinhKien" class="form-control" placeholder="Tìm kiếm linh kiện..." aria-label="Tìm kiếm linh kiện">
+                            <button type="button" id="clearSearch" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+
+                        <div class="form-floating mb-3 component-select-container">
+                            <select name="linhKienId" id="linhKienId" class="form-select" required>
+                                <option value="">-- Chọn linh kiện --</option>
+                                @if (ViewBag.LinhKienList != null)
+                                {
+                                    @foreach (var item in ViewBag.LinhKienList)
+                                    {
+                                        <option value="@item.LinhKienId" data-soluong="@item.SoLuongTon" data-dongia="@item.DonGia" 
+                                                data-searchtext="@item.LinhKienId @item.TenLinhKien">
+                                            @item.LinhKienId - @item.TenLinhKien (@item.SoLuongTon còn lại)
+                                        </option>
+                                    }
+                                }
+                            </select>
+                            <label for="linhKienId">Linh kiện</label>
+                        </div>
+
+                        <div class="d-flex justify-content-between price-info p-3 bg-light rounded mb-3">
+                            <div class="info-item">
+                                <i class="bi bi-box-seam text-primary me-2"></i>
+                                <strong>Số lượng tồn:</strong> 
+                                <span id="soLuongTon" class="badge bg-info">0</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="bi bi-tag text-primary me-2"></i>
+                                <strong>Đơn giá:</strong> 
+                                <span id="donGia">0 VND</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="bi bi-calculator text-primary me-2"></i>
+                                <strong>Thành tiền:</strong> 
+                                <span id="thanhTien" class="fw-bold text-success">0 VND</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle me-2"></i>Hủy
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-plus-circle me-2"></i>Thêm linh kiện
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Đánh giá kỹ thuật -->
+    <div class="modal fade" id="evaluateModal" tabindex="-1" aria-labelledby="evaluateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="evaluateModalLabel">Đánh giá kỹ thuật</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form asp-action="CapNhatDanhGia" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="modal-body">
+                        <input type="hidden" name="chiTietId" id="chiTietId" />
+                        <h5 id="linhKienName" class="mb-3"></h5>
+                        <div class="mb-3">
+                            <label for="danhGiaKyThuat" class="form-label">Đánh giá kỹ thuật</label>
+                            <textarea name="danhGiaKyThuat" id="danhGiaKyThuat" class="form-control" rows="5" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary">Lưu đánh giá</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const linhKienSelect = document.getElementById('linhKienId');
+            const soLuongInput = document.getElementById('soLuongLinhKien');
+            const soLuongTonElement = document.getElementById('soLuongTon');
+            const donGiaElement = document.getElementById('donGia');
+            const thanhTienElement = document.getElementById('thanhTien');
+            const searchInput = document.getElementById('searchLinhKien');
+            const clearSearchButton = document.getElementById('clearSearch');
+
+            // Lưu lại tất cả các options gốc để tìm kiếm
+            const allLinhKienOptions = [];
+            if (linhKienSelect) {
+                for (let i = 0; i < linhKienSelect.options.length; i++) {
+                    allLinhKienOptions.push(linhKienSelect.options[i]);
+                }
+            }
+
+            // Hàm tìm kiếm linh kiện
+            function filterLinhKien() {
+                const searchText = searchInput.value.toLowerCase().trim();
+                
+                // Xóa tất cả options hiện tại
+                while (linhKienSelect.options.length > 0) {
+                    linhKienSelect.remove(0);
+                }
+                
+                // Thêm lại những options phù hợp với tìm kiếm
+                for (let option of allLinhKienOptions) {
+                    if (option.value === '' || (option.getAttribute('data-searchtext') && 
+                        option.getAttribute('data-searchtext').toLowerCase().includes(searchText))) {
+                        linhKienSelect.add(option.cloneNode(true));
+                    }
+                }
+                
+                // Hiển thị thông báo nếu không có kết quả
+                if (searchText !== '' && linhKienSelect.options.length === 1) {
+                    const noResultOption = document.createElement('option');
+                    noResultOption.textContent = "Không tìm thấy linh kiện phù hợp";
+                    noResultOption.disabled = true;
+                    linhKienSelect.add(noResultOption);
+                }
+            }
+
+            // Xử lý sự kiện tìm kiếm
+            if (searchInput) {
+                searchInput.addEventListener('input', filterLinhKien);
+                
+                // Xử lý nút xóa tìm kiếm
+                clearSearchButton.addEventListener('click', function() {
+                    searchInput.value = '';
+                    filterLinhKien();
+                    searchInput.focus();
+                });
+            }
+
+            // Xử lý tính toán giá linh kiện
+            function updatePriceInfo() {
+                if (linhKienSelect.selectedIndex > 0) {
+                    const selectedOption = linhKienSelect.options[linhKienSelect.selectedIndex];
+                    const soLuongTon = parseFloat(selectedOption.dataset.soluong);
+                    const donGia = parseFloat(selectedOption.dataset.dongia);
+                    const soLuong = parseFloat(soLuongInput.value);
+
+                    soLuongTonElement.textContent = soLuongTon;
+                    donGiaElement.textContent = donGia.toLocaleString('vi-VN') + ' VND';
+                    thanhTienElement.textContent = (donGia * soLuong).toLocaleString('vi-VN') + ' VND';
+
+                    // Cập nhật số lượng tối đa
+                    soLuongInput.max = soLuongTon;
+                    if (soLuong > soLuongTon) {
+                        soLuongInput.value = soLuongTon;
+                    }
+                    
+                    // Thêm hiệu ứng highlight khi chọn
+                    thanhTienElement.classList.add('highlight');
+                    setTimeout(() => {
+                        thanhTienElement.classList.remove('highlight');
+                    }, 500);
+                }
+            }
+
+            if (linhKienSelect) {
+                linhKienSelect.addEventListener('change', updatePriceInfo);
+            }
+            
+            if (soLuongInput) {
+                soLuongInput.addEventListener('change', updatePriceInfo);
+                soLuongInput.addEventListener('input', updatePriceInfo);
+            }
+
+            // Xử lý Modal Đánh giá
+            const evaluateModal = document.getElementById('evaluateModal');
+            if (evaluateModal) {
+                evaluateModal.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+                    const chiTietId = button.getAttribute('data-chitiet-id');
+                    const linhKienName = button.getAttribute('data-linhkien');
+                    const danhGia = button.getAttribute('data-danhgia');
+                    
+                    document.getElementById('chiTietId').value = chiTietId;
+                    document.getElementById('linhKienName').textContent = linhKienName;
+                    document.getElementById('danhGiaKyThuat').value = danhGia;
+                });
+            }
+            
+            // Hiệu ứng focus cho ô tìm kiếm khi mở modal
+            const addComponentModal = document.getElementById('addComponentModal');
+            if (addComponentModal) {
+                addComponentModal.addEventListener('shown.bs.modal', function () {
+                    if (searchInput) {
+                        searchInput.focus();
+                    }
+                });
+            }
+        });
+    </script>
+}
+``` 

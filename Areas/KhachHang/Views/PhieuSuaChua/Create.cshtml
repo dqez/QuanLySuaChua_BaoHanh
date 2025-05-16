@@ -24,7 +24,7 @@
                                 {
                                     var conBaoHanh = item.NgayHetHanBh > DateOnly.FromDateTime(DateTime.Now);
                                     var trangThai = conBaoHanh ? "Hết BH" : "Còn BH";
-                                    <option value="@item.SanPhamId">@item.TenSanPham - @trangThai</option>
+                                    <option value="@item.SanPhamId">@item.SanPhamId - @item.TenSanPham - @trangThai</option>
                                 }
                             }
                         </select>
