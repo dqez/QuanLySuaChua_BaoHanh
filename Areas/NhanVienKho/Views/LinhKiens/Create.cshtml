@@ -15,31 +15,31 @@
                 <div class="card-body">
                     <form asp-area="NhanVienKho" asp-controller="LinhKiens" asp-action="Create">
                         <div class="mb-3">
-                            <label asp-for="DanhMucId" class="form-label"></label>
+                            <label asp-for="DanhMucId" class="form-label">Mã danh mục</label>
                             <select asp-for="DanhMucId" class="form-select" asp-items="ViewBag.DanhMucId"></select>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="TenLinhKien" class="form-label"></label>
+                            <label asp-for="TenLinhKien" class="form-label">Tên linh kiện</label>
                             <input asp-for="TenLinhKien" class="form-control" />
                             <span asp-validation-for="TenLinhKien" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="SoLuongTon" class="form-label"></label>
+                            <label asp-for="SoLuongTon" class="form-label">Số lượng tồn</label>
                             <input asp-for="SoLuongTon" class="form-control" />
                             <span asp-validation-for="SoLuongTon" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="DonGia" class="form-label"></label>
+                            <label asp-for="DonGia" class="form-label">Đơn giá</label>
                             <input asp-for="DonGia" class="form-control" />
                             <span asp-validation-for="DonGia" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="PhamViSuDung" class="form-label"></label>
+                            <label asp-for="PhamViSuDung" class="form-label">Phạm vi sử dụng</label>
                             <input asp-for="PhamViSuDung" class="form-control" />
                             <span asp-validation-for="PhamViSuDung" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="GhiChu" class="form-label"></label>
+                            <label asp-for="GhiChu" class="form-label">Ghi chú</label>
                             <input asp-for="GhiChu" class="form-control" />
                             <span asp-validation-for="GhiChu" class="text-danger"></span>
                         </div>

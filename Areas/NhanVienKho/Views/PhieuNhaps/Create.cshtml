@@ -17,21 +17,21 @@
                 <div class="card-body">
                     <form asp-area="NhanVienKho" asp-controller="PhieuNhaps" asp-action="Create" autocomplete="off">
                         <div class="mb-3">
-                            <label asp-for="KhoId" class="form-label"></label>
+                            <label asp-for="KhoId" class="form-label">Mã kho</label>
                             <select asp-for="KhoId" class="form-select" asp-items="ViewBag.KhoId"></select>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="TongTien" class="form-label"></label>
+                            <label asp-for="TongTien" class="form-label">Tổng tiền</label>
                             <input asp-for="TongTien" class="form-control" />
                             <span asp-validation-for="TongTien" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="TrangThai" class="form-label"></label>
+                            <label asp-for="TrangThai" class="form-label">Trạng thái</label>
                             <input asp-for="TrangThai" class="form-control" />
                             <span asp-validation-for="TrangThai" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="GhiChu" class="form-label"></label>
+                            <label asp-for="GhiChu" class="form-label">Ghi chú</label>
                             <input asp-for="GhiChu" class="form-control" />
                             <span asp-validation-for="GhiChu" class="text-danger"></span>
                         </div>

@@ -1,294 +1,296 @@
 ﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Panasonic Trung tâm bảo hành</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Inter:wght@400;500&display=swap">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/livecanvas-team/ninjabootstrap/dist/css/bootstrap.min.css" media="all">
-    <style>
-        :root {
-            --blue-primary: #319BC5;
-            --white: #FFFFFF;
-            --black: #000000;
-            --gray-light: #F8F8F8;
-            --gray-border: #DDDDDD;
-        }
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - Panasonic Trung tâm bảo hành</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Inter:wght@400;500&display=swap">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/livecanvas-team/ninjabootstrap/dist/css/bootstrap.min.css" media="all">
+	<style>
+		:root {
+			--blue-primary: #319BC5;
+			--white: #FFFFFF;
+			--black: #000000;
+			--gray-light: #F8F8F8;
+			--gray-border: #DDDDDD;
+		}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F8F8F8;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+		body {
+			font-family: 'Inter', sans-serif;
+			background-color: #F8F8F8;
+			margin: 0;
+			padding: 0;
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+		}
 
-        /* Header styles */
-        .header {
-            background-color: var(--white);
-            padding: 10px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            height: 70px;
-        }
+		/* Header styles */
+		.header {
+			background-color: var(--white);
+			padding: 10px 30px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.1);
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			z-index: 1000;
+			height: 70px;
+		}
 
-        .logo-container {
-            display: flex;
-            flex-direction: column;
-        }
+		.logo-container {
+			display: flex;
+			flex-direction: column;
+		}
 
-        .logo-text {
-            font-family: 'Baloo 2', cursive;
-            font-weight: 700;
-            font-size: 32px;
-            color: var(--blue-primary);
-            line-height: 1.2;
-            margin: 0;
-        }
+		.logo-text {
+			font-family: 'Baloo 2', cursive;
+			font-weight: 700;
+			font-size: 32px;
+			color: var(--blue-primary);
+			line-height: 1.2;
+			margin: 0;
+		}
 
-        .logo-subtext {
-            font-family: 'Baloo 2', cursive;
-            font-weight: 400;
-            font-size: 16px;
-            color: var(--black);
-            margin: -5px 0 0 0;
-        }
+		.logo-subtext {
+			font-family: 'Baloo 2', cursive;
+			font-weight: 400;
+			font-size: 16px;
+			color: var(--black);
+			margin: -5px 0 0 0;
+		}
 
-        .search-container {
-            display: flex;
-            width: 30%;
-            max-width: 400px;
-            margin: 0 auto;
-        }
+		.search-container {
+			display: flex;
+			width: 30%;
+			max-width: 400px;
+			margin: 0 auto;
+		}
 
-        .search-input {
-            flex-grow: 1;
-            border: 1px solid var(--gray-border);
-            border-right: none;
-            border-radius: 26px 0 0 27px;
-            padding: 10px 15px;
-            font-size: 14px;
-        }
+		.search-input {
+			flex-grow: 1;
+			border: 1px solid var(--gray-border);
+			border-right: none;
+			border-radius: 26px 0 0 27px;
+			padding: 10px 15px;
+			font-size: 14px;
+		}
 
-            .search-input:focus {
-                outline: none;
-            }
+			.search-input:focus {
+				outline: none;
+			}
 
-        .search-button {
-            background-color: var(--blue-primary);
-            border: none;
-            border-radius: 0 19px 20px 0;
-            padding: 10px 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+		.search-button {
+			background-color: var(--blue-primary);
+			border: none;
+			border-radius: 0 19px 20px 0;
+			padding: 10px 15px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
 
-            .search-button i {
-                color: white;
-                font-size: 18px;
-            }
+			.search-button i {
+				color: white;
+				font-size: 18px;
+			}
 
-        .header-icons {
-            display: flex;
-            gap: 20px;
-        }
+		.header-icons {
+			display: flex;
+			gap: 20px;
+		}
 
-            .header-icons i {
-                font-size: 24px;
-                color: var(--blue-primary);
-                cursor: pointer;
-            }
+			.header-icons i {
+				font-size: 24px;
+				color: var(--blue-primary);
+				cursor: pointer;
+			}
 
-        /* Sidebar styles */
-        .sidebar {
-            background-color: var(--blue-primary);
-            width: 300px;
-            position: fixed;
-            left: 0;
-            top: 70px;
-            bottom: 0;
-            padding-top: 20px;
-            z-index: 999;
-        }
+		/* Sidebar styles */
+		.sidebar {
+			background-color: var(--blue-primary);
+			width: 300px;
+			position: fixed;
+			left: 0;
+			top: 70px;
+			bottom: 0;
+			padding-top: 20px;
+			z-index: 999;
+		}
 
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            color: var(--white);
-            text-decoration: none;
-            font-family: 'Baloo 2', cursive;
-            font-weight: 600;
-            font-size: 20px;
-            position: relative;
-        }
+		.nav-item {
+			display: flex;
+			align-items: center;
+			padding: 15px 20px;
+			color: var(--white);
+			text-decoration: none;
+			font-family: 'Baloo 2', cursive;
+			font-weight: 600;
+			font-size: 20px;
+			position: relative;
+		}
 
-            .nav-item:hover {
-                background-color: rgba(255, 255, 255, 0.1);
-                color: var(--white);
-            }
+			.nav-item:hover {
+				background-color: rgba(255, 255, 255, 0.1);
+				color: var(--white);
+			}
 
-            .nav-item i {
-                margin-right: 15px;
-                font-size: 24px;
-            }
+			.nav-item i {
+				margin-right: 15px;
+				font-size: 24px;
+			}
 
-            .nav-item.active {
-                background-color: rgba(255, 255, 255, 0.47);
-                border-radius: 10px;
-                margin: 0 15px;
-                padding: 15px;
-            }
+			.nav-item.active {
+				background-color: rgba(255, 255, 255, 0.47);
+				border-radius: 10px;
+				margin: 0 15px;
+				padding: 15px;
+			}
 
-        /* Main content area */
-        .main-content {
-            margin-left: 280px;
-            margin-top: 70px;
-            padding: 20px;
-            flex: 1;
-        }
-    </style>
+		/* Main content area */
+		.main-content {
+			margin-left: 280px;
+			margin-top: 70px;
+			padding: 20px;
+			flex: 1;
+		}
+	</style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo-container">
-            <h1 class="logo-text">Panasonic</h1>
-            <p class="logo-subtext">Trung tâm bảo hành</p>
-        </div>
+	<!-- Header -->
+	<header class="header">
+		<div class="logo-container">
+			<h1 class="logo-text">Panasonic</h1>
+			<p class="logo-subtext">Trung tâm bảo hành</p>
+		</div>
 
-        <div class="search-container">
-            <input type="text" class="search-input" placeholder="Tìm kiếm">
-            <button class="search-button">
-                <i class="bi bi-search"></i>
-            </button>
-        </div>
+		<div class="search-container">
+			<input type="text" class="search-input" placeholder="Tìm kiếm">
+			<button class="search-button">
+				<i class="bi bi-search"></i>
+			</button>
+		</div>
 
-        <div class="header-icons">
-            <i class="bi bi-globe"></i>
-            <i class="bi bi-geo-alt"></i>
-            <i class="bi bi-facebook"></i>
-            <i class="bi bi-person-circle"></i>
+		<div class="header-icons">
+			<i class="bi bi-globe"></i>
+			<i class="bi bi-geo-alt"></i>
+			<i class="bi bi-facebook"></i>
+			<i class="bi bi-person-circle"></i>
 
-            @{
-                bool isAuthenticated = User.Identity?.IsAuthenticated ?? false;
-            }
+			@{
+				bool isAuthenticated = User.Identity?.IsAuthenticated ?? false;
+			}
 
-            @if (isAuthenticated && User.Identity != null)
-            {
-                <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="d-inline">
-                    <button type="submit" class="btn btn-link text-decoration-none">Đăng xuất (@User.Identity.Name)</button>
-                </form>
-            }
-            else
-            {
-                <a asp-area="" asp-controller="Account" asp-action="Login" class="btn btn-link text-decoration-none">Đăng nhập</a>
-            }
+			@if (isAuthenticated && User.Identity != null)
+			{
+				<form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="d-inline">
+					*
+					Html.AntiForgeryToken()
+					<button type="submit" class="btn btn-link text-decoration-none">Đăng xuất (@User.Identity.Name)</button>
+				</form>
+			}
+			else
+			{
+				<a asp-area="" asp-controller="Account" asp-action="Login" class="btn btn-link text-decoration-none">Đăng nhập</a>
+			}
 
-        </div>
-    </header>
+		</div>
+	</header>
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-image text-center mb-3">
-            <i class="bi bi-person-fill-gear" style="font-size: 48px;"></i>
-        </div>
-        <nav>
-            <a href="@Url.Action("Index", "Home")" class="nav-item">
-                <i class="bi bi-house-door"></i>
-                <span>Trang chủ</span>
-            </a>
-            <a href="@Url.Action("Index", "LinhKiens")" class="nav-item">
-                <i class="bi bi-gear-fill"></i>
-                <span>Linh kiện</span>
-            </a>
-            <a href="@Url.Action("Index", "PhieuNhaps")" class="nav-item">
-                <i class="bi bi-bookmark-check-fill"></i>
-                <span>Phiếu nhập</span>
-            </a>
-            <a href="@Url.Action("Index", "PhieuXuats")" class="nav-item">
-                <i class="bi bi-bookmark-check-fill"></i>
-                <span>Phiếu xuất</span>
-            </a>
-        </nav>
-    </aside>
+	<!-- Sidebar -->
+	<aside class="sidebar">
+		<div class="sidebar-image text-center mb-3">
+			<i class="bi bi-person-fill-gear" style="font-size: 48px;"></i>
+		</div>
+		<nav>
+			<a href="@Url.Action("Index", "Home")" class="nav-item">
+				<i class="bi bi-house-door"></i>
+				<span>Trang chủ</span>
+			</a>
+			<a href="@Url.Action("Index", "LinhKiens")" class="nav-item">
+				<i class="bi bi-gear-fill"></i>
+				<span>Linh kiện</span>
+			</a>
+			<a href="@Url.Action("Index", "PhieuNhaps")" class="nav-item">
+				<i class="bi bi-bookmark-check-fill"></i>
+				<span>Phiếu nhập</span>
+			</a>
+			<a href="@Url.Action("Index", "PhieuXuats")" class="nav-item">
+				<i class="bi bi-bookmark-check-fill"></i>
+				<span>Phiếu xuất</span>
+			</a>
+		</nav>
+	</aside>
 
 
-    <!-- Main content -->
-    <main class="main-content">
-        @RenderBody()
-    </main>
+	<!-- Main content -->
+	<main class="main-content">
+		@RenderBody()
+	</main>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <!-- Sidebar active state script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get all navigation items
-            const navItems = document.querySelectorAll('.sidebar .nav-item');
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	<!-- Sidebar active state script -->
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			// Get all navigation items
+			const navItems = document.querySelectorAll('.sidebar .nav-item');
 
-            // Get current URL path
-            const currentPath = window.location.pathname;
+			// Get current URL path
+			const currentPath = window.location.pathname;
 
-            // Check if there's a saved active tab in localStorage
-            const savedActiveTab = localStorage.getItem('activeNavItem');
-            let activeFound = false;
+			// Check if there's a saved active tab in localStorage
+			const savedActiveTab = localStorage.getItem('activeNavItem');
+			let activeFound = false;
 
-            // Set active class based on current URL
-            navItems.forEach(item => {
-                // Remove any existing active class
-                item.classList.remove('active');
+			// Set active class based on current URL
+			navItems.forEach(item => {
+				// Remove any existing active class
+				item.classList.remove('active');
 
-                // Check if this nav item matches current URL
-                if (item.getAttribute('href') === currentPath) {
-                    item.classList.add('active');
-                    localStorage.setItem('activeNavItem', item.getAttribute('href'));
-                    activeFound = true;
-                }
-                // If we have a saved tab and it matches this item
-                else if (savedActiveTab === item.getAttribute('href')) {
-                    item.classList.add('active');
-                    activeFound = true;
-                }
+				// Check if this nav item matches current URL
+				if (item.getAttribute('href') === currentPath) {
+					item.classList.add('active');
+					localStorage.setItem('activeNavItem', item.getAttribute('href'));
+					activeFound = true;
+				}
+				// If we have a saved tab and it matches this item
+				else if (savedActiveTab === item.getAttribute('href')) {
+					item.classList.add('active');
+					activeFound = true;
+				}
 
-                // Add click event listener
-                item.addEventListener('click', function(e) {
-                    // Remove active class from all items
-                    navItems.forEach(navItem => {
-                        navItem.classList.remove('active');
-                    });
+				// Add click event listener
+				item.addEventListener('click', function(e) {
+					// Remove active class from all items
+					navItems.forEach(navItem => {
+						navItem.classList.remove('active');
+					});
 
-                    // Add active class to clicked item
-                    this.classList.add('active');
+					// Add active class to clicked item
+					this.classList.add('active');
 
-                    // Save active state to localStorage
-                    localStorage.setItem('activeNavItem', this.getAttribute('href'));
-                });
-            });
+					// Save active state to localStorage
+					localStorage.setItem('activeNavItem', this.getAttribute('href'));
+				});
+			});
 
-            // If no active item was found, default to the first item
-            if (!activeFound && navItems.length > 0) {
-                navItems[0].classList.add('active');
-                localStorage.setItem('activeNavItem', navItems[0].getAttribute('href'));
-            }
-        });
-    </script>
-    @await RenderSectionAsync("Scripts", required: false)
-    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+			// If no active item was found, default to the first item
+			if (!activeFound && navItems.length > 0) {
+				navItems[0].classList.add('active');
+				localStorage.setItem('activeNavItem', navItems[0].getAttribute('href'));
+			}
+		});
+	</script>
+	@await RenderSectionAsync("Scripts", required: false)
+	<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
 </body>
 </html>
