@@ -64,7 +64,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         // GET: NhanVienKho/LinhKiens/Create
         public IActionResult Create()
         {
-            ViewData["DanhMucId"] = new SelectList(_context.DanhMucs, "DanhMucId", "TenDanhMuc");
+            ViewBag.DanhMucId = new SelectList(_context.DanhMucs, "DanhMucId", "TenDanhMuc");
             return View();
         }
 

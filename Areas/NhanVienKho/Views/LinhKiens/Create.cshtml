@@ -13,10 +13,12 @@
                     <h4 class="mb-0"><i class="bi bi-plus-circle"></i> Thêm linh kiện mới</h4>
                 </div>
                 <div class="card-body">
-                    <form asp-area="NhanVienKho" asp-controller="LinhKiens" asp-action="Create">
+                    <form asp-action="Create">
                         <div class="mb-3">
                             <label asp-for="DanhMucId" class="form-label">Mã danh mục</label>
-                            <select asp-for="DanhMucId" class="form-select" asp-items="ViewBag.DanhMucId"></select>
+                            <select asp-for="DanhMucId" class="form-select" asp-items="ViewBag.DanhMucId">
+                                <option value="">-- Chọn danh mục --</option>
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label asp-for="TenLinhKien" class="form-label">Tên linh kiện</label>
