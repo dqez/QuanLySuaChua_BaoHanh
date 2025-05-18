@@ -14,10 +14,10 @@ public partial class PhieuSuaChua
     public int PhieuSuaChuaId { get; set; }
 
     [Column("KhachHangID")]
-    public int KhachHangId { get; set; }
+    public string KhachHangId { get; set; } = null!;
 
     [Column("KyThuatID")]
-    public int? KyThuatId { get; set; }
+    public string? KyThuatId { get; set; } 
 
     [Column("PhuongID")]
     public int PhuongId { get; set; }

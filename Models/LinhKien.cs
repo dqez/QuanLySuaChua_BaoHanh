@@ -11,7 +11,7 @@ public partial class LinhKien
 {
     [Key]
     [Column("LinhKienID")]
-    public int LinhKienId { get; set; }
+    public string LinhKienId { get; set; }
 
     [Column("DanhMucID")]
     public int? DanhMucId { get; set; }

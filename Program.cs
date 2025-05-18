@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<BHSC_DbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddIdentity<NguoiDung,IdentityRole<int>>(options =>
+builder.Services.AddIdentity<NguoiDung,IdentityRole<string>>(options =>
     {
         // Password settings
         options.Password.RequireDigit = false;

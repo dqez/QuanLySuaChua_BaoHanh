@@ -195,7 +195,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EditUserViewModel model)
         {
-            if (id != model.Id)
+            if (id.ToString() != model.Id)
             {
                 return NotFound();
             }

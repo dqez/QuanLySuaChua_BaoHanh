@@ -14,7 +14,8 @@ public partial class SanPham
     public int SanPhamId { get; set; }
 
     [Column("KhachHangID")]
-    public int KhachHangId { get; set; }
+    public string KhachHangId { get; set; } = null!;
+
 
     [Column("DanhMucID")]
     public int DanhMucId { get; set; }

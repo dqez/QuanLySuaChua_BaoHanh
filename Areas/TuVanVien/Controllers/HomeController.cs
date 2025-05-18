@@ -1,6 +1,4 @@
-﻿// Areas/TuVanVien/Controllers/HomeController.cs
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QuanLySuaChua_BaoHanh.Models;
@@ -26,7 +24,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
                 .Take(5)
                 .ToListAsync();
 
-            return View(latestOrders); // ✅
+            return View(latestOrders);
         }
     }
 }

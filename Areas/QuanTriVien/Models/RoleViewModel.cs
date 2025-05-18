@@ -1,21 +1,22 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models
 {
     public class RoleViewModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; } = null!;
 
         [Required(ErrorMessage = "Tên vai trò không được để trống!")]
         [Display(Name = "Tên vai trò")]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
     }
 
     public class UserRolesViewModel
     {
-        public int UserId { get; set; }
-        public string UserName { get; set; }
-        public IList<string> Roles { get; set; }
-        public IList<string> SelectedRoles { get; set; }
+        public string UserId { get; set; } = null!;
+        public string UserName { get; set; } = null!;
+        public IList<string> Roles { get; set; } = new List<string>();
+        public IList<string> SelectedRoles { get; set; } = new List<string>();
     }
 }

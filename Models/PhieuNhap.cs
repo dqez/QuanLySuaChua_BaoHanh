@@ -11,10 +11,10 @@ public partial class PhieuNhap
 {
     [Key]
     [Column("PhieuNhapID")]
-    public int PhieuNhapId { get; set; }
+    public string PhieuNhapId { get; set; }
 
     [Column("KhoID")]
-    public int KhoId { get; set; }
+    public string KhoId { get; set; }
 
     [Precision(0)]
     public DateTime NgayNhap { get; set; }

@@ -45,7 +45,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models
     // EditUserViewModel.cs
     public class EditUserViewModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; } = null!;
 
         [Display(Name = "Tên đăng nhập")]
         public string UserName { get; set; } // Read-only

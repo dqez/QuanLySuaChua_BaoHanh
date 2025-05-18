@@ -14,13 +14,13 @@ public partial class ChiTietSuaChua
     public int ChiTietId { get; set; }
 
     [Column("SanPhamID")]
-    public int SanPhamId { get; set; }
+    public string SanPhamId { get; set; }
 
     [Column("PhieuSuaChuaID")]
-    public int PhieuSuaChuaId { get; set; }
+    public string PhieuSuaChuaId { get; set; }
 
     [Column("LinhKienID")]
-    public int LinhKienId { get; set; }
+    public string LinhKienId { get; set; }
 
     [StringLength(20)]
     [Unicode(false)]

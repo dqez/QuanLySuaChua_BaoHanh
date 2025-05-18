@@ -66,21 +66,6 @@ namespace QuanLySuaChua_BaoHanh.Controllers
             }
 
             ViewBag.Phuongs = new SelectList(await _context.Phuongs.ToListAsync(), "PhuongId", "TenPhuong");
-
-
-                //Cach2
-            //var phuongs = _context.Phuongs
-            //    .Include(p => p.Quan).ThenInclude(q => q.ThanhPho)
-            //    .Select(p => new
-            //    {
-            //        PhuongId = p.PhuongId,
-            //        TenDayDu = p.TenPhuong + ", " + p.Quan.TenQuan + ", " + p.Quan.ThanhPho.TenThanhPho
-            //    })
-            //    .OrderBy(p => p.TenDayDu)
-            //    .ToList();
-
-            //ViewBag.Phuongs = new SelectList(phuongs, "PhuongId", "TenDayDu");
-
             return View(model);
         }
 

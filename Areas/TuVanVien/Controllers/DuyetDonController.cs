@@ -14,18 +14,16 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
             _context = context;
         }
 
-        // Danh sách đơn chưa duyệt
         public IActionResult DanhSachDon()
         {
             var danhSach = _context.PhieuSuaChuas
                 .Include(p => p.KhachHang)
-              .Where(p => p.TrangThai.ToLower() == "ChuaDuyet")
+                .Where(p => p.TrangThai.ToLower() == "chuaduyet")
                 .ToList();
 
             return View(danhSach);
         }
 
-        // Chi tiết đơn
         public IActionResult ChiTietDon(int id)
         {
             var phieu = _context.PhieuSuaChuas
@@ -33,16 +31,14 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
                 .Include(p => p.ChiTietSuaChuas)
                     .ThenInclude(ct => ct.LinhKien)
                 .FirstOrDefault(p => p.PhieuSuaChuaId == id);
-
             if (phieu == null)
                 return NotFound();
 
             return View(phieu);
         }
 
-        // Duyet don
         [HttpPost]
-        public IActionResult Duyet(int id)
+        public IActionResult Duyet(string id)
         {
             var phieu = _context.PhieuSuaChuas.Find(id);
             if (phieu != null)

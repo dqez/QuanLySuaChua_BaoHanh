@@ -14,7 +14,7 @@ public partial class PhieuXuat
     public int PhieuXuatId { get; set; }
 
     [Column("KhoID")]
-    public int KhoId { get; set; }
+    public string KhoId { get; set; }
 
     [Precision(0)]
     public DateTime NgayXuat { get; set; }

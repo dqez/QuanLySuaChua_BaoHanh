@@ -5,60 +5,9 @@
     Layout = "~/Areas/TuVanVien/Views/Shared/_LayoutTuVanVien.cshtml";
 }
 
-<style>
-    .box-wrapper {
-        background-color: #d3f1f3;
-        border-radius: 10px;
-        padding: 20px;
-        border: 2px solid #bbb;
-    }
-
-    .info-box {
-        border: 1px solid #000;
-        padding: 10px;
-        margin-bottom: 10px;
-        background: white;
-    }
-
-    .device-img {
-        width: 180px;
-        height: auto;
-        border: 1px solid #888;
-    }
-
-    .btn-duyet {
-        background-color: gold;
-        border: none;
-        color: black;
-        padding: 5px 20px;
-        font-weight: bold;
-        border-radius: 5px;
-    }
-
-    .btn-lienhe {
-        background-color: #0d6efd;
-        border: none;
-        color: white;
-        padding: 5px 20px;
-        font-weight: bold;
-        border-radius: 5px;
-    }
-
-    .btn-back {
-        background: none;
-        border: none;
-        font-size: 20px;
-        color: black;
-        position: absolute;
-        bottom: 20px;
-        left: 20px;
-    }
-</style>
-
 <h2 class="text-center text-primary">Chi tiết đơn</h2>
 
 <div class="box-wrapper">
-    <!-- Thông tin khách hàng -->
     <div class="info-box">
         <b>Thông tin khách hàng</b><br />
         Tên khách hàng: @Model.KhachHang?.HoTen<br />
@@ -68,12 +17,10 @@
     </div>
 
     <div class="row">
-        <!-- Ảnh thiết bị -->
         <div class="col-md-3 text-center">
             <img src="https://cdn-icons-png.flaticon.com/512/1063/1063254.png" class="device-img" />
         </div>
 
-        <!-- Thông tin phiếu -->
         <div class="col-md-9">
             <div class="text-center mb-2">
                 <input type="text" class="form-control d-inline-block w-50" value="TÊN THIẾT BỊ" readonly />
@@ -92,7 +39,6 @@
         </div>
     </div>
 
-    <!-- Bảng chi tiết -->
     <table class="table mt-4 table-bordered bg-white">
         <thead>
             <tr class="text-center">
@@ -116,7 +62,6 @@
         </tbody>
     </table>
 
-    <!-- Nút chức năng -->
     <div class="d-flex justify-content-end gap-3">
         <form method="post" asp-action="Duyet" asp-route-id="@Model.PhieuSuaChuaId">
             <button class="btn-duyet">Duyệt</button>
@@ -124,7 +69,6 @@
         <button class="btn-lienhe">Liên hệ</button>
     </div>
 
-    <!-- Nút quay lại -->
     <a asp-action="DanhSachDon" class="btn-back" title="Quay lại">
         <i class="bi bi-arrow-return-left"></i>
     </a>
