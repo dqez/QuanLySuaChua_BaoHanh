@@ -15,10 +15,12 @@
                 <div class="card-body">
                     <form asp-action="Create">
                         <div class="mb-3">
-                            <label asp-for="DanhMucId" class="form-label">Mã danh mục</label>
-                            <select asp-for="DanhMucId" class="form-select" asp-items="ViewBag.DanhMucId">
-                                <option value="">-- Chọn danh mục --</option>
-                            </select>
+                            @* <label asp-for="DanhMucId" class="form-label">Mã danh mục</label> *@
+                            @* <select asp-for="DanhMucId" class="form-select" asp-items="ViewBag.DanhMucId"> *@
+                            @*     <option value="">-- Chọn danh mục --</option> *@
+                            @* </select> *@
+                            <label asp-for="DanhMucId" class="form-label fw-bold">Danh Mục</label>
+                            <select asp-for="DanhMucId" class="form-select" asp-items="ViewBag.DanhMucId"></select>
                         </div>
                         <div class="mb-3">
                             <label asp-for="TenLinhKien" class="form-label">Tên linh kiện</label>
