@@ -12,11 +12,15 @@ public partial class ChiTietPn
 {
     [Key]
     [Column("PhieuNhapID")]
-    public int PhieuNhapId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string PhieuNhapId { get; set; }
 
     [Key]
     [Column("LinhKienID")]
-    public int LinhKienId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string LinhKienId { get; set; }
 
     public int SoLuong { get; set; }
 

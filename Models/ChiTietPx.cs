@@ -12,11 +12,15 @@ public partial class ChiTietPx
 {
     [Key]
     [Column("PhieuXuatID")]
-    public int PhieuXuatId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string PhieuXuatId { get; set; }
 
     [Key]
     [Column("PhieuSuaChuaID")]
-    public int PhieuSuaChuaId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string PhieuSuaChuaId { get; set; }
 
     [StringLength(500)]
     public string? GhiChu { get; set; }

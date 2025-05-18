@@ -11,25 +11,30 @@ public partial class ChiTietSuaChua
 {
     [Key]
     [Column("ChiTietID")]
-    public int ChiTietId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string ChiTietId { get; set; }
 
     [Column("SanPhamID")]
+    [StringLength(20)]
+    [Unicode(false)]
     public string SanPhamId { get; set; }
 
     [Column("PhieuSuaChuaID")]
+    [StringLength(20)]
+    [Unicode(false)]
     public string PhieuSuaChuaId { get; set; }
 
     [Column("LinhKienID")]
-    public string LinhKienId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? LinhKienId { get; set; }
 
     [StringLength(20)]
     [Unicode(false)]
     public string? LoaiDon { get; set; }
 
     public int SoLuongLinhKien { get; set; }
-
-    [StringLength(1000)]
-    public string? MoTaKhachHang { get; set; }
 
     [StringLength(500)]
     public string? DanhGiaKyThuat { get; set; }
