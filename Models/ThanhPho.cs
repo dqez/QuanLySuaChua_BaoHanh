@@ -11,9 +11,13 @@ public partial class ThanhPho
 {
     [Key]
     [Column("ThanhPhoID")]
-    public int ThanhPhoId { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    [Display(Name = "Mã thành phố")]
+    public string ThanhPhoId { get; set; }
 
     [StringLength(100)]
+    [Display(Name = "Tên thành phố")]
     public string TenThanhPho { get; set; } = null!;
 
     [InverseProperty("ThanhPho")]

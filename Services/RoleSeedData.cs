@@ -26,7 +26,7 @@ public static class RoleSeedData
                 Email = "admin@example.com",
                 HoTen = "Quản trị viên",
                 PhoneNumber = "0123456789",
-                PhuongId = 1, // Đảm bảo có dữ liệu Phường trước
+                PhuongId = "PH001",
                 VaiTro = "QuanTriVien",
                 DiaChi = "Địa chỉ văn phòng"
             };

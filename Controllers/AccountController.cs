@@ -48,7 +48,7 @@ namespace QuanLySuaChua_BaoHanh.Controllers
                     HoTen = model.HoTen,
                     PhoneNumber = model.PhoneNumber,
                     DiaChi = model.DiaChi,
-                    PhuongId = model.PhuongId,
+                    PhuongId = model.PhuongId.ToString(),
                     VaiTro = "KhachHang"
                 };
                 var result = await _userManager.CreateAsync(user, model.Password);

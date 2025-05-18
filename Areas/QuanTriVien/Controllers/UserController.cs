@@ -66,7 +66,8 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
             ViewBag.UserRoles = userRoles;
 
             // Lấy thông tin phường, quận, thành phố
-            if (user.PhuongId > 0)
+            if (!string.IsNullOrEmpty(user.PhuongId))  
+
             {
                 var phuong = await _context.Phuongs
                     .Include(p => p.Quan)

@@ -37,7 +37,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models
 
         [Required(ErrorMessage = "Phường là bắt buộc")]
         [Display(Name = "Phường")]
-        public int PhuongId { get; set; }
+        public String PhuongId { get; set; }
 
         public List<string> SelectedRoles { get; set; }
     }
@@ -76,7 +76,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models
 
         [Required(ErrorMessage = "Phường là bắt buộc")]
         [Display(Name = "Phường")]
-        public int PhuongId { get; set; }
+        public String PhuongId { get; set; }
 
         public List<string> SelectedRoles { get; set; }
     }

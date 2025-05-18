@@ -11,9 +11,13 @@ public partial class PhieuNhap
 {
     [Key]
     [Column("PhieuNhapID")]
+    [StringLength(20)]
+    [Unicode(false)]
     public string PhieuNhapId { get; set; }
 
     [Column("KhoID")]
+    [StringLength(20)]
+    [Unicode(false)]
     public string KhoId { get; set; }
 
     [Precision(0)]

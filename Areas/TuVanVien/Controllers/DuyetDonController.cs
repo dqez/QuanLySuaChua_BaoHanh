@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QuanLySuaChua_BaoHanh.Models;
 
@@ -24,18 +25,22 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
             return View(danhSach);
         }
 
-        public IActionResult ChiTietDon(int id)
+        public async Task<IActionResult> ChiTietDon(int id)
         {
-            var phieu = _context.PhieuSuaChuas
+           
+
+            var phieu = await _context.PhieuSuaChuas
                 .Include(p => p.KhachHang)
                 .Include(p => p.ChiTietSuaChuas)
                     .ThenInclude(ct => ct.LinhKien)
-                .FirstOrDefault(p => p.PhieuSuaChuaId == id);
+                .FirstOrDefaultAsync(p => p.PhuongId.ToString() == p.PhuongId); // nếu cần
+
             if (phieu == null)
                 return NotFound();
 
             return View(phieu);
         }
+
 
         [HttpPost]
         public IActionResult Duyet(string id)
