@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -63,7 +64,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         // GET: NhanVienKho/LinhKiens/Create
         public IActionResult Create()
         {
-            ViewData["DanhMucId"] = new SelectList(_context.DanhMucs, "DanhMucId", "DanhMucId");
+            ViewBag.DanhMucId = new SelectList(_context.DanhMucs, "DanhMucId", "TenDanhMuc");
             return View();
         }
 
@@ -80,7 +81,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DanhMucId"] = new SelectList(_context.DanhMucs, "DanhMucId", "DanhMucId", linhKien.DanhMucId);
+            ViewData["DanhMucId"] = new SelectList(_context.DanhMucs, "DanhMucId", "TenDanhMuc", linhKien.DanhMucId);
             return View(linhKien);
         }
 
@@ -97,7 +98,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
             {
                 return NotFound();
             }
-            ViewData["DanhMucId"] = new SelectList(_context.DanhMucs, "DanhMucId", "DanhMucId", linhKien.DanhMucId);
+            ViewData["DanhMucId"] = new SelectList(_context.DanhMucs, "DanhMucId", "TenDanhMuc", linhKien.DanhMucId);
             return View(linhKien);
         }
 
@@ -133,7 +134,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DanhMucId"] = new SelectList(_context.DanhMucs, "DanhMucId", "DanhMucId", linhKien.DanhMucId);
+            ViewData["DanhMucId"] = new SelectList(_context.DanhMucs, "DanhMucId", "TenDanhMuc", linhKien.DanhMucId);
             return View(linhKien);
         }
 
