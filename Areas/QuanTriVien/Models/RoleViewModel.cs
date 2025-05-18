@@ -5,7 +5,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models
 {
     public class RoleViewModel
     {
-        public string Id { get; set; } = null!;
+        public string Id { get; set; }
 
         [Required(ErrorMessage = "Tên vai trò không được để trống!")]
         [Display(Name = "Tên vai trò")]
@@ -14,9 +14,9 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models
 
     public class UserRolesViewModel
     {
-        public string UserId { get; set; } = null!;
-        public string UserName { get; set; } = null!;
-        public IList<string> Roles { get; set; } = new List<string>();
-        public IList<string> SelectedRoles { get; set; } = new List<string>();
+        public string UserId { get; set; }
+        public string UserName { get; set; }
+        public IList<string> Roles { get; set; }
+        public IList<string> SelectedRoles { get; set; }
     }
 }

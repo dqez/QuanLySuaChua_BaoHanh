@@ -3,124 +3,159 @@
     ViewData["Title"] = "Trang chủ khách hàng";
 }
 
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="card-title mb-0">Thông tin cá nhân</h5>
-                </div>
-                <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">@Model.HoTen</h6>
-                    <p><i class="bi bi-envelope me-2"></i> @Model.Email</p>
-                    <p><i class="bi bi-telephone me-2"></i> @Model.PhoneNumber</p>
-                    <p><i class="bi bi-geo-alt me-2"></i> @ViewBag.DiaChi</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8">
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="card-title mb-0">Thiết bị của bạn</h5>
-                </div>
-                <div class="card-body">
-                    @if (ViewBag.Products != null && ((List<QuanLySuaChua_BaoHanh.Models.SanPham>)ViewBag.Products).Count > 0)
-                    {
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Tên sản phẩm</th>
-                                        <th>Hãng sản xuất</th>
-                                        <th>Model</th>
-                                        <th>Số series</th>
-                                        <th>Trạng thái</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in (List<QuanLySuaChua_BaoHanh.Models.SanPham>)ViewBag.Products)
-                                    {
-                                        <tr>
-                                            <td>@item.TenSanPham</td>
-                                            <td>@item.DanhMuc</td>
-                                            <td>@item.NgayMua</td>
-                                            <td>@item.ThoiGianBaoHanh</td>
-                                            <td>@item.MaBh</td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                    else
-                    {
-                        <p class="text-muted">Bạn chưa có thiết bị nào đăng ký.</p>
-                    }
+<style>
+    .hero-section {
+        background: linear-gradient(rgba(49, 155, 197, 0.1), rgba(49, 155, 197, 0.05));
+        padding: 60px 0;
+        border-radius: 20px;
+        margin-bottom: 40px;
+    }
+
+    .service-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+        border: 1px solid #eee;
+    }
+
+    .service-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .service-icon {
+        font-size: 2.5rem;
+        color: var(--blue-primary);
+        margin-bottom: 20px;
+    }
+
+    .btn-primary-custom {
+        background-color: var(--blue-primary);
+        border: none;
+        padding: 12px 30px;
+        border-radius: 30px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary-custom:hover {
+        background-color: #2b89af;
+        transform: translateY(-2px);
+    }
+
+    .btn-outline-custom {
+        border: 2px solid var(--blue-primary);
+        color: var(--blue-primary);
+        padding: 12px 30px;
+        border-radius: 30px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-custom:hover {
+        background-color: var(--blue-primary);
+        color: white;
+    }
+
+    .section-title {
+        color: var(--blue-primary);
+        font-weight: 700;
+        margin-bottom: 40px;
+    }
+
+    .highlight-text {
+        color: var(--blue-primary);
+        font-weight: 600;
+    }
+</style>
+
+<div class="container">
+    <!-- Hero Section -->
+    <div class="hero-section text-center">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h1 class="display-4 fw-bold mb-4">Trung Tâm Bảo Hành <span class="highlight-text">Panasonic</span></h1>
+                <p class="lead mb-4">
+                    Chúng tôi cam kết mang đến dịch vụ bảo hành và sửa chữa chất lượng cao nhất cho các thiết bị Panasonic của bạn
+                </p>
+                <div class="mt-5">
+                    <a asp-area="KhachHang" asp-controller="ServiceRegistration" asp-action="Index" class="btn btn-primary-custom me-3">
+                        Đăng Ký Dịch Vụ
+                    </a>
+                    <a asp-area="KhachHang" asp-controller="Home" asp-action="About" class="btn btn-outline-custom">
+                        Tìm Hiểu Thêm
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="card-title mb-0">Lịch sử sửa chữa</h5>
+    <!-- Services Section -->
+    <div class="services-section my-5">
+        <h2 class="text-center section-title mb-5">Dịch Vụ Của Chúng Tôi</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="service-card text-center">
+                    <i class="bi bi-tools service-icon"></i>
+                    <h3 class="h4 mb-3">Sửa Chữa Chuyên Nghiệp</h3>
+                    <p class="text-muted">
+                        Đội ngũ kỹ thuật viên được đào tạo chuyên sâu, sử dụng thiết bị và phụ tùng chính hãng
+                    </p>
                 </div>
-                <div class="card-body">
-                    @if (ViewBag.Orders != null && ((List<QuanLySuaChua_BaoHanh.Models.PhieuSuaChua>)ViewBag.Orders).Count > 0)
-                    {
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Mã phiếu</th>
-                                        <th>Ngày gửi</th>
-                                        <th>Tình trạng</th>
-                                        <th>Mô tả</th>
-                                        <th>Ngày hoàn thành</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var order in (List<QuanLySuaChua_BaoHanh.Models.PhieuSuaChua>)ViewBag.Orders)
-                                    {
-                                        <tr>
-                                            <td>@order.PhieuSuaChuaId</td>
-                                            <td>@order.NgayGui.ToString("dd/MM/yyyy")</td>
-                                            <td>
-                                                @{
-                                                    string badgeClass = "badge bg-secondary";
+            </div>
+            <div class="col-md-4">
+                <div class="service-card text-center">
+                    <i class="bi bi-shield-check service-icon"></i>
+                    <h3 class="h4 mb-3">Bảo Hành Chính Hãng</h3>
+                    <p class="text-muted">
+                        Dịch vụ bảo hành theo tiêu chuẩn của Panasonic, đảm bảo quyền lợi khách hàng
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="service-card text-center">
+                    <i class="bi bi-clock-history service-icon"></i>
+                    <h3 class="h4 mb-3">Hỗ Trợ Nhanh Chóng</h3>
+                    <p class="text-muted">
+                        Thời gian phản hồi nhanh, xử lý sự cố kịp thời, theo dõi tiến độ trực tuyến
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                                                    switch (order.TrangThai?.ToLower())
-                                                    {
-                                                        case "đang xử lý":
-                                                            badgeClass = "badge bg-warning text-dark";
-                                                            break;
-                                                        case "hoàn thành":
-                                                            badgeClass = "badge bg-success";
-                                                            break;
-                                                        case "đã hủy":
-                                                            badgeClass = "badge bg-danger";
-                                                            break;
-                                                        case "chờ xác nhận":
-                                                            badgeClass = "badge bg-info";
-                                                            break;
-                                                    }
-                                                }
-                                                <span class="@badgeClass">@order.TrangThai</span>
-                                            </td>
-                                            <td>@(string.IsNullOrEmpty(order.MoTaKhachHang) ? "Không có mô tả" : order.MoTaKhachHang)</td>
-                                            <td>@(order.NgayTra.HasValue ? order.NgayTra.Value.ToString("dd/MM/yyyy") : "Chưa hoàn thành")</td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                    else
-                    {
-                        <p class="text-muted">Bạn chưa có phiếu sửa chữa nào.</p>
-                    }
+    <!-- Why Choose Us Section -->
+    <div class="why-us-section my-5 text-center">
+        <h2 class="section-title">Tại Sao Chọn Chúng Tôi?</h2>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-3">
+                <div class="text-center">
+                    <i class="bi bi-patch-check service-icon"></i>
+                    <h4 class="mt-3">Uy Tín</h4>
+                    <p class="text-muted">Đơn vị ủy quyền chính thức của Panasonic</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <i class="bi bi-people service-icon"></i>
+                    <h4 class="mt-3">Chuyên Nghiệp</h4>
+                    <p class="text-muted">Đội ngũ kỹ thuật viên giàu kinh nghiệm</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <i class="bi bi-gear service-icon"></i>
+                    <h4 class="mt-3">Chất Lượng</h4>
+                    <p class="text-muted">Linh kiện chính hãng 100%</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <i class="bi bi-headset service-icon"></i>
+                    <h4 class="mt-3">Hỗ Trợ 24/7</h4>
+                    <p class="text-muted">Luôn sẵn sàng phục vụ khách hàng</p>
                 </div>
             </div>
         </div>

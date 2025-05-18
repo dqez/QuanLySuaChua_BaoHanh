@@ -22,13 +22,10 @@ namespace QuanLySuaChua_BaoHanh.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<string>", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -52,7 +49,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -66,8 +63,9 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -76,7 +74,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -90,8 +88,9 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(20)");
 
                     b.HasKey("Id");
 
@@ -100,7 +99,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -111,8 +110,9 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(20)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -121,13 +121,13 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(20)");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -136,10 +136,10 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -157,12 +157,16 @@ namespace QuanLySuaChua_BaoHanh.Migrations
 
             modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.ChiTietPn", b =>
                 {
-                    b.Property<int>("PhieuNhapId")
-                        .HasColumnType("int")
+                    b.Property<string>("PhieuNhapId")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("PhieuNhapID");
 
-                    b.Property<int>("LinhKienId")
-                        .HasColumnType("int")
+                    b.Property<string>("LinhKienId")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("LinhKienID");
 
                     b.Property<int>("SoLuong")
@@ -178,12 +182,16 @@ namespace QuanLySuaChua_BaoHanh.Migrations
 
             modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.ChiTietPx", b =>
                 {
-                    b.Property<int>("PhieuXuatId")
-                        .HasColumnType("int")
+                    b.Property<string>("PhieuXuatId")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("PhieuXuatID");
 
-                    b.Property<int>("PhieuSuaChuaId")
-                        .HasColumnType("int")
+                    b.Property<string>("PhieuSuaChuaId")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("PhieuSuaChuaID");
 
                     b.Property<string>("GhiChu")
@@ -200,19 +208,21 @@ namespace QuanLySuaChua_BaoHanh.Migrations
 
             modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.ChiTietSuaChua", b =>
                 {
-                    b.Property<int>("ChiTietId")
+                    b.Property<string>("ChiTietId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("ChiTietID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChiTietId"));
 
                     b.Property<string>("DanhGiaKyThuat")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("LinhKienId")
-                        .HasColumnType("int")
+                    b.Property<string>("LinhKienId")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("LinhKienID");
 
                     b.Property<string>("LoaiDon")
@@ -220,16 +230,18 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(20)");
 
-                    b.Property<string>("MoTaKhachHang")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<int>("PhieuSuaChuaId")
-                        .HasColumnType("int")
+                    b.Property<string>("PhieuSuaChuaId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("PhieuSuaChuaID");
 
-                    b.Property<int>("SanPhamId")
-                        .HasColumnType("int")
+                    b.Property<string>("SanPhamId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("SanPhamID");
 
                     b.Property<int>("SoLuongLinhKien")
@@ -249,12 +261,12 @@ namespace QuanLySuaChua_BaoHanh.Migrations
 
             modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.DanhMuc", b =>
                 {
-                    b.Property<int>("DanhMucId")
+                    b.Property<string>("DanhMucId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("DanhMucID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DanhMucId"));
 
                     b.Property<string>("PhanLoai")
                         .IsRequired()
@@ -275,15 +287,17 @@ namespace QuanLySuaChua_BaoHanh.Migrations
 
             modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.LinhKien", b =>
                 {
-                    b.Property<int>("LinhKienId")
+                    b.Property<string>("LinhKienId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("LinhKienID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LinhKienId"));
-
-                    b.Property<int?>("DanhMucId")
-                        .HasColumnType("int")
+                    b.Property<string>("DanhMucId")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("DanhMucID");
 
                     b.Property<decimal>("DonGia")
@@ -315,12 +329,12 @@ namespace QuanLySuaChua_BaoHanh.Migrations
 
             modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.NguoiDung", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("NguoiDungID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -378,8 +392,11 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int>("PhuongId")
-                        .HasColumnType("int")
+                    b.Property<string>("PhuongId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("PhuongID");
 
                     b.Property<string>("SecurityStamp")
@@ -421,24 +438,29 @@ namespace QuanLySuaChua_BaoHanh.Migrations
 
             modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.PhieuNhap", b =>
                 {
-                    b.Property<int>("PhieuNhapId")
+                    b.Property<string>("PhieuNhapId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("PhieuNhapID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PhieuNhapId"));
 
                     b.Property<string>("GhiChu")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("KhoId")
-                        .HasColumnType("int")
+                    b.Property<string>("KhoId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("KhoID");
 
                     b.Property<DateTime>("NgayNhap")
+                        .ValueGeneratedOnAdd()
                         .HasPrecision(0)
-                        .HasColumnType("datetime2(0)");
+                        .HasColumnType("datetime2(0)")
+                        .HasDefaultValueSql("(getdate())");
 
                     b.Property<decimal?>("TongTien")
                         .HasColumnType("decimal(12, 2)");
@@ -458,12 +480,12 @@ namespace QuanLySuaChua_BaoHanh.Migrations
 
             modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.PhieuSuaChua", b =>
                 {
-                    b.Property<int>("PhieuSuaChuaId")
+                    b.Property<string>("PhieuSuaChuaId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("PhieuSuaChuaID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PhieuSuaChuaId"));
 
                     b.Property<string>("DiaChiNhanTraSanPham")
                         .IsRequired()
@@ -474,15 +496,20 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("KhachHangId")
-                        .HasColumnType("int")
+                    b.Property<string>("KhachHangId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("KhachHangID");
 
                     b.Property<double?>("KhoangCach")
                         .HasColumnType("float");
 
-                    b.Property<int?>("KyThuatId")
-                        .HasColumnType("int")
+                    b.Property<string>("KyThuatId")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("KyThuatID");
 
                     b.Property<string>("MoTaKhachHang")
@@ -511,8 +538,11 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.Property<decimal?>("PhiVanChuyen")
                         .HasColumnType("decimal(12, 2)");
 
-                    b.Property<int>("PhuongId")
-                        .HasColumnType("int")
+                    b.Property<string>("PhuongId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("PhuongID");
 
                     b.Property<string>("PhuongThucThanhToan")
@@ -542,19 +572,22 @@ namespace QuanLySuaChua_BaoHanh.Migrations
 
             modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.PhieuXuat", b =>
                 {
-                    b.Property<int>("PhieuXuatId")
+                    b.Property<string>("PhieuXuatId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("PhieuXuatID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PhieuXuatId"));
 
                     b.Property<string>("GhiChu")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("KhoId")
-                        .HasColumnType("int")
+                    b.Property<string>("KhoId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("KhoID");
 
                     b.Property<DateTime>("NgayXuat")
@@ -579,15 +612,18 @@ namespace QuanLySuaChua_BaoHanh.Migrations
 
             modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.Phuong", b =>
                 {
-                    b.Property<int>("PhuongId")
+                    b.Property<string>("PhuongId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("PhuongID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PhuongId"));
-
-                    b.Property<int>("QuanId")
-                        .HasColumnType("int")
+                    b.Property<string>("QuanId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("QuanID");
 
                     b.Property<string>("TenPhuong")
@@ -605,20 +641,23 @@ namespace QuanLySuaChua_BaoHanh.Migrations
 
             modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.Quan", b =>
                 {
-                    b.Property<int>("QuanId")
+                    b.Property<string>("QuanId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("QuanID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuanId"));
 
                     b.Property<string>("TenQuan")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("ThanhPhoId")
-                        .HasColumnType("int")
+                    b.Property<string>("ThanhPhoId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("ThanhPhoID");
 
                     b.HasKey("QuanId")
@@ -631,19 +670,25 @@ namespace QuanLySuaChua_BaoHanh.Migrations
 
             modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.SanPham", b =>
                 {
-                    b.Property<int>("SanPhamId")
+                    b.Property<string>("SanPhamId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("SanPhamID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SanPhamId"));
-
-                    b.Property<int>("DanhMucId")
-                        .HasColumnType("int")
+                    b.Property<string>("DanhMucId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("DanhMucID");
 
-                    b.Property<int>("KhachHangId")
-                        .HasColumnType("int")
+                    b.Property<string>("KhachHangId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("KhachHangID");
 
                     b.Property<string>("MaBh")
@@ -671,6 +716,9 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.Property<int>("ThoiGianBaoHanh")
                         .HasColumnType("int");
 
+                    b.Property<string>("UrlHinhAnh")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("SanPhamId")
                         .HasName("PK__SanPham__05180FF4A990F499");
 
@@ -683,12 +731,12 @@ namespace QuanLySuaChua_BaoHanh.Migrations
 
             modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.ThanhPho", b =>
                 {
-                    b.Property<int>("ThanhPhoId")
+                    b.Property<string>("ThanhPhoId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("ThanhPhoID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ThanhPhoId"));
 
                     b.Property<string>("TenThanhPho")
                         .IsRequired()
@@ -703,19 +751,22 @@ namespace QuanLySuaChua_BaoHanh.Migrations
 
             modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.ThongBao", b =>
                 {
-                    b.Property<int>("ThongBaoId")
+                    b.Property<string>("ThongBaoId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("ThongBaoID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ThongBaoId"));
 
                     b.Property<DateTime>("NgayTao")
                         .HasPrecision(0)
                         .HasColumnType("datetime2(0)");
 
-                    b.Property<int>("NguoiDungId")
-                        .HasColumnType("int")
+                    b.Property<string>("NguoiDungId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("NguoiDungID");
 
                     b.Property<string>("NoiDung")
@@ -744,19 +795,25 @@ namespace QuanLySuaChua_BaoHanh.Migrations
 
             modelBuilder.Entity("QuanLySuaChua_BaoHanh.Models.TinNhan", b =>
                 {
-                    b.Property<int>("TinNhanId")
+                    b.Property<string>("TinNhanId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("TinNhanID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TinNhanId"));
-
-                    b.Property<int>("NguoiGuiId")
-                        .HasColumnType("int")
+                    b.Property<string>("NguoiGuiId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("NguoiGuiID");
 
-                    b.Property<int>("NguoiNhanId")
-                        .HasColumnType("int")
+                    b.Property<string>("NguoiNhanId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
                         .HasColumnName("NguoiNhanID");
 
                     b.Property<string>("NoiDung")
@@ -782,16 +839,16 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.ToTable("TinNhan");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<string>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.HasOne("QuanLySuaChua_BaoHanh.Models.NguoiDung", null)
                         .WithMany()
@@ -800,7 +857,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.HasOne("QuanLySuaChua_BaoHanh.Models.NguoiDung", null)
                         .WithMany()
@@ -809,9 +866,9 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<string>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -824,7 +881,7 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.HasOne("QuanLySuaChua_BaoHanh.Models.NguoiDung", null)
                         .WithMany()
@@ -876,7 +933,6 @@ namespace QuanLySuaChua_BaoHanh.Migrations
                     b.HasOne("QuanLySuaChua_BaoHanh.Models.LinhKien", "LinhKien")
                         .WithMany("ChiTietSuaChuas")
                         .HasForeignKey("LinhKienId")
-                        .IsRequired()
                         .HasConstraintName("FK__ChiTietSu__LinhK__70DDC3D8");
 
                     b.HasOne("QuanLySuaChua_BaoHanh.Models.PhieuSuaChua", "PhieuSuaChua")

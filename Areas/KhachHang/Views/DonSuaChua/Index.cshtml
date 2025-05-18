@@ -1,0 +1,354 @@
+﻿@using QuanLySuaChua_BaoHanh.Enums
+@{
+    ViewData["Title"] = "Đơn sửa chữa/Bảo hành";
+}
+
+<div class="container-fluid px-4 mt-6">
+    <h2 class="text-center main-title">ĐƠN SỬA CHỮA/BẢO HÀNH</h2>
+
+    <div class="repair-tabs-container">
+        <ul class="nav nav-tabs custom-tabs" id="repairTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab">
+                    <i class="bi bi-grid me-1"></i>
+                    Tất cả (@ViewBag.AllOrders.Count)
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="waiting-tab" data-bs-toggle="tab" data-bs-target="#waiting" type="button" role="tab">
+                    <i class="bi bi-hourglass-split me-1"></i>
+                    Chờ xác nhận (@ViewBag.PendingOrders.Count)
+                </button>
+            </li>            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="received-tab" data-bs-toggle="tab" data-bs-target="#received" type="button" role="tab">
+                    <i class="bi bi-check2-circle me-1"></i>
+                    Đã xác nhận (@ViewBag.ConfirmedOrders.Count)
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="waiting-inspection-tab" data-bs-toggle="tab" data-bs-target="#waiting-inspection" type="button" role="tab">
+                    <i class="bi bi-calendar-check me-1"></i>
+                    Chờ kiểm tra (@ViewBag.WaitingForInspectionOrders.Count)
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="repairing-tab" data-bs-toggle="tab" data-bs-target="#repairing" type="button" role="tab">
+                    <i class="bi bi-gear-wide-connected me-1"></i>
+                    Đang sửa chữa (@ViewBag.RepairingOrders.Count)
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="completed-tab" data-bs-toggle="tab" data-bs-target="#completed" type="button" role="tab">
+                    <i class="bi bi-trophy me-1"></i>
+                    Hoàn thành (@ViewBag.CompletedOrders.Count)
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="cancelled-tab" data-bs-toggle="tab" data-bs-target="#cancelled" type="button" role="tab">
+                    <i class="bi bi-x-circle me-1"></i>
+                    Đã hủy (@ViewBag.CancelledOrders.Count)
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content mt-4" id="repairTabContent">
+            <div class="tab-pane fade show active" id="all" role="tabpanel">
+                <div class="repair-orders-list">
+                    @if (ViewBag.AllOrders.Count > 0)
+                    {
+                        @foreach (var order in ViewBag.AllOrders)
+                        {
+                            <partial name="_RepairOrderCard" model="order" />
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-center">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Bạn chưa có đơn sửa chữa nào
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="waiting" role="tabpanel">
+                <div class="repair-orders-list">
+                    @if (ViewBag.PendingOrders.Count > 0)
+                    {
+                        @foreach (var order in ViewBag.PendingOrders)
+                        {
+                            <partial name="_RepairOrderCard" model="order" />
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-center">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Bạn không có đơn sửa chữa đang chờ xác nhận
+                        </div>
+                    }
+                </div>
+            </div>            <div class="tab-pane fade" id="received" role="tabpanel">
+                <div class="repair-orders-list">
+                    @if (ViewBag.ConfirmedOrders.Count > 0)
+                    {
+                        @foreach (var order in ViewBag.ConfirmedOrders)
+                        {
+                            <partial name="_RepairOrderCard" model="order" />
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-center">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Bạn không có đơn sửa chữa đã xác nhận
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="waiting-inspection" role="tabpanel">
+                <div class="repair-orders-list">
+                    @if (ViewBag.WaitingForInspectionOrders.Count > 0)
+                    {
+                        @foreach (var order in ViewBag.WaitingForInspectionOrders)
+                        {
+                            <partial name="_RepairOrderCard" model="order" />
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-center">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Bạn không có đơn sửa chữa đang chờ kiểm tra
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="repairing" role="tabpanel">
+                <div class="repair-orders-list">
+                    @if (ViewBag.RepairingOrders.Count > 0)
+                    {
+                        @foreach (var order in ViewBag.RepairingOrders)
+                        {
+                            <partial name="_RepairOrderCard" model="order" />
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-center">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Bạn không có đơn sửa chữa đang được sửa
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="completed" role="tabpanel">
+                <div class="repair-orders-list">
+                    @if (ViewBag.CompletedOrders.Count > 0)
+                    {
+                        @foreach (var order in ViewBag.CompletedOrders)
+                        {
+                            <partial name="_RepairOrderCard" model="order" />
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-center">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Bạn không có đơn sửa chữa đã hoàn thành
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="cancelled" role="tabpanel">
+                <div class="repair-orders-list">
+                    @if (ViewBag.CancelledOrders.Count > 0)
+                    {
+                        @foreach (var order in ViewBag.CancelledOrders)
+                        {
+                            <partial name="_RepairOrderCard" model="order" />
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-center">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Bạn không có đơn sửa chữa đã hủy
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        .container-fluid {
+            padding-top: 6rem;
+            padding-bottom: 2rem;
+        }
+
+        .main-title {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .main-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            border-radius: 2px;
+        }
+
+        .repair-tabs-container {
+            background-color: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+        }
+
+        .custom-tabs {
+            border-bottom: none;
+            margin-bottom: 1.5rem;
+            gap: 0.5rem;
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.25rem;
+            font-weight: 500;
+            color: #718096;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: #3498db;
+            background-color: #f8fafc;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: #3498db;
+            background-color: #ebf8ff;
+            border-bottom: none;
+        }
+
+        .nav-tabs .nav-link.active:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #3498db;
+            border-radius: 3px;
+        }
+
+        .tab-content {
+            min-height: 300px;
+        }
+
+        .repair-orders-list {
+            margin-top: 1rem;
+        }
+
+        .tab-pane .alert {
+            border-radius: 12px;
+            padding: 1.5rem;
+        }        @@media (max-width: 768px) {
+            .nav-tabs {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                scrollbar-width: thin;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .nav-tabs::-webkit-scrollbar {
+                height: 4px;
+            }
+
+            .nav-tabs::-webkit-scrollbar-thumb {
+                background-color: #cbd5e0;
+                border-radius: 2px;
+            }
+
+            .container-fluid {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+        }
+    </style>
+}
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Handle cancel order
+            $(document).on('click', '.cancel-order', function () {
+                const orderId = $(this).data('id');
+                
+                Swal.fire({
+                    title: 'Xác nhận hủy đơn',
+                    text: "Bạn có chắc chắn muốn hủy đơn sửa chữa này?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Có, hủy đơn!',
+                    cancelButtonText: 'Không, giữ lại'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/KhachHang/DonSuaChua/Cancel',
+                            type: 'POST',
+                            data: {
+                                id: orderId,
+                                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    Swal.fire({
+                                        title: 'Thành công!',
+                                        text: response.message,
+                                        icon: 'success'
+                                    }).then(() => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Lỗi!',
+                                        text: response.message,
+                                        icon: 'error'
+                                    });
+                                }
+                            },
+                            error: function () {
+                                Swal.fire({
+                                    title: 'Lỗi!',
+                                    text: 'Có lỗi xảy ra, vui lòng thử lại sau.',
+                                    icon: 'error'
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

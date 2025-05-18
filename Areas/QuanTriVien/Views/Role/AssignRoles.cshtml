@@ -4,86 +4,187 @@
     Layout = "_LayoutAdmin";
 }
 
-<div class="container-fluid">
-    <h1 class="mt-4">Phân quyền người dùng</h1>
-
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success">
-            @TempData["SuccessMessage"]
-        </div>
+<style>
+    .page-title {
+        font-family: 'Baloo 2', cursive;
+        font-weight: 700;
+        color: var(--blue-primary);
+        margin-bottom: 25px;
     }
-
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger">
-            @TempData["ErrorMessage"]
-        </div>
+    
+    .content-card {
+        background-color: var(--white);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        margin-bottom: 30px;
+        width: 100%;
     }
+    
+    .user-list {
+        border-radius: 6px;
+        overflow: hidden;
+    }
+    
+    .user-list-item {
+        padding: 12px 16px;
+        border-left: 3px solid transparent;
+        transition: all 0.2s;
+        display: block;
+        text-decoration: none;
+        color: #495057;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .user-list-item:hover {
+        background-color: #f8f9fa;
+        text-decoration: none;
+        color: var(--blue-primary);
+    }
+    
+    .user-list-item.active {
+        background-color: rgba(49, 155, 197, 0.1);
+        border-left-color: var(--blue-primary);
+        color: var(--blue-primary);
+        font-weight: 500;
+    }
+    
+    .role-section {
+        padding: 20px;
+        border-radius: 6px;
+        background-color: #f8f9fa;
+    }
+    
+    .role-header {
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #dee2e6;
+    }
+    
+    .role-check-item {
+        padding: 8px 12px;
+        border-radius: 4px;
+        margin-bottom: 5px;
+        transition: background-color 0.2s;
+    }
+    
+    .role-check-item:hover {
+        background-color: rgba(49, 155, 197, 0.05);
+    }
+    
+    .form-check-input {
+        margin-top: 0.2rem;
+    }
+    
+    .form-check-label {
+        margin-left: 5px;
+        font-weight: 500;
+    }
+    
+    .btn-primary-custom {
+        background-color: var(--blue-primary);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 16px;
+        text-decoration: none;
+        font-size: 14px;
+        transition: background-color 0.2s;
+    }
+    
+    .btn-primary-custom:hover {
+        background-color: #2580a3;
+        color: white;
+    }
+    
+    .alert-custom {
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+</style>
 
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <i class="fas fa-users mr-1"></i>
-                    Danh sách người dùng
-                </div>
-                <div class="card-body">
-                    <div class="list-group">
-                        @foreach (var user in ViewBag.Users)
-                        {
-                            <a asp-action="AssignRoles" asp-route-userId="@user.Id"
-                               class="list-group-item list-group-item-action @(Model.UserId == user.Id ? "active" : "")">
-                                @user.UserName
-                            </a>
-                        }
-                    </div>
-                </div>
+<h1 class="page-title"><i class="bi bi-person-lock me-2"></i>Phân quyền người dùng</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-custom alert-success">
+        <i class="bi bi-check-circle me-2"></i> @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-custom alert-danger">
+        <i class="bi bi-exclamation-triangle me-2"></i> @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="content-card">
+            <h5 class="mb-3"><i class="bi bi-people me-2"></i>Danh sách người dùng</h5>
+            <div class="user-list">
+                @foreach (var user in ViewBag.Users)
+                {
+                    <a asp-action="AssignRoles" asp-route-userId="@user.Id"
+                       class="user-list-item @(Model.UserId == user.Id ? "active" : "")">
+                        <i class="bi bi-person me-2"></i>@user.UserName
+                    </a>
+                }
             </div>
         </div>
-
-        <div class="col-md-8">
-            @if (!string.IsNullOrEmpty(Model.UserId)) 
-            {
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fas fa-user-tag mr-1"></i>
-                        Phân quyền cho: <strong>@Model.UserName</strong>
-                    </div>
-                    <div class="card-body">
-                        <form asp-action="AssignRoles">
-                            <input type="hidden" name="UserId" value="@Model.UserId" />
-                            <input type="hidden" name="UserName" value="@Model.UserName" />
-
-                            <div class="form-group">
-                                <label>Chọn các quyền:</label>
-                                @foreach (var role in ViewBag.Roles)
-                                {
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input"
-                                               name="SelectedRoles" value="@role.Name" id="role_@role.Id"
-                                        @(Model.Roles != null && Model.Roles.Contains(role.Name) ? "checked" : "") />
-                                        <label class="form-check-label" for="role_@role.Id">@role.Name</label>
-                                    </div>
-                                }
-                            </div>
-
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            }
-            else
-            {
-                <div class="card">
-                    <div class="card-body">
-                        <p class="text-muted">Vui lòng chọn một người dùng từ danh sách bên trái để phân quyền.</p>
-                    </div>
-                </div>
-            }
+        <div class="d-flex justify-content-center">
+            <a asp-action="Index" asp-controller="ManageAccounts" class="btn btn-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Quay lại
+            </a>
         </div>
+    </div>
+
+    <div class="col-md-8">
+        @if (Model.UserId != null)
+        {
+            <div class="content-card">
+                <div class="role-header">
+                    <h5 class="mb-0"><i class="bi bi-shield me-2"></i>Phân quyền cho: <strong>@Model.UserName</strong></h5>
+                </div>
+                <form asp-action="AssignRoles">
+                    <input type="hidden" name="UserId" value="@Model.UserId" />
+                    <input type="hidden" name="UserName" value="@Model.UserName" />
+                    <div class="role-section">
+                        <div class="mb-3">
+                            <label class="mb-2 fw-bold">Chọn các quyền:</label>
+                        </div>
+                        @foreach (var role in ViewBag.Roles)
+                        {
+                            <div class="role-check-item">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input"
+                                           name="SelectedRoles" value="@role.Name" id="role_@role.Id"
+                                    @(Model.Roles != null && Model.Roles.Contains(role.Name) ? "checked" : "") />
+                                    <label class="form-check-label" for="role_@role.Id">@role.Name</label>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn-primary-custom">
+                            <i class="bi bi-save me-1"></i>Lưu thay đổi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        }
+        else
+        {
+            <div class="content-card">
+                <div class="text-center py-4">
+                    <i class="bi bi-arrow-left-circle text-muted" style="font-size: 3rem;"></i>
+                    <p class="text-muted mt-3">Vui lòng chọn một người dùng từ danh sách bên trái để phân quyền.</p>
+                </div>
+            </div>
+        }
     </div>
 </div>
 

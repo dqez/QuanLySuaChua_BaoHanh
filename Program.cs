@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using QuanLySuaChua_BaoHanh.Models;
+using QuanLySuaChua_BaoHanh.Services;
+using QuanLySuaChua_BaoHanh.Areas.KhachHang.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +31,11 @@ builder.Services.ConfigureApplicationCookie(options => {
     options.SlidingExpiration = true;
 });
 
+//dang ky IDGenerator
+builder.Services.AddScoped<IDGenerator>();
+
+// Đăng ký service PhieuSuaChua
+builder.Services.AddScoped<IPhieuSuaChuaService, PhieuSuaChuaService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -55,7 +62,6 @@ app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
@@ -66,10 +72,13 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     try
     {
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole<string>>>();
         var userManager = services.GetRequiredService<UserManager<NguoiDung>>();
-        var roleManager = services.GetRequiredService<RoleManager<IdentityRole<int>>>();
-        await RoleSeedData.SeedRoles(roleManager);
-        await RoleSeedData.SeedAdminUser(userManager);
+        var idGenerator = services.GetRequiredService<IDGenerator>();
+        var context = services.GetRequiredService<BHSC_DbContext>();
+
+        await RoleSeedData.SeedRoles(roleManager, idGenerator);
+        await RoleSeedData.SeedAdminUser(userManager, idGenerator, context);
     }
     catch (Exception ex)
     {

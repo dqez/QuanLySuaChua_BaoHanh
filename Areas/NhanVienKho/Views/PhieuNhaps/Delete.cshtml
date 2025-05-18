@@ -1,0 +1,58 @@
+﻿@model QuanLySuaChua_BaoHanh.Models.PhieuNhap
+@{
+    ViewData["Title"] = "Xóa phiếu nhập";
+    Layout = "~/Areas/NhanVienKho/Views/Shared/_LayoutStashEmployee.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-danger">
+        <i class="bi bi-exclamation-triangle-fill"></i> Xóa phiếu nhập
+    </h2>
+
+    <div class="card shadow mb-4">
+        <div class="card-header bg-danger text-white">
+            <i class="bi bi-exclamation-circle"></i>
+            Xác nhận xóa phiếu nhập
+        </div>
+        <div class="card-body">
+            <h5 class="mb-3">Bạn có chắc chắn muốn xóa phiếu nhập này?</h5>
+            <div class="alert alert-warning d-flex align-items-center" role="alert">
+                <i class="bi bi-exclamation-diamond-fill me-2"></i>
+                <div>
+                    Cảnh báo: Hành động này không thể hoàn tác. Tất cả dữ liệu liên quan đến phiếu nhập này sẽ bị xóa.
+                </div>
+            </div>
+
+            <dl class="row mb-0">
+                <dt class="col-sm-4">Mã phiếu nhập:</dt>
+                <dd class="col-sm-8">@Model.PhieuNhapId</dd>
+
+                <dt class="col-sm-4">Ngày nhập:</dt>
+                <dd class="col-sm-8">@Model.NgayNhap.ToString("dd/MM/yyyy")</dd>
+
+                <dt class="col-sm-4">Tổng tiền:</dt>
+                <dd class="col-sm-8">@Model.TongTien</dd>
+
+                <dt class="col-sm-4">Trạng thái:</dt>
+                <dd class="col-sm-8">@Model.TrangThai</dd>
+
+                <dt class="col-sm-4">Ghi chú:</dt>
+                <dd class="col-sm-8">@Model.GhiChu</dd>
+
+                <dt class="col-sm-4">Mã kho:</dt>
+                <dd class="col-sm-8">@Model.Kho?.Id</dd>
+            </dl>
+
+            <form asp-area="NhanVienKho" asp-controller="PhieuNhaps" asp-action="Delete" method="post" class="mt-4">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="PhieuNhapId" />
+                <button type="submit" class="btn btn-danger me-2">
+                    <i class="bi bi-trash"></i> Xác nhận xóa
+                </button>
+                <a href="/NhanVienKho/PhieuNhaps/Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Hủy
+                </a>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,203 @@
+﻿@model QuanLySuaChua_BaoHanh.Models.PhieuSuaChua
+
+@{
+    ViewData["Title"] = "Chi tiết phiếu sửa chữa";
+    Layout = "~/Areas/QuanTriVien/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    .page-title {
+        font-family: 'Baloo 2', cursive;
+        font-weight: 700;
+        color: var(--blue-primary);
+        margin-bottom: 25px;
+    }
+      .content-card {
+        background-color: var(--white);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        margin-bottom: 30px;
+        width: 100%;
+        overflow-x: auto;
+    }
+    
+    .section-title {
+        font-family: 'Baloo 2', cursive;
+        font-weight: 600;
+        font-size: 20px;
+        color: var(--blue-primary);
+        margin-bottom: 15px;
+        border-bottom: 2px solid #e9e9e9;
+        padding-bottom: 10px;
+    }
+    
+    .info-row {
+        margin-bottom: 8px;
+    }
+    
+    .info-row dt {
+        font-weight: 600;
+        color: #495057;
+    }
+    
+    .info-row dd {
+        color: #212529;
+    }
+    
+    .btn-action {
+        padding: 8px 16px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        font-family: 'Inter', sans-serif;
+        transition: all 0.3s;
+    }
+    
+    .btn-primary-custom {
+        background-color: var(--blue-primary);
+        color: white;
+    }
+    
+    .btn-primary-custom:hover {
+        background-color: #2580a3;
+        color: white;
+    }
+    
+    .btn-secondary-custom {
+        background-color: #6c757d;
+        color: white;
+    }
+    
+    .btn-secondary-custom:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+    
+    .action-buttons {
+        margin-top: 20px;
+    }
+</style>
+
+<h1 class="page-title"><i class="bi bi-clipboard-data me-2"></i>Chi tiết phiếu sửa chữa</h1>
+
+<div class="content-card">
+    <h4 class="section-title">Thông tin phiếu #@Model.PhieuSuaChuaId</h4>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <dl>
+                <div class="info-row row">
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.PhieuSuaChuaId)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.PhieuSuaChuaId)</dd>
+                </div>
+                <div class="info-row row">
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.MoTaKhachHang)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.MoTaKhachHang)</dd>
+                </div>
+                <div class="info-row row">
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.TrangThai)</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.TrangThai == "DaPhanCong")
+                        {
+                            <span class="badge bg-success">@Html.DisplayFor(model => model.TrangThai)</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning">@Html.DisplayFor(model => model.TrangThai)</span>
+                        }
+                    </dd>
+                </div>
+                <div class="info-row row">
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.NgayGui)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.NgayGui)</dd>
+                </div>
+                <div class="info-row row">
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.NgayHen)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.NgayHen)</dd>
+                </div>
+                <div class="info-row row">
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.NgayTra)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.NgayTra)</dd>
+                </div>
+            </dl>
+        </div>
+        <div class="col-md-6">
+            <dl>
+                <div class="info-row row">
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.DiaChiNhanTraSanPham)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.DiaChiNhanTraSanPham)</dd>
+                </div>
+                <div class="info-row row">
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.KhoangCach)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.KhoangCach)</dd>
+                </div>
+                <div class="info-row row">
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.PhiVanChuyen)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.PhiVanChuyen)</dd>
+                </div>
+                <div class="info-row row">
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.TongTien)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.TongTien)</dd>
+                </div>
+                <div class="info-row row">
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.PhuongThucThanhToan)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.PhuongThucThanhToan)</dd>
+                </div>
+                <div class="info-row row">
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.NgayThanhToan)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.NgayThanhToan)</dd>
+                </div>
+            </dl>
+        </div>
+    </div>
+    
+    <h4 class="section-title mt-4">Thông tin khách hàng & kỹ thuật</h4>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <dl>
+                <div class="info-row row">
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.KhachHang)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.KhachHang.Id)</dd>
+                </div>
+                <div class="info-row row">
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Phuong)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.Phuong.PhuongId)</dd>
+                </div>
+            </dl>
+        </div>
+        <div class="col-md-6">
+            <dl>
+                <div class="info-row row">
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.KyThuat)</dt>
+                    <dd class="col-sm-8">
+                        @if (string.IsNullOrEmpty(Model.KyThuatId))
+                        {
+                            <span class="badge bg-danger">Chưa phân công kỹ thuật viên</span>
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(model => model.KyThuat.Id)
+                        }
+                    </dd>
+                </div>
+                <div class="info-row row">
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.GhiChu)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.GhiChu)</dd>
+                </div>
+            </dl>
+        </div>
+    </div>
+    
+    <div class="action-buttons">
+        <a class="btn-action btn-primary-custom me-2" asp-action="Edit" asp-route-id="@Model?.PhieuSuaChuaId">
+            <i class="bi bi-pencil-square me-1"></i> Phân công
+        </a>
+        <a class="btn-action btn-secondary-custom" asp-action="Index">
+            <i class="bi bi-arrow-left me-1"></i> Quay lại danh sách
+        </a>
+    </div>
+</div>

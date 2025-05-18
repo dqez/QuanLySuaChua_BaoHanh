@@ -6,6 +6,8 @@ using QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models;
 using QuanLySuaChua_BaoHanh.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models;
+using QuanLySuaChua_BaoHanh.Services;
 
 namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
 {
@@ -15,11 +17,13 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
     {
         private readonly RoleManager<IdentityRole<string>> _roleManager;
         private readonly UserManager<NguoiDung> _userManager;
+        private readonly IDGenerator _idGenerator;
 
-        public RoleController(RoleManager<IdentityRole<string>> roleManager, UserManager<NguoiDung> userManager)
+        public RoleController(RoleManager<IdentityRole<string>> roleManager, UserManager<NguoiDung> userManager, IDGenerator idGenerator)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            _idGenerator = idGenerator;
         }
 
         public async Task<IActionResult> Index()
@@ -37,17 +41,28 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(RoleViewModel model)
         {
+
+            ModelState.Remove("Id");
+                // Kiểm tra role đã tồn tại
+               
             if (ModelState.IsValid)
             {
-                if (await _roleManager.RoleExistsAsync(model.Name))
-                {
+                 if (await _roleManager.RoleExistsAsync(model.Name))
+                 {
                     ModelState.AddModelError("", "Role đã tồn tại!");
                     return View(model);
-                }
+                 }
 
+                 string roleId = await _idGenerator.GenerateRoleIdAsync(model.Name);
+                model.Id = roleId;
+
+                // Tạo role mới
                 var identityRole = new IdentityRole<string>
                 {
-                    Name = model.Name
+                    Id = model.Id,
+                    Name = model.Name,
+                    //NormalizedName = model.Name.ToUpper(),
+
                 };
 
                 var result = await _roleManager.CreateAsync(identityRole);
@@ -65,6 +80,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
             return View(model);
         }
 
+        //get: quantrivien/role/edit/{id}
         public async Task<IActionResult> Edit(string id)
         {
             var role = await _roleManager.FindByIdAsync(id);
@@ -87,7 +103,11 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
             if (ModelState.IsValid)
             {
                 var role = await _roleManager.FindByIdAsync(id);
-                if (role == null) return NotFound();
+
+                if (role == null)
+                {
+                    return NotFound();
+                }
 
                 role.Name = model.Name;
                 var result = await _roleManager.UpdateAsync(role);
@@ -106,10 +126,15 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
             return View(model);
         }
 
+
+        //get: quantrivien/role/delete/{id}
         public async Task<IActionResult> Delete(string id)
         {
             var role = await _roleManager.FindByIdAsync(id);
-            if (role == null) return NotFound();
+            if (role == null)
+            {
+                return NotFound();
+            }
             return View(role);
         }
 
@@ -118,7 +143,10 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var role = await _roleManager.FindByIdAsync(id);
-            if (role == null) return NotFound();
+            if (role == null)
+            {
+                return NotFound();
+            }
 
             var usersInRole = await _userManager.GetUsersInRoleAsync(role.Name);
             if (usersInRole.Count > 0)
@@ -138,7 +166,8 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> AssignRoles(string userId)
+        //get: quantrivien/role/assignRoles
+        public async Task<IActionResult> AssignRoles(string? userId)
         {
             ViewBag.Users = await _userManager.Users.ToListAsync();
             ViewBag.Roles = await _roleManager.Roles.ToListAsync();

@@ -1,0 +1,571 @@
+﻿@{
+    ViewData["Title"] = "Trang chủ Kỹ thuật viên";
+}
+
+@section Scripts {
+    <script>
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+
+        // Add animation when stats come into view
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add a subtle hover effect to table rows
+            const tableRows = document.querySelectorAll('tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseover', function() {
+                    this.style.backgroundColor = 'rgba(59, 130, 246, 0.05)';
+                    this.style.transition = 'all 0.2s ease';
+                });
+                row.addEventListener('mouseout', function() {
+                    this.style.backgroundColor = '';
+                });
+            });
+        });
+    </script>
+}
+
+<style>
+    .dashboard-header {
+        background: linear-gradient(110deg, #DFF0FE, #EDF7FF);
+        border-radius: 16px;
+        padding: 24px 30px;
+        margin-bottom: 28px;
+        box-shadow: var(--shadow-sm);
+        position: relative;
+        overflow: hidden;
+        animation: fadeInDown 0.5s ease-out;
+    }
+    
+    .dashboard-header::before {
+        content: '';
+        position: absolute;
+        right: -5%;
+        top: -20%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+        z-index: 0;
+        opacity: 0.6;
+    }
+    
+    .dashboard-header h2 {
+        font-weight: 700;
+        margin-bottom: 8px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .dashboard-header p {
+        opacity: 0.8;
+        max-width: 600px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .stat-card {
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        height: 100%;
+        border: none;
+        box-shadow: var(--shadow-sm);
+        animation: fadeInUp 0.5s ease-out;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md);
+    }
+    
+    .stat-assigned {
+        background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    }
+    
+    .stat-processing {
+        background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+    }
+    
+    .stat-completed {
+        background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    }
+    
+    .stat-lowstock {
+        background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    }
+    
+    .stat-card .card-body {
+        padding: 20px;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .stat-card .card-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .stat-card .card-text.display-4 {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        font-family: 'Baloo 2', cursive;
+    }
+    
+    .stat-card .card-icon {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 24px;
+        opacity: 0.3;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover .card-icon {
+        transform: scale(1.2);
+        opacity: 0.5;
+    }
+    
+    .stat-card .card-footer {
+        background: rgba(255, 255, 255, 0.1);
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 12px 20px;
+    }
+    
+    .stat-card .card-footer a {
+        font-weight: 500;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover .card-footer a i {
+        transform: translateX(3px);
+    }
+      @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @@keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="dashboard-header">
+    <h2 class="fs-1 fw-bold">Xin chào, @(User.Identity?.Name ?? "Kỹ thuật viên")!</h2>
+    <p class="fs-5 text-secondary">Chào mừng bạn đến với hệ thống quản lý sửa chữa và bảo hành Panasonic.</p>
+</div>
+
+<div class="row mb-4 g-4">
+    <div class="col-md-3">
+        <div class="card text-white stat-card stat-assigned">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-clipboard-check me-2"></i>Đơn được phân công</h5>
+                <p class="card-text display-4">@ViewBag.AssignedCount</p>
+                <p class="card-text">Đơn đã được phân công cho bạn</p>
+                <i class="bi bi-clipboard-check card-icon"></i>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a asp-controller="PhieuSuaChua" asp-action="Index" class="text-white stretched-link">Xem chi tiết <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white stat-card stat-processing">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-tools me-2"></i>Đang xử lý</h5>
+                <p class="card-text display-4">@ViewBag.InProgressCount</p>
+                <p class="card-text">Đơn đang được sửa chữa</p>
+                <i class="bi bi-tools card-icon"></i>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a asp-controller="PhieuSuaChua" asp-action="DangXuLy" class="text-white stretched-link">Xem chi tiết <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white stat-card stat-completed">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-check-circle me-2"></i>Hoàn thành</h5>
+                <p class="card-text display-4">@ViewBag.CompletedTodayCount</p>
+                <p class="card-text">Đơn hoàn thành hôm nay</p>
+                <i class="bi bi-check-circle card-icon"></i>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a asp-controller="PhieuSuaChua" asp-action="HoanThanh" class="text-white stretched-link">Xem chi tiết <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white stat-card stat-lowstock">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-exclamation-triangle me-2"></i>Linh kiện sắp hết</h5>
+                <p class="card-text display-4">@ViewBag.LowStockCount</p>
+                <p class="card-text">Linh kiện dưới ngưỡng an toàn</p>
+                <i class="bi bi-exclamation-triangle card-icon"></i>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a asp-controller="LinhKien" asp-action="Index" class="text-white stretched-link">Xem chi tiết <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .recent-orders-card {
+        border-radius: 12px;
+        border: none;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        height: 100%;
+        animation: fadeIn 0.6s ease-out;
+        animation-delay: 0.1s;
+        opacity: 0;
+        animation-fill-mode: forwards;
+    }
+    
+    .recent-orders-card:hover {
+        box-shadow: var(--shadow-md);
+    }
+    
+    .card-header-custom {
+        background: linear-gradient(to right, #F9FAFB, #F3F4F6);
+        padding: 18px 24px;
+        border-bottom: 1px solid #E5E7EB;
+    }
+    
+    .card-header-title {
+        font-weight: 600;
+        color: #111827;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .card-header-title i {
+        color: var(--blue-primary);
+    }
+    
+    .view-all-btn {
+        transition: all 0.3s ease;
+        padding: 6px 14px;
+        font-weight: 500;
+        border-radius: 6px;
+    }
+    
+    .view-all-btn:hover {
+        transform: translateY(-2px);
+    }
+    
+    .recent-orders-table {
+        margin-bottom: 0;
+    }
+    
+    .recent-orders-table th {
+        font-weight: 600;
+        color: #4B5563;
+        padding-top: 16px;
+        padding-bottom: 16px;
+        border-top: none;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+    }
+    
+    .recent-orders-table td {
+        padding-top: 14px;
+        padding-bottom: 14px;
+        vertical-align: middle;
+    }
+    
+    .component-list-card {
+        border-radius: 12px;
+        border: none;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        height: 100%;
+        animation: fadeIn 0.6s ease-out;
+        animation-delay: 0.2s;
+        opacity: 0;
+        animation-fill-mode: forwards;
+    }
+    
+    .component-list-card:hover {
+        box-shadow: var(--shadow-md);
+    }
+    
+    .component-list-item {
+        border: none;
+        border-bottom: 1px solid #E5E7EB;
+        padding: 16px 20px;
+        transition: all 0.2s ease;
+    }
+    
+    .component-list-item:last-child {
+        border-bottom: none;
+    }
+    
+    .component-list-item:hover {
+        background-color: rgba(59, 130, 246, 0.05);
+        z-index: 1;
+    }
+    
+    .component-name {
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 4px;
+        transition: all 0.2s ease;
+    }
+    
+    .component-id {
+        color: #6B7280;
+        font-size: 0.85rem;
+    }
+    
+    .component-badge {
+        font-weight: 500;
+        padding: 5px 10px;
+        border-radius: 20px;
+    }
+    
+    .usage-badge {
+        background-color: rgba(59, 130, 246, 0.1);
+        color: var(--blue-primary);
+    }
+    
+    .stock-badge-low {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: var(--red);
+    }
+    
+    .stock-badge-ok {
+        background-color: rgba(16, 185, 129, 0.1);
+        color: var(--green);
+    }
+    
+    .component-view-btn {
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+    }
+    
+    .component-view-btn:hover {
+        background-color: var(--blue-primary);
+        color: white;
+    }
+    
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        text-align: center;
+    }
+    
+    .empty-state i {
+        font-size: 2.5rem;
+        color: #9CA3AF;
+        margin-bottom: 16px;
+    }
+    
+    .empty-state-text {
+        color: #4B5563;
+        font-weight: 500;
+    }
+    
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+    
+    .status-badge.status-pending {
+        background-color: rgba(249, 115, 22, 0.1);
+        color: #F59E0B;
+    }
+    
+    .status-badge.status-inprogress {
+        background-color: rgba(59, 130, 246, 0.1);
+        color: #3B82F6;
+    }
+    
+    .status-badge.status-completed {
+        background-color: rgba(16, 185, 129, 0.1);
+        color: #10B981;
+    }
+    
+    .status-badge.status-cancelled {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: #EF4444;
+    }
+    
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="row g-4">
+    <div class="col-md-7">
+        <div class="card recent-orders-card">
+            <div class="card-header-custom d-flex justify-content-between align-items-center">
+                <h5 class="card-header-title mb-0"><i class="bi bi-clock-history"></i> Đơn sửa chữa gần đây</h5>
+                <a asp-area="KyThuatVien" asp-controller="PhieuSuaChua" asp-action="Index" class="btn btn-primary view-all-btn">
+                    <i class="bi bi-list-ul me-1"></i> Xem tất cả
+                </a>
+            </div>
+            <div class="card-body p-0">
+                @if (ViewBag.RecentOrders == null || ViewBag.RecentOrders.Count == 0)
+                {
+                    <div class="empty-state">
+                        <i class="bi bi-clipboard-x"></i>
+                        <p class="empty-state-text">Hiện chưa có đơn sửa chữa nào.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table recent-orders-table">
+                            <thead>
+                                <tr>
+                                    <th>Mã phiếu</th>
+                                    <th>Khách hàng</th>
+                                    <th>Ngày gửi</th>
+                                    <th>Trạng thái</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var order in ViewBag.RecentOrders)
+                                {
+                                    <tr>
+                                        <td class="fw-medium">#@order.PhieuSuaChuaId</td>
+                                        <td>@order.KhachHang.HoTen</td>
+                                        <td><i class="bi bi-calendar-date me-1 text-muted"></i>@order.NgayGui.ToString("dd/MM/yyyy")</td>
+                                        <td>   
+                                            @{
+                                                var statusClass = order.TrangThai switch
+                                                {
+                                                    "DaPhanCong" => "status-pending",
+                                                    "ChoKiemTra" => "status-pending",
+                                                    "DangSuaChua" => "status-inprogress",
+                                                    "DaSuaXong" => "status-completed",
+                                                    "DaThanhToan" => "status-completed",
+                                                    "DangVanChuyen" => "status-completed",
+                                                    "HoanThanh" => "status-completed",
+                                                    "DaHuy" => "status-cancelled",
+                                                    _ => "status-pending"
+                                                };
+
+                                                var statusText = order.TrangThai switch
+                                                {
+                                                    "DaPhanCong" => "Đã phân công",
+                                                    "ChoKiemTra" => "Chờ kiểm tra",
+                                                    "DangSuaChua" => "Đang sửa chữa",
+                                                    "DaSuaXong" => "Đã sửa xong",
+                                                    "DaThanhToan" => "Đã thanh toán",
+                                                    "DangVanChuyen" => "Đang vận chuyển",
+                                                    "HoanThanh" => "Hoàn thành",
+                                                    "DaHuy" => "Đã hủy",
+                                                    _ => "Chờ xử lý"
+                                                };
+                                            }
+                                            <span class="status-badge @statusClass">@statusText</span>
+                                        </td>
+                                        <td>
+                                            <a asp-controller="PhieuSuaChua" asp-action="ChiTiet" asp-route-id="@order.PhieuSuaChuaId" 
+                                               class="btn btn-sm btn-outline-primary component-view-btn" data-bs-toggle="tooltip" title="Xem chi tiết">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card component-list-card">
+            <div class="card-header-custom d-flex justify-content-between align-items-center">
+                <h5 class="card-header-title mb-0"><i class="bi bi-bar-chart-line-fill"></i> Linh kiện sử dụng nhiều</h5>
+                <a asp-area="KyThuatVien" asp-controller="LinhKien" asp-action="ThongKeSuDung" class="btn btn-primary view-all-btn">
+                    <i class="bi bi-graph-up me-1"></i> Xem thống kê
+                </a>
+            </div>
+            <div class="card-body p-0">
+                @if (ViewBag.TopComponents == null || ViewBag.TopComponents.Count == 0)
+                {
+                    <div class="empty-state">
+                        <i class="bi bi-bar-chart"></i>
+                        <p class="empty-state-text">Chưa có dữ liệu thống kê về linh kiện.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var component in ViewBag.TopComponents)
+                        {
+                            <div class="list-group-item component-list-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="component-name">@component.TenLinhKien</h6>
+                                    <small class="component-id"><i class="bi bi-upc me-1"></i>Mã: @component.LinhKienId</small>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="component-badge usage-badge">
+                                        <i class="bi bi-arrow-repeat me-1"></i>@component.UsageCount
+                                    </span>
+                                    <span class="component-badge @(component.SoLuongTon < 5 ? "stock-badge-low" : "stock-badge-ok")">
+                                        <i class="bi @(component.SoLuongTon < 5 ? "bi-exclamation-circle" : "bi-check-circle") me-1"></i>@component.SoLuongTon
+                                    </span>
+                                    <a asp-controller="LinhKien" asp-action="Details" asp-route-id="@component.LinhKienId" 
+                                       class="btn btn-sm btn-outline-secondary component-view-btn" data-bs-toggle="tooltip" title="Xem chi tiết">
+                                        <i class="bi bi-info-circle"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

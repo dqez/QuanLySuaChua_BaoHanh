@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuanLySuaChua_BaoHanh.Models;
+using QuanLySuaChua_BaoHanh.Services;
 using QuanLySuaChua_BaoHanh.ViewModels;
 
 namespace QuanLySuaChua_BaoHanh.Controllers
@@ -14,16 +15,19 @@ namespace QuanLySuaChua_BaoHanh.Controllers
         private readonly UserManager<NguoiDung> _userManager;
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly BHSC_DbContext _context;
+        private readonly IDGenerator _idGenerator;
 
 
         public AccountController(
             UserManager<NguoiDung> userManager,
             SignInManager<NguoiDung> signInManager,
-            BHSC_DbContext context)
+            BHSC_DbContext context,
+            IDGenerator idGenerator)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
+            _idGenerator = idGenerator;
         }
 
 
@@ -43,6 +47,7 @@ namespace QuanLySuaChua_BaoHanh.Controllers
             {
                 var user = new NguoiDung
                 {
+                    Id = await _idGenerator.GenerateNguoiDungIDAsync("KhachHang"),
                     UserName = model.UserName,
                     Email = model.Email,
                     HoTen = model.HoTen,
@@ -72,7 +77,35 @@ namespace QuanLySuaChua_BaoHanh.Controllers
         [HttpGet]
         public async Task<IActionResult> Login()
         {
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                // string[] roleNames = { "QuanTriVien", "KhachHang", "KyThuatVien", "NhanVienKho", "TuVanVien" };
+                if (await _userManager.IsInRoleAsync(user, "KhachHang"))
+                {
+                    return RedirectToAction("Index", "Home", new { area = "KhachHang" });
+                }
+                else if (await _userManager.IsInRoleAsync(user, "QuanTriVien"))
+                {
+                    return RedirectToAction("Index", "Home", new { area = "QuanTriVien" });
+                }
+                else if (await _userManager.IsInRoleAsync(user, "KyThuatVien"))
+                {
+                    return RedirectToAction("Index", "Home", new { area = "KyThuatVien" });
+                }
+                else if (await _userManager.IsInRoleAsync(user, "NhanVienKho"))
+                {
+                    return RedirectToAction("Index", "Home", new { area = "NhanVienKho" });
+                }
+                else if (await _userManager.IsInRoleAsync(user, "TuVanVien"))
+                {
+                    return RedirectToAction("Index", "Home", new { area = "TuVanVien" });
+                }
+                else
+                {
+                    return RedirectToAction("index", "home");
+                }
+            }
             return View();
         }
 

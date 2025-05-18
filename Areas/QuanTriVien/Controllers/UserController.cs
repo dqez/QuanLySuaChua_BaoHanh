@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models;
+using QuanLySuaChua_BaoHanh.Services;
 
 namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
 {
@@ -17,23 +18,26 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
     public class UserController : Controller
     {
         private readonly UserManager<NguoiDung> _userManager;
-        private readonly RoleManager<IdentityRole<int>> _roleManager;
+        private readonly RoleManager<IdentityRole<string>> _roleManager;
         private readonly BHSC_DbContext _context;
+        private readonly IDGenerator _idGenerator;
 
         public UserController(
             UserManager<NguoiDung> userManager,
-            RoleManager<IdentityRole<int>> roleManager,
-            BHSC_DbContext context)
+            RoleManager<IdentityRole<string>> roleManager,
+            BHSC_DbContext context,
+            IDGenerator idGenerator)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _context = context;
+            _idGenerator = idGenerator;
         }
 
         // get: quantrivien/user
         public async Task<IActionResult> Index(string searchString, int? pageNumber)
         {
-             var pageSize = 10;
+            var pageSize = 10;
             var usersQuery = _userManager.Users.AsQueryable();
     
             ViewData["CurrentFilter"] = searchString;
@@ -53,7 +57,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         }
 
         // GET: Admin/User/Details/5
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(string id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null)
@@ -66,8 +70,8 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
             ViewBag.UserRoles = userRoles;
 
             // Lấy thông tin phường, quận, thành phố
-            if (!string.IsNullOrEmpty(user.PhuongId))  
 
+            if (user.PhuongId != null)
             {
                 var phuong = await _context.Phuongs
                     .Include(p => p.Quan)
@@ -107,14 +111,17 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         {
             if (ModelState.IsValid)
             {
+                string vaiTro = model.SelectedRoles[0];
                 var user = new NguoiDung
                 {
+                    Id = await _idGenerator.GenerateNguoiDungIDAsync(vaiTro),
                     UserName = model.UserName,
                     Email = model.Email,
                     HoTen = model.HoTen,
                     PhoneNumber = model.PhoneNumber,
                     DiaChi = model.DiaChi,
                     PhuongId = model.PhuongId,
+                    VaiTro = vaiTro,
                     EmailConfirmed = true,
                     PhoneNumberConfirmed = true
                 };
@@ -154,7 +161,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         }
 
         // GET: Admin/User/Edit/5
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(string id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null)
@@ -194,11 +201,17 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         // POST: Admin/User/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, EditUserViewModel model)
+        public async Task<IActionResult> Edit(string id, EditUserViewModel model)
         {
             if (id.ToString() != model.Id)
             {
                 return NotFound();
+            }
+
+            if (string.IsNullOrEmpty(model.Password))
+            {
+                ModelState.Remove("Password");
+                ModelState.Remove("ConfirmPassword");
             }
 
             if (ModelState.IsValid)
@@ -270,7 +283,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         }
 
         // GET: Admin/User/Delete/5
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null)
@@ -287,7 +300,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         // POST: Admin/User/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null)

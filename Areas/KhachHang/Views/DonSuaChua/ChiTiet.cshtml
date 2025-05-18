@@ -1,0 +1,445 @@
+﻿@using QuanLySuaChua_BaoHanh.Enums
+@model QuanLySuaChua_BaoHanh.Models.PhieuSuaChua
+@{
+    ViewData["Title"] = "Chi tiết đơn sửa chữa #" + Model.PhieuSuaChuaId;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="~/css/DonSuaChua.css">
+}
+
+<div class="container mt-6">
+    <!-- Nút quay lại -->
+    <div class="mb-4">
+        <a href="/KhachHang/DonSuaChua" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left me-1"></i>
+            Quay lại danh sách
+        </a>
+    </div>
+
+    <!-- Header và trạng thái -->
+    <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-header bg-white border-0 py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="mb-0 fw-bold">Phiếu sửa chữa #@Model.PhieuSuaChuaId</h3>
+                
+                @{
+                    string statusClass = Model.TrangThai switch
+                    {
+                        nameof(TrangThaiPhieu.ChoXacNhan) => "bg-warning text-dark",
+                        nameof(TrangThaiPhieu.DaXacNhan) => "bg-info text-white",
+                        nameof(TrangThaiPhieu.DaPhanCong) => "bg-primary text-white",
+                        nameof(TrangThaiPhieu.ChoKiemTra) => "bg-secondary text-white",
+                        nameof(TrangThaiPhieu.DangSuaChua) => "bg-primary text-white",
+                        nameof(TrangThaiPhieu.DaSuaXong) => "bg-success text-white",
+                        nameof(TrangThaiPhieu.DaThanhToan) => "bg-info text-white",
+                        nameof(TrangThaiPhieu.DangVanChuyen) => "bg-info text-white",
+                        nameof(TrangThaiPhieu.HoanThanh) => "bg-success text-white",
+                        nameof(TrangThaiPhieu.DaHuy) => "bg-danger text-white",
+                        _ => "bg-secondary text-white"
+                    };
+
+                    string statusText = "";
+                    foreach (var prop in typeof(TrangThaiPhieu).GetField(Model.TrangThai).GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.DisplayAttribute), false))
+                    {
+                        var displayAttr = (System.ComponentModel.DataAnnotations.DisplayAttribute)prop;
+                        statusText = displayAttr.Name;
+                    }
+                }
+                
+                <span class="badge @statusClass px-3 py-2">@statusText</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Thông tin chung -->
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-info-circle me-2 text-primary"></i>
+                        Thông tin chung
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between px-0">
+                            <span class="text-muted">Ngày gửi:</span>
+                            <strong>@Model.NgayGui.ToString("dd/MM/yyyy HH:mm")</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between px-0">
+                            <span class="text-muted">Khách hàng:</span>
+                            <strong>@Model.KhachHang.HoTen</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between px-0">
+                            <span class="text-muted">Số điện thoại:</span>
+                            <strong>@Model.KhachHang.PhoneNumber</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between px-0">
+                            <span class="text-muted">Địa chỉ nhận/trả:</span>
+                            <strong>@Model.DiaChiNhanTraSanPham</strong>
+                        </li>                        
+                        @if (Model.NgayHen.HasValue)
+                        {
+                            @if (Model.TrangThai == nameof(TrangThaiPhieu.ChoKiemTra))
+                            {
+                                <li class="list-group-item d-flex justify-content-between px-0 bg-warning-subtle">
+                                    <span class="text-muted">
+                                        <i class="bi bi-clock-history text-warning me-1"></i>
+                                        <strong class="text-warning">Ngày hẹn kiểm tra:</strong>
+                                    </span>
+                                    <strong class="text-warning">@Model.NgayHen.Value.ToString("dd/MM/yyyy HH:mm")</strong>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="list-group-item d-flex justify-content-between px-0">
+                                    <span class="text-muted">Ngày hẹn kiểm tra:</span>
+                                    <strong>@Model.NgayHen.Value.ToString("dd/MM/yyyy HH:mm")</strong>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mô tả và ghi chú -->
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-chat-left-text me-2 text-primary"></i>
+                        Mô tả và ghi chú
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="text-muted mb-2">Mô tả vấn đề:</label>
+                        <p class="border rounded p-3 mb-0 bg-light">@(string.IsNullOrEmpty(Model.MoTaKhachHang) ? "Không có mô tả" : Model.MoTaKhachHang)</p>
+                    </div>
+                    
+                    @* @if (!string.IsNullOrEmpty(Model.DanhGiaKyThuat)) *@
+                    @* { *@
+                    @*     <div> *@
+                    @*         <label class="text-muted mb-2">Đánh giá kỹ thuật:</label> *@
+                    @*         <p class="border rounded p-3 mb-0 bg-light">@Model.DanhGiaKyThuat</p> *@
+                    @*     </div> *@
+                    @* } *@
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tiến trình xử lý -->
+    @if (Model.TrangThai != nameof(TrangThaiPhieu.DaHuy))
+    {
+        <div class="card mb-4 border-0 shadow-sm">
+            <div class="card-header bg-white border-0">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-arrow-repeat me-2 text-primary"></i>
+                    Tiến trình xử lý
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="repair-timeline">
+                    @{
+                        bool isChoXacNhanActive = true;
+                        bool isDaXacNhanActive = Model.TrangThai != nameof(TrangThaiPhieu.ChoXacNhan) && Model.TrangThai != nameof(TrangThaiPhieu.DaHuy);
+                        bool isDaPhanCongActive = Model.TrangThai != nameof(TrangThaiPhieu.ChoXacNhan) && Model.TrangThai != nameof(TrangThaiPhieu.DaXacNhan) && Model.TrangThai != nameof(TrangThaiPhieu.DaHuy);
+                        bool isChoKiemTraActive = Model.TrangThai == nameof(TrangThaiPhieu.ChoKiemTra) || Model.TrangThai == nameof(TrangThaiPhieu.DangSuaChua) || Model.TrangThai == nameof(TrangThaiPhieu.DaSuaXong) || Model.TrangThai == nameof(TrangThaiPhieu.DaThanhToan) || Model.TrangThai == nameof(TrangThaiPhieu.DangVanChuyen) || Model.TrangThai == nameof(TrangThaiPhieu.HoanThanh);
+                        bool isDangSuaChuaActive = Model.TrangThai == nameof(TrangThaiPhieu.DangSuaChua) || Model.TrangThai == nameof(TrangThaiPhieu.DaSuaXong) || Model.TrangThai == nameof(TrangThaiPhieu.DaThanhToan) || Model.TrangThai == nameof(TrangThaiPhieu.DangVanChuyen) || Model.TrangThai == nameof(TrangThaiPhieu.HoanThanh);
+                        bool isDaSuaXongActive = Model.TrangThai == nameof(TrangThaiPhieu.DaSuaXong) || Model.TrangThai == nameof(TrangThaiPhieu.DaThanhToan) || Model.TrangThai == nameof(TrangThaiPhieu.DangVanChuyen) || Model.TrangThai == nameof(TrangThaiPhieu.HoanThanh);
+                        bool isDaThanhToanActive = Model.TrangThai == nameof(TrangThaiPhieu.DaThanhToan) || Model.TrangThai == nameof(TrangThaiPhieu.DangVanChuyen) || Model.TrangThai == nameof(TrangThaiPhieu.HoanThanh);
+                        bool isDangVanChuyenActive = Model.TrangThai == nameof(TrangThaiPhieu.DangVanChuyen) || Model.TrangThai == nameof(TrangThaiPhieu.HoanThanh);
+                        bool isHoanThanhActive = Model.TrangThai == nameof(TrangThaiPhieu.HoanThanh);
+                    }
+
+                    <div class="timeline-item @(isChoXacNhanActive ? "active" : "")">
+                        <div class="timeline-icon">
+                            <i class="bi bi-hourglass-split"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Chờ xác nhận</h6>
+                            <p>Phiếu sửa chữa đang chờ tư vấn viên xác nhận.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item @(isDaXacNhanActive ? "active" : "")">
+                        <div class="timeline-icon">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Đã xác nhận</h6>
+                            <p>Phiếu sửa chữa đã được tư vấn viên xác nhận.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item @(isDaPhanCongActive ? "active" : "")">
+                        <div class="timeline-icon">
+                            <i class="bi bi-person-check"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Đã phân công</h6>
+                            <p>Đơn sửa chữa đã được phân công cho kỹ thuật viên.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item @(isChoKiemTraActive ? "active" : "")">
+                        <div class="timeline-icon">
+                            <i class="bi bi-tools"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Chờ kiểm tra</h6>
+                            <p>Kỹ thuật viên đang chờ kiểm tra sản phẩm.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item @(isDangSuaChuaActive ? "active" : "")">
+                        <div class="timeline-icon">
+                            <i class="bi bi-gear-wide-connected"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Đang sửa chữa</h6>
+                            <p>Sản phẩm đang được sửa chữa.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item @(isDaSuaXongActive ? "active" : "")">
+                        <div class="timeline-icon">
+                            <i class="bi bi-check-all"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Đã sửa xong</h6>
+                            <p>Sản phẩm đã được sửa chữa xong.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item @(isDaThanhToanActive ? "active" : "")">
+                        <div class="timeline-icon">
+                            <i class="bi bi-credit-card"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Đã thanh toán</h6>
+                            <p>Khách hàng đã thanh toán chi phí sửa chữa.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item @(isDangVanChuyenActive ? "active" : "")">
+                        <div class="timeline-icon">
+                            <i class="bi bi-truck"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Đang vận chuyển</h6>
+                            <p>Sản phẩm đang được vận chuyển về cho khách hàng.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item @(isHoanThanhActive ? "active" : "")">
+                        <div class="timeline-icon">
+                            <i class="bi bi-trophy"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Hoàn thành</h6>
+                            <p>Quá trình sửa chữa đã hoàn tất.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Danh sách sản phẩm -->
+    <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-header bg-white border-0">
+            <h5 class="card-title mb-0">
+                <i class="bi bi-box-seam me-2 text-primary"></i>
+                Sản phẩm cần sửa
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="bg-light">
+                        <tr>
+                            <th scope="col">Mã SP</th>
+                            <th scope="col">Tên sản phẩm</th>
+                            <th scope="col">Loại</th>
+                            <th scope="col">Bảo hành</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ChiTietSuaChuas)
+                        {
+                            <tr>
+                                <td>@item.SanPhamId</td>
+                                <td>@item.SanPham.TenSanPham</td>
+                                <td>@item.LoaiDon</td>
+                                <td>
+                                    @{
+                                        bool conBaoHanh = item.SanPham.NgayHetHanBh > DateOnly.FromDateTime(DateTime.Now);
+                                    }
+                                    @if (conBaoHanh)
+                                    {
+                                        <span class="badge bg-success">Còn bảo hành</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Hết bảo hành</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thông tin chi phí -->
+    <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-header bg-white border-0">
+            <h5 class="card-title mb-0">
+                <i class="bi bi-currency-dollar me-2 text-primary"></i>
+                Thông tin chi phí
+            </h5>
+        </div>
+        <div class="card-body">
+            @if (Model.ChiTietSuaChuas.Any(c => c.LinhKien != null))
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>Tên linh kiện</th>
+                                <th>Số lượng</th>
+                                <th class="text-end">Đơn giá</th>
+                                <th class="text-end">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.ChiTietSuaChuas.Where(c => c.LinhKienId != null))
+                            {
+                                <tr>
+                                    <td>@item.LinhKien.TenLinhKien</td>
+                                    <td>@item.SoLuongLinhKien</td>
+                                    <td class="text-end">@item.LinhKien.DonGia.ToString("N0") đ</td>
+                                    <td class="text-end">@((item.SoLuongLinhKien * item.LinhKien.DonGia).ToString("N0")) đ</td>
+                                </tr>
+                            }
+                            <tr class="fw-bold bg-light">
+                                <td colspan="3" class="text-end">Tổng cộng:</td>
+                                <td class="text-end">@((Model.TongTien?.ToString("N0") ?? "0") + " đ")</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Thông tin chi phí sẽ được cập nhật sau khi kỹ thuật viên kiểm tra sản phẩm.
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Hành động -->
+    <div class="d-flex justify-content-end my-4 gap-2">       
+        
+        @if (Model.TrangThai == nameof(TrangThaiPhieu.ChoXacNhan))
+        {
+            <button 
+                type="button" 
+                class="btn btn-danger cancel-order"
+                data-id="@Model.PhieuSuaChuaId">
+                <i class="bi bi-x-circle me-1"></i>
+                Hủy đơn
+            </button>
+        }
+        @if (Model.TrangThai == nameof(TrangThaiPhieu.HoanThanh))
+        {
+            <button type="button" class="btn btn-primary open-rating-modal">
+                <i class="bi bi-star me-1"></i>
+                Đánh giá dịch vụ
+            </button>
+        }
+    </div>
+    
+</div>
+
+@section Scripts {
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- CANCEL ORDER FUNCTIONALITY ---
+        const cancelBtns = document.querySelectorAll('.cancel-order');
+        cancelBtns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const orderId = this.getAttribute('data-id');
+                
+                Swal.fire({
+                    title: 'Xác nhận hủy đơn',
+                    text: "Bạn có chắc chắn muốn hủy đơn sửa chữa này?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Có, hủy đơn!',
+                    cancelButtonText: 'Không, giữ lại'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Get CSRF token
+                        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+                        
+                        // Send AJAX request to cancel order
+                        fetch('/KhachHang/DonSuaChua/Cancel', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'RequestVerificationToken': token
+                            },
+                            body: new URLSearchParams({
+                                'id': orderId,
+                                '__RequestVerificationToken': token
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire({
+                                    title: 'Thành công!',
+                                    text: data.message,
+                                    icon: 'success'
+                                }).then(() => {
+                                    window.location.href = '/KhachHang/DonSuaChua';
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Lỗi!',
+                                    text: data.message,
+                                    icon: 'error'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                title: 'Lỗi!',
+                                text: 'Có lỗi xảy ra, vui lòng thử lại sau.',
+                                icon: 'error'
+                            });
+                        });
+                    }
+                });
+            });
+        });
+    });
+</script>
+}
+
