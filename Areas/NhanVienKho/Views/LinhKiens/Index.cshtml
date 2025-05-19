@@ -65,7 +65,7 @@
         @if (Model.HasPreviousPage)
         {
             <li class="page-item">
-                <a class="page-link" href="/NhanVienKho/LinhKiens/Index" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">« Trước</a>
+                <a class="page-link" asp-area="NhanVienKho" asp-controller="LinhKiens" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">« Trước</a>
             </li>
         }
         else
@@ -82,7 +82,7 @@
         @if (Model.HasNextPage)
         {
             <li class="page-item">
-                <a class="page-link" href="/NhanVienKho/LinhKiens/Index" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">Tiếp »</a>
+                <a class="page-link" asp-area="NhanVienKho" asp-controller="LinhKiens" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">Tiếp »</a>
             </li>
         }
         else
