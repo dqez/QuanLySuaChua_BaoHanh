@@ -143,7 +143,12 @@
                         <tr>
                             <td>@Html.DisplayFor(modelItem => item.PhieuSuaChuaId)</td>
                             <td>@Html.DisplayFor(modelItem => item.MoTaKhachHang)</td>
-                            <td>@Html.DisplayFor(modelItem => item.TrangThai)</td>
+                            <td>
+                                @{
+                                    var trangThaiEnum = Enum.TryParse<QuanLySuaChua_BaoHanh.Enums.TrangThaiPhieu>(item.TrangThai, out var t) ? t : default;
+                                }
+                                @trangThaiEnum.GetDisplayName()
+                            </td>
                             <td>@Html.DisplayFor(modelItem => item.NgayGui)</td>
                             <td>@Html.DisplayFor(modelItem => item.DiaChiNhanTraSanPham)</td>
                             <td>@Html.DisplayFor(modelItem => item.KhachHang.Id)</td>
@@ -185,7 +190,12 @@
                         <tr>
                             <td>@Html.DisplayFor(modelItem => item.PhieuSuaChuaId)</td>
                             <td>@Html.DisplayFor(modelItem => item.MoTaKhachHang)</td>
-                            <td>@Html.DisplayFor(modelItem => item.TrangThai)</td>
+                            <td>
+                                @{
+                                    var trangThaiEnum = Enum.TryParse<QuanLySuaChua_BaoHanh.Enums.TrangThaiPhieu>(item.TrangThai, out var t) ? t : default;
+                                }
+                                @trangThaiEnum.GetDisplayName()
+                            </td>
                             <td>@Html.DisplayFor(modelItem => item.NgayGui)</td>
                             <td>@Html.DisplayFor(modelItem => item.DiaChiNhanTraSanPham)</td>
                             <td>@Html.DisplayFor(modelItem => item.KhachHang.Id)</td>

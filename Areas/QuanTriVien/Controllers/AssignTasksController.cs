@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using QuanLySuaChua_BaoHanh.Enums;
 using QuanLySuaChua_BaoHanh.Models;
 
 namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
@@ -112,8 +113,6 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         }
 
         // POST: QuanTriVien/AssignTasks/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("PhieuSuaChuaId,KyThuatId,TrangThai")] PhieuSuaChua phieuSuaChua)
@@ -122,6 +121,11 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
             {
                 return NotFound();
             }
+
+            ModelState.Remove(nameof(phieuSuaChua.PhuongId));
+            ModelState.Remove(nameof(phieuSuaChua.KhachHangId));
+            ModelState.Remove(nameof(phieuSuaChua.MoTaKhachHang));
+            ModelState.Remove(nameof(phieuSuaChua.DiaChiNhanTraSanPham));
 
             if (ModelState.IsValid)
             {
@@ -137,11 +141,15 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
 
                     if (!string.IsNullOrEmpty(phieuSuaChua.KyThuatId))
                     {
-                        existingPhieuSuaChua.TrangThai = "DaPhanCong";
+                        existingPhieuSuaChua.TrangThai = TrangThaiPhieu.DaPhanCong.ToString();
+                    }
+                    else
+                    {
+                        existingPhieuSuaChua.TrangThai = TrangThaiPhieu.DaXacNhan.ToString();
                     }
 
-
-                    _context.Update(phieuSuaChua);
+                    // Đã dùng existingPhieuSuaChua thì không cần update() nữa. theo dõi 1 thực thể at a time
+                    //_context.Update(phieuSuaChua);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
