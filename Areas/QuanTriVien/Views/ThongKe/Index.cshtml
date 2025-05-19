@@ -1,0 +1,353 @@
+@model QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models.ThongKeViewModel
+@{
+    ViewData["Title"] = "Thống kê và báo cáo";
+    Layout = "~/Areas/QuanTriVien/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid p-4">
+    <h2 class="mb-4 text-primary">Thống kê và báo cáo</h2>
+
+    <!-- Bộ lọc thời gian -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <form asp-action="Index" method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Từ ngày:</label>
+                    <input type="date" name="tuNgay" class="form-control" value="@Model.TuNgay.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Đến ngày:</label>
+                    <input type="date" name="denNgay" class="form-control" value="@Model.DenNgay.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary">Áp dụng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Thẻ tổng quan -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Tổng số đơn sửa chữa
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TongSoDonSuaChua</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Tổng doanh thu
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@String.Format("{0:N0} VNĐ", Model.TongDoanhThu)</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Số đơn hoàn thành
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.SoDonHoanThanh</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Tổng linh kiện sử dụng
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.SoLuongLinhKienSuDung</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-tools fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thống kê trạng thái đơn hàng -->
+    <div class="row mb-4">
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Thống kê trạng thái đơn hàng</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-pie pt-4">
+                        <canvas id="orderStatusChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-primary"></i> Chờ xác nhận (@Model.SoDonChoXacNhan)
+                        </span>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-success"></i> Đang xử lý (@Model.SoDonDangXuLy)
+                        </span>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-info"></i> Hoàn thành (@Model.SoDonHoanThanh)
+                        </span>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-danger"></i> Hủy (@Model.SoDonHuy)
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Biểu đồ doanh thu -->
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Doanh thu thời gian gần đây</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Top kỹ thuật viên -->
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Top kỹ thuật viên</h6>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Kỹ thuật viên</th>
+                                <th>Số lượng đơn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.TopKyThuatVien)
+                            {
+                                <tr>
+                                    <td>@item.TenKyThuat</td>
+                                    <td>@item.SoLuongDon</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top linh kiện -->
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Top linh kiện sử dụng nhiều</h6>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Linh kiện</th>
+                                <th>Số lượng sử dụng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.TopLinhKien)
+                            {
+                                <tr>
+                                    <td>@item.TenLinhKien</td>
+                                    <td>@item.SoLuongSuDung</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thống kê theo khu vực -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Thống kê theo khu vực</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Thành phố</th>
+                            <th>Số lượng đơn</th>
+                            <th>Tổng doanh thu</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ThongKeThanhPho)
+                        {
+                            <tr>
+                                <td>@item.TenThanhPho</td>
+                                <td>@item.SoLuongDon</td>
+                                <td>@String.Format("{0:N0} VNĐ", item.TongDoanhThu)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liên kết đến các báo cáo chi tiết -->
+    <div class="row">
+        <div class="col-lg-12 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Báo cáo chi tiết</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <a href="@Url.Action("DoanhThu", "ThongKe", new { tuNgay = Model.TuNgay.ToString("yyyy-MM-dd"), denNgay = Model.DenNgay.ToString("yyyy-MM-dd") })" class="btn btn-primary btn-block">
+                                <i class="fas fa-chart-line mr-2"></i>Báo cáo doanh thu
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <a href="@Url.Action("DonSuaChua", "ThongKe", new { tuNgay = Model.TuNgay.ToString("yyyy-MM-dd"), denNgay = Model.DenNgay.ToString("yyyy-MM-dd") })" class="btn btn-success btn-block">
+                                <i class="fas fa-clipboard-list mr-2"></i>Báo cáo đơn sửa chữa
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <a href="@Url.Action("KhoLinhKien", "ThongKe")" class="btn btn-info btn-block">
+                                <i class="fas fa-warehouse mr-2"></i>Báo cáo kho linh kiện
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <a href="@Url.Action("KyThuatVien", "ThongKe", new { tuNgay = Model.TuNgay.ToString("yyyy-MM-dd"), denNgay = Model.DenNgay.ToString("yyyy-MM-dd") })" class="btn btn-warning btn-block">
+                                <i class="fas fa-user-cog mr-2"></i>Báo cáo kỹ thuật viên
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <a href="@Url.Action("KhachHang", "ThongKe", new { tuNgay = Model.TuNgay.ToString("yyyy-MM-dd"), denNgay = Model.DenNgay.ToString("yyyy-MM-dd") })" class="btn btn-danger btn-block">
+                                <i class="fas fa-users mr-2"></i>Báo cáo khách hàng
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- ChartJS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Biểu đồ trạng thái đơn hàng
+        var orderStatusChart = new Chart(document.getElementById("orderStatusChart"), {
+            type: 'doughnut',
+            data: {
+                labels: ["Chờ xác nhận", "Đang xử lý", "Hoàn thành", "Hủy"],
+                datasets: [{
+                    data: [@Model.SoDonChoXacNhan, @Model.SoDonDangXuLy, @Model.SoDonHoanThanh, @Model.SoDonHuy],
+                    backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#e74a3b'],
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            },
+        });
+
+        // Biểu đồ doanh thu theo ngày
+        var revenueData = @Html.Raw(Json.Serialize(Model.DoanhThuTheoNgay.Select(x => new { x.Ngay.Day, x.Ngay.Month, x.TongDoanhThu })));
+        
+        var revenueLabels = revenueData.map(item => item.Day + '/' + item.Month);
+        var revenueValues = revenueData.map(item => item.TongDoanhThu);
+
+        var revenueChart = new Chart(document.getElementById("revenueChart"), {
+            type: 'line',
+            data: {
+                labels: revenueLabels,
+                datasets: [{
+                    label: "Doanh thu",
+                    lineTension: 0.3,
+                    backgroundColor: "rgba(78, 115, 223, 0.05)",
+                    borderColor: "rgba(78, 115, 223, 1)",
+                    pointRadius: 3,
+                    pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                    pointBorderColor: "rgba(78, 115, 223, 1)",
+                    pointHoverRadius: 3,
+                    pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                    pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                    pointHitRadius: 10,
+                    pointBorderWidth: 2,
+                    data: revenueValues,
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString('vi-VN') + ' đ';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let value = context.raw;
+                                return value.toLocaleString('vi-VN') + ' đ';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}

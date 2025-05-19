@@ -1,0 +1,345 @@
+@model QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models.DoanhThuViewModel
+@{
+    ViewData["Title"] = "Báo cáo doanh thu";
+    Layout = "~/Areas/QuanTriVien/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">Báo cáo doanh thu</h2>
+        <a href="@Url.Action("Index", "ThongKe")" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left mr-2"></i>Quay lại tổng quan
+        </a>
+    </div>
+
+    <!-- Bộ lọc thời gian -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <form asp-action="DoanhThu" method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Từ ngày:</label>
+                    <input type="date" name="tuNgay" class="form-control" value="@Model.TuNgay.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Đến ngày:</label>
+                    <input type="date" name="denNgay" class="form-control" value="@Model.DenNgay.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary">Áp dụng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Thông tin tổng quan -->
+    <div class="row mb-4">
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Tổng doanh thu
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@String.Format("{0:N0} VNĐ", Model.TongDoanhThu)</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Đơn hàng hoàn thành
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.SoLuongDonHoanThanh đơn</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Biểu đồ doanh thu theo tháng -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Doanh thu theo tháng</h6>
+        </div>
+        <div class="card-body">
+            <div class="chart-bar">
+                <canvas id="revenueByMonthChart"></canvas>
+            </div>
+        </div>
+    </div>    <!-- Bảng doanh thu theo tháng -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Chi tiết doanh thu theo tháng</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Tháng/Năm</th>
+                            <th>Doanh thu</th>
+                            <th>Số lượng đơn</th>
+                            <th>Doanh thu trung bình/đơn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.DoanhThuTheoThang)
+                        {
+                            <tr>
+                                <td>@item.ThangNam</td>
+                                <td>@String.Format("{0:N0} VNĐ", item.TongDoanhThu)</td>
+                                <td>@item.SoLuongDon</td>
+                                <td>@String.Format("{0:N0} VNĐ", item.SoLuongDon > 0 ? item.TongDoanhThu / item.SoLuongDon : 0)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                
+                <!-- Pagination -->
+                @{
+                    var prevDisabled = !Model.DoanhThuTheoThang.HasPreviousPage ? "disabled" : "";
+                    var nextDisabled = !Model.DoanhThuTheoThang.HasNextPage ? "disabled" : "";
+                }
+
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @prevDisabled">
+                            <a class="page-link" 
+                               asp-action="DoanhThu" 
+                               asp-route-trang="@(Model.DoanhThuTheoThang.PageIndex - 1)"
+                               asp-route-tuNgay="@Model.TuNgay.ToString("yyyy-MM-dd")"
+                               asp-route-denNgay="@Model.DenNgay.ToString("yyyy-MM-dd")">
+                                &laquo; Trước
+                            </a>
+                        </li>
+                        
+                        @for (int i = 1; i <= Model.DoanhThuTheoThang.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == Model.DoanhThuTheoThang.PageIndex ? "active" : "")">
+                                <a class="page-link" 
+                                   asp-action="DoanhThu" 
+                                   asp-route-trang="@i"
+                                   asp-route-tuNgay="@Model.TuNgay.ToString("yyyy-MM-dd")"
+                                   asp-route-denNgay="@Model.DenNgay.ToString("yyyy-MM-dd")">
+                                    @i
+                                </a>
+                            </li>
+                        }
+                        
+                        <li class="page-item @nextDisabled">
+                            <a class="page-link" 
+                               asp-action="DoanhThu" 
+                               asp-route-trang="@(Model.DoanhThuTheoThang.PageIndex + 1)"
+                               asp-route-tuNgay="@Model.TuNgay.ToString("yyyy-MM-dd")"
+                               asp-route-denNgay="@Model.DenNgay.ToString("yyyy-MM-dd")">
+                                Tiếp &raquo;
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thống kê theo phương thức thanh toán -->
+    <div class="row">
+        <!-- Biểu đồ thanh toán -->
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Doanh thu theo phương thức thanh toán</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-pie pt-4">
+                        <canvas id="paymentMethodChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bảng chi tiết thanh toán -->
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Chi tiết theo phương thức thanh toán</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Phương thức</th>
+                                    <th>Doanh thu</th>
+                                    <th>Số giao dịch</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.DoanhThuTheoPhuongThucThanhToan)
+                                {
+                                    <tr>
+                                        <td>@item.PhuongThucThanhToan</td>
+                                        <td>@String.Format("{0:N0} VNĐ", item.TongDoanhThu)</td>
+                                        <td>@item.SoLuongGiaoDich</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nút xuất báo cáo -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">Xuất báo cáo</h5>
+            <div class="btn-group">
+                <a href="@Url.Action("ExportDoanhThu", "ThongKe", new { tuNgay = Model.TuNgay, denNgay = Model.DenNgay, format = "excel" })" class="btn btn-success">
+                    <i class="fas fa-file-excel mr-2"></i>Excel
+                </a>
+                <a href="@Url.Action("ExportDoanhThu", "ThongKe", new { tuNgay = Model.TuNgay, denNgay = Model.DenNgay, format = "pdf" })" class="btn btn-danger">
+                    <i class="fas fa-file-pdf mr-2"></i>PDF
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- ChartJS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>    <script>
+        // Doanh thu theo tháng
+        var monthlyRevenueData = @Html.Raw(Json.Serialize(Model.DoanhThuTheoThang.Select(x => new { Label = x.ThangNam, x.TongDoanhThu, x.SoLuongDon })));
+        
+        var monthlyLabels = monthlyRevenueData.map(item => item.Label);
+        var monthlyRevenue = monthlyRevenueData.map(item => item.TongDoanhThu);
+        var monthlyOrders = monthlyRevenueData.map(item => item.SoLuongDon);
+
+        var monthlyChart = new Chart(document.getElementById("revenueByMonthChart"), {
+            type: 'bar',
+            data: {
+                labels: monthlyLabels,
+                datasets: [
+                    {
+                        label: "Doanh thu",
+                        backgroundColor: "#4e73df",
+                        hoverBackgroundColor: "#2e59d9",
+                        borderColor: "#4e73df",
+                        data: monthlyRevenue,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: "Số đơn",
+                        backgroundColor: "#1cc88a",
+                        hoverBackgroundColor: "#17a673",
+                        borderColor: "#1cc88a",
+                        data: monthlyOrders,
+                        type: 'line',
+                        yAxisID: 'y1'
+                    }
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        position: 'left',
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString('vi-VN') + ' đ';
+                            }
+                        }
+                    },
+                    y1: {
+                        position: 'right',
+                        beginAtZero: true,
+                        grid: {
+                            drawOnChartArea: false
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                let value = context.raw;
+                                
+                                if (label === "Doanh thu") {
+                                    return label + ': ' + value.toLocaleString('vi-VN') + ' đ';
+                                } else {
+                                    return label + ': ' + value + ' đơn';
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Doanh thu theo phương thức thanh toán
+        var paymentMethodData = @Html.Raw(Json.Serialize(Model.DoanhThuTheoPhuongThucThanhToan.Select(x => new { x.PhuongThucThanhToan, x.TongDoanhThu, x.SoLuongGiaoDich })));
+        
+        var paymentLabels = paymentMethodData.map(item => item.PhuongThucThanhToan);
+        var paymentValues = paymentMethodData.map(item => item.TongDoanhThu);
+
+        var backgroundColors = [
+            '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#5a5c69', 
+            '#6610f2', '#fd7e14', '#20c997', '#6f42c1'
+        ];
+
+        var paymentChart = new Chart(document.getElementById("paymentMethodChart"), {
+            type: 'doughnut',
+            data: {
+                labels: paymentLabels,
+                datasets: [{
+                    data: paymentValues,
+                    backgroundColor: backgroundColors.slice(0, paymentLabels.length),
+                    hoverBackgroundColor: backgroundColors.slice(0, paymentLabels.length).map(color => {
+                        // Làm cho màu hơi tối hơn khi hover
+                        return color;
+                    }),
+                    hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let value = context.raw;
+                                let label = context.label || '';
+                                let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                let percentage = Math.round((value / total * 100) * 10) / 10;
+                                
+                                return label + ': ' + value.toLocaleString('vi-VN') + ' đ (' + percentage + '%)';
+                            }
+                        }
+                    }
+                },
+                cutout: '70%'
+            },
+        });
+    </script>
+}

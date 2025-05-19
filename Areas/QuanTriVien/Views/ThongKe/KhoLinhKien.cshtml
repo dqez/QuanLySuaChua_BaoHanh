@@ -1,0 +1,229 @@
+@model QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models.KhoLinhKienViewModel
+@{
+    ViewData["Title"] = "Báo cáo kho linh kiện";
+    Layout = "~/Areas/QuanTriVien/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">Báo cáo kho linh kiện</h2>
+        <a href="@Url.Action("Index", "ThongKe")" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left mr-2"></i>Quay lại tổng quan
+        </a>
+    </div>
+
+    <!-- Thông tin tổng quan -->
+    <div class="row mb-4">
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Tổng số linh kiện
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TongSoLinhKien</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-tools fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Tổng giá trị tồn kho
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@String.Format("{0:N0} VNĐ", Model.TongGiaTriTonKho)</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bộ lọc danh mục -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <form asp-action="KhoLinhKien" method="get" class="row g-3 align-items-end">
+                <div class="col-md-8">
+                    <label class="form-label">Lọc theo danh mục:</label>
+                    <select name="danhMucId" class="form-control">
+                        <option value="">Tất cả danh mục</option>
+                        @foreach (var item in Model.DanhSachDanhMuc)
+                        {
+                            <option value="@item.Value" selected="@(item.Value == Model.DanhMucId)">@item.Text</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary">Áp dụng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Biểu đồ theo danh mục -->
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Phân bố theo danh mục</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-pie pt-4">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bảng thống kê theo danh mục -->
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Thống kê theo danh mục</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Danh mục</th>
+                                    <th>Số loại linh kiện</th>
+                                    <th>Số lượng tồn</th>
+                                    <th>Giá trị tồn</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ThongKeTheoDanhMuc)
+                                {
+                                    <tr>
+                                        <td>@item.TenDanhMuc</td>
+                                        <td>@item.SoLuongLinhKien</td>
+                                        <td>@item.TongSoLuongTon</td>
+                                        <td>@String.Format("{0:N0} VNĐ", item.TongGiaTri)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bảng chi tiết tồn kho -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Chi tiết tồn kho</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="inventoryTable">
+                    <thead>
+                        <tr>
+                            <th>Mã linh kiện</th>
+                            <th>Tên linh kiện</th>
+                            <th>Danh mục</th>
+                            <th>Số lượng tồn</th>
+                            <th>Đơn giá</th>
+                            <th>Giá trị tồn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ThongKeTonKho)
+                        {
+                            <tr>
+                                <td>@item.LinhKienId</td>
+                                <td>@item.TenLinhKien</td>
+                                <td>@item.DanhMuc</td>
+                                <td>@item.SoLuongTon</td>
+                                <td>@String.Format("{0:N0} VNĐ", item.DonGia)</td>
+                                <td>@String.Format("{0:N0} VNĐ", item.GiaTriTon)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- ChartJS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+    <script>
+        $(document).ready(function() {
+            $('#inventoryTable').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/vi.json"
+                },
+                "pageLength": 10,
+                "order": [[5, "desc"]] // Sắp xếp theo giá trị tồn (giảm dần)
+            });
+        });
+
+        // Biểu đồ theo danh mục
+        var categoryData = @Html.Raw(Json.Serialize(Model.ThongKeTheoDanhMuc.Select(x => new { x.TenDanhMuc, x.TongGiaTri })));
+        
+        var categoryLabels = categoryData.map(item => item.TenDanhMuc);
+        var categoryValues = categoryData.map(item => item.TongGiaTri);
+
+        var backgroundColors = [
+            '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#5a5c69', 
+            '#6610f2', '#fd7e14', '#20c997', '#6f42c1'
+        ];
+
+        var categoryChart = new Chart(document.getElementById("categoryChart"), {
+            type: 'doughnut',
+            data: {
+                labels: categoryLabels,
+                datasets: [{
+                    data: categoryValues,
+                    backgroundColor: backgroundColors.slice(0, categoryLabels.length),
+                    hoverBackgroundColor: backgroundColors.slice(0, categoryLabels.length),
+                    hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            boxWidth: 12
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let value = context.raw;
+                                let label = context.label || '';
+                                let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                let percentage = Math.round((value / total * 100) * 10) / 10;
+                                
+                                return label + ': ' + value.toLocaleString('vi-VN') + ' đ (' + percentage + '%)';
+                            }
+                        }
+                    }
+                },
+                cutout: '70%'
+            },
+        });
+    </script>
+}

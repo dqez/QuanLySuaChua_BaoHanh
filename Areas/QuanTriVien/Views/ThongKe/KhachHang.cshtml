@@ -1,0 +1,312 @@
+@model QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models.KhachHangViewModel
+@{
+    ViewData["Title"] = "Báo cáo khách hàng";
+    Layout = "~/Areas/QuanTriVien/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">Báo cáo khách hàng</h2>
+        <a href="@Url.Action("Index", "ThongKe")" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left mr-2"></i>Quay lại tổng quan
+        </a>
+    </div>
+
+    <!-- Bộ lọc thời gian -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <form asp-action="KhachHang" method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Từ ngày:</label>
+                    <input type="date" name="tuNgay" class="form-control" value="@Model.TuNgay.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Đến ngày:</label>
+                    <input type="date" name="denNgay" class="form-control" value="@Model.DenNgay.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary">Áp dụng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Thông tin tổng quan -->
+    <div class="row mb-4">
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Tổng số khách hàng
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TongSoKhachHang</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @* <div class="col-xl-6 col-md-6 mb-4"> *@
+        @*     <div class="card border-left-success shadow h-100 py-2"> *@
+        @*         <div class="card-body"> *@
+        @*             <div class="row no-gutters align-items-center"> *@
+        @*                 <div class="col mr-2"> *@
+        @*                     <div class="text-xs font-weight-bold text-success text-uppercase mb-1"> *@
+        @*                         Khách hàng mới (30 ngày gần đây) *@
+        @*                     </div> *@
+        @*                     <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.KhachHangMoi</div> *@
+        @*                 </div> *@
+        @*                 <div class="col-auto"> *@
+        @*                     <i class="fas fa-user-plus fa-2x text-gray-300"></i> *@
+        @*                 </div> *@
+        @*             </div> *@
+        @*         </div> *@
+        @*     </div> *@
+        @* </div> *@
+    </div>
+
+    <div class="row">
+        <!-- Biểu đồ phân bố khách hàng theo khu vực -->
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Phân bố khách hàng theo khu vực</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-pie pt-4">
+                        <canvas id="customerRegionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top 10 khách hàng chi tiêu nhiều nhất -->
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Top 10 khách hàng chi tiêu nhiều nhất</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-bar">
+                        <canvas id="topCustomersChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bảng chi tiết khách hàng -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Chi tiết khách hàng</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="customerTable">
+                    <thead>
+                        <tr>
+                            <th>Mã khách hàng</th>
+                            <th>Tên khách hàng</th>
+                            <th>Số đơn hàng</th>
+                            <th>Tổng chi tiêu</th>
+                            <th>Chi tiêu trung bình/đơn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ThongKeKhachHang)
+                        {
+                            <tr>
+                                <td>@item.KhachHangId</td>
+                                <td>@item.TenKhachHang</td>
+                                <td>@item.SoDonHang</td>
+                                <td>@String.Format("{0:N0} VNĐ", item.TongChiTieu)</td>
+                                <td>@String.Format("{0:N0} VNĐ", item.SoDonHang > 0 ? item.TongChiTieu / item.SoDonHang : 0)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thống kê khách hàng theo khu vực -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Thống kê khách hàng theo khu vực</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Thành phố</th>
+                            <th>Số lượng khách hàng</th>
+                            <th>Tỉ lệ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var totalCustomers = Model.ThongKeTheoKhuVuc.Sum(x => x.SoLuongKhachHang);
+                        }
+                        @foreach (var item in Model.ThongKeTheoKhuVuc.OrderByDescending(x => x.SoLuongKhachHang))
+                        {
+                            var percent = totalCustomers > 0 ? (item.SoLuongKhachHang * 100.0 / totalCustomers) : 0;
+                            <tr>
+                                <td>@item.TenThanhPho</td>
+                                <td>@item.SoLuongKhachHang</td>
+                                <td>@Math.Round(percent, 1)%</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- ChartJS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+    <script>
+        $(document).ready(function() {
+            $('#customerTable').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/vi.json"
+                },
+                "pageLength": 10,
+                "order": [[3, "desc"]] // Sắp xếp theo tổng chi tiêu (giảm dần)
+            });
+        });
+
+        // Biểu đồ phân bố khách hàng theo khu vực
+        var regionData = @Html.Raw(Json.Serialize(Model.ThongKeTheoKhuVuc.Select(x => new { x.TenThanhPho, x.SoLuongKhachHang })));
+        
+        var regionLabels = regionData.map(item => item.TenThanhPho);
+        var regionValues = regionData.map(item => item.SoLuongKhachHang);
+
+        var backgroundColors = [
+            '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#5a5c69', 
+            '#6610f2', '#fd7e14', '#20c997', '#6f42c1'
+        ];
+
+        var regionChart = new Chart(document.getElementById("customerRegionChart"), {
+            type: 'doughnut',
+            data: {
+                labels: regionLabels,
+                datasets: [{
+                    data: regionValues,
+                    backgroundColor: backgroundColors.slice(0, regionLabels.length),
+                    hoverBackgroundColor: backgroundColors.slice(0, regionLabels.length),
+                    hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            boxWidth: 12
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let value = context.raw;
+                                let label = context.label || '';
+                                let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                let percentage = Math.round((value / total * 100) * 10) / 10;
+                                
+                                return label + ': ' + value + ' khách hàng (' + percentage + '%)';
+                            }
+                        }
+                    }
+                },
+                cutout: '70%'
+            },
+        });
+
+        // Biểu đồ top 10 khách hàng
+        var topCustomerData = @Html.Raw(Json.Serialize(Model.ThongKeKhachHang.OrderByDescending(x => x.TongChiTieu).Take(10).Select(x => new { 
+            x.TenKhachHang, 
+            x.TongChiTieu,
+            x.SoDonHang
+        })));
+        
+        var topCustomerLabels = topCustomerData.map(item => item.TenKhachHang);
+        var topCustomerValues = topCustomerData.map(item => item.TongChiTieu);
+        var topCustomerOrders = topCustomerData.map(item => item.SoDonHang);
+
+        var topCustomersChart = new Chart(document.getElementById("topCustomersChart"), {
+            type: 'bar',
+            data: {
+                labels: topCustomerLabels,
+                datasets: [
+                    {
+                        label: 'Tổng chi tiêu',
+                        backgroundColor: '#4e73df',
+                        data: topCustomerValues,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Số đơn hàng',
+                        backgroundColor: '#1cc88a',
+                        type: 'line',
+                        data: topCustomerOrders,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
+                    x: {
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString('vi-VN') + ' đ';
+                            }
+                        }
+                    },
+                    y1: {
+                        position: 'right',
+                        beginAtZero: true,
+                        grid: {
+                            drawOnChartArea: false
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                let value = context.raw;
+                                
+                                if (label === 'Tổng chi tiêu') {
+                                    return label + ': ' + value.toLocaleString('vi-VN') + ' đ';
+                                } else {
+                                    return label + ': ' + value + ' đơn';
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}

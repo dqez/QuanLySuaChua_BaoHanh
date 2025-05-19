@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using QuanLySuaChua_BaoHanh.Models;
 using QuanLySuaChua_BaoHanh.Services;
 using QuanLySuaChua_BaoHanh.Areas.KhachHang.Services;
+using DinkToPdf;
+using DinkToPdf.Contracts;
+using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +39,10 @@ builder.Services.AddScoped<IDGenerator>();
 
 // Đăng ký service PhieuSuaChua
 builder.Services.AddScoped<IPhieuSuaChuaService, PhieuSuaChuaService>();
+
+// Đăng ký service Export
+builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+builder.Services.AddScoped<IExportService, ExportService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
