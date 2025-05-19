@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using QuanLySuaChua_BaoHanh.Enums;
 using QuanLySuaChua_BaoHanh.Models;
 
 namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
@@ -123,6 +124,11 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
                 return NotFound();
             }
 
+            ModelState.Remove(nameof(phieuSuaChua.PhuongId));
+            ModelState.Remove(nameof(phieuSuaChua.KhachHangId));
+            ModelState.Remove(nameof(phieuSuaChua.MoTaKhachHang));
+            ModelState.Remove(nameof(phieuSuaChua.DiaChiNhanTraSanPham));
+
             if (ModelState.IsValid)
             {
                 try
@@ -137,11 +143,9 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
 
                     if (!string.IsNullOrEmpty(phieuSuaChua.KyThuatId))
                     {
-                        existingPhieuSuaChua.TrangThai = "DaPhanCong";
+                        existingPhieuSuaChua.TrangThai = TrangThaiPhieu.DaPhanCong;
                     }
 
-
-                    _context.Update(phieuSuaChua);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -157,7 +161,23 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["KyThuatId"] = new SelectList(_context.NguoiDungs, "Id", "Id", phieuSuaChua.KyThuatId);
+
+            var assignedIds = await _context.PhieuSuaChuas
+                .Where(p => p.KyThuatId != null && p.PhieuSuaChuaId != id)
+                .Select(p => p.KyThuatId)
+                .ToListAsync();
+
+            ViewBag.AssignedTechnicians = await _context.NguoiDungs
+                .Where(u => assignedIds.Contains(u.Id))
+                .ToListAsync();
+
+            ViewBag.UnassignedTechnicians = await _context.NguoiDungs
+                .Where(u => u.VaiTro == "KyThuatVien" && !assignedIds.Contains(u.Id))
+                .ToListAsync();
+
+            ViewData["KhachHangId"] = new SelectList(_context.NguoiDungs.Where(u => u.VaiTro == "KhachHang"), "Id", "Id", phieuSuaChua.KhachHangId);
+            ViewData["KyThuatId"] = new SelectList(_context.NguoiDungs.Where(u => u.VaiTro == "KyThuatVien"), "Id", "Id", phieuSuaChua.KyThuatId);
+            ViewData["PhuongId"] = new SelectList(_context.Phuongs, "PhuongId", "PhuongId", phieuSuaChua.PhuongId);
             return View(phieuSuaChua);
         }
 
