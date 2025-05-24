@@ -32,6 +32,8 @@ builder.Services.ConfigureApplicationCookie(options => {
     options.AccessDeniedPath = "/Account/AccessDenied";
     options.ExpireTimeSpan = TimeSpan.FromDays(1);
     options.SlidingExpiration = true;
+    options.Cookie.MaxAge = TimeSpan.FromDays(1);
+    options.Cookie.IsEssential = true; 
 });
 
 //dang ky IDGenerator

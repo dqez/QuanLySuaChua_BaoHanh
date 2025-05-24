@@ -4,42 +4,165 @@
     Layout = "_LayoutAdmin";
 }
 
-<div class="container-fluid">
-    <h1 class="mt-4">Sửa thông tin người dùng</h1>
+<style>
+    /* Styles for User Create/Edit pages */
+    :root {
+        --blue-primary: #319BC5;
+        --white: #FFFFFF;
+        --black: #000000;
+        --gray-light: #F8F8F8;
+        --gray-border: #DDDDDD;
+    }
+    
+    .page-title {
+        font-family: 'Baloo 2', cursive;
+        font-weight: 700;
+        color: var(--blue-primary);
+        margin-bottom: 1.5rem;
+        font-size: 2rem;
+    }
+    
+    .content-card {
+        background-color: var(--white);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        width: 100%;
+    }
+    
+    .card-header-custom {
+        background-color: var(--blue-primary);
+        color: var(--white);
+        font-family: 'Baloo 2', cursive;
+        font-weight: 600;
+        padding: 1rem 1.5rem;
+        border-radius: 8px 8px 0 0;
+        display: flex;
+        align-items: center;
+    }
+    
+    .card-header-custom i {
+        margin-right: 0.5rem;
+        font-size: 1.25rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+    
+    .form-control {
+        border-radius: 6px;
+        border: 1px solid var(--gray-border);
+        padding: 0.5rem 0.75rem;
+        transition: all 0.2s;
+    }
+    
+    .form-control:focus {
+        border-color: var(--blue-primary);
+        box-shadow: 0 0 0 0.2rem rgba(49, 155, 197, 0.25);
+    }
+    
+    .form-control.readonly {
+        background-color: #f8f9fa;
+        cursor: not-allowed;
+    }
+    
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: #212529;
+    }
+    
+    .btn {
+        border-radius: 6px;
+        padding: 0.5rem 1.25rem;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+    
+    .btn-primary {
+        background-color: var(--blue-primary);
+        border-color: var(--blue-primary);
+    }
+    
+    .btn-primary:hover {
+        background-color: #2689b0;
+        border-color: #2689b0;
+    }
+    
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+    
+    .form-check-input:checked {
+        background-color: var(--blue-primary);
+        border-color: var(--blue-primary);
+    }
+    
+    .form-text {
+        color: #6c757d;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+    
+    .required-indicator {
+        color: #dc3545;
+        font-weight: normal;
+        font-size: 0.875rem;
+        margin-left: 0.25rem;
+    }
+    
+    @@media (max-width: 768px) {
+        .row [class*="col-"] {
+            margin-bottom: 1rem;
+        }
+    }
+</style>
 
-    <div class="card mb-4">
-        <div class="card-header">
-            <i class="fas fa-user-edit mr-1"></i>
+<div class="container-fluid p-4">
+    <h1 class="page-title">
+        <i class="bi bi-person-gear me-2"></i>Sửa thông tin người dùng
+    </h1>
+
+    <div class="content-card">
+        <div class="card-header-custom">
+            <i class="bi bi-pencil-square"></i>
             Chỉnh sửa thông tin
         </div>
         <div class="card-body">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>            <form asp-action="Edit">
                 <input type="hidden" asp-for="Id" />
 
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label asp-for="UserName" class="control-label"></label>
-                            <input asp-for="UserName" class="form-control" readonly />
+                            <label asp-for="UserName" class="form-label">Tên đăng nhập</label>
+                            <input asp-for="UserName" class="form-control readonly" readonly />
+                            <small class="form-text">Tên đăng nhập không thể thay đổi</small>
                         </div>
 
                         <div class="form-group">
-                            <label asp-for="Email" class="control-label"></label>
+                            <label asp-for="Email" class="form-label">Email <span class="required-indicator">*</span></label>
                             <input asp-for="Email" class="form-control" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
                         <div class="form-group">
-                            <label asp-for="Password" class="control-label"></label>
+                            <label asp-for="Password" class="form-label">Mật khẩu</label>
                             <input asp-for="Password" class="form-control" data-val="false"/>
                             <span asp-validation-for="Password" class="text-danger"></span>
-                            <small class="form-text text-muted">Để trống nếu không thay đổi mật khẩu</small>
+                            <small class="form-text">Để trống nếu không thay đổi mật khẩu</small>
                         </div>
 
                         <div class="form-group">
-                            <label asp-for="ConfirmPassword" class="control-label"></label>
+                            <label asp-for="ConfirmPassword" class="form-label">Xác nhận mật khẩu</label>
                             <input asp-for="ConfirmPassword" class="form-control" data-val="false" />
                             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                         </div>
@@ -47,25 +170,25 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label asp-for="HoTen" class="control-label"></label>
+                            <label asp-for="HoTen" class="form-label">Họ tên <span class="required-indicator">*</span></label>
                             <input asp-for="HoTen" class="form-control" />
                             <span asp-validation-for="HoTen" class="text-danger"></span>
                         </div>
 
                         <div class="form-group">
-                            <label asp-for="PhoneNumber" class="control-label"></label>
+                            <label asp-for="PhoneNumber" class="form-label">Số điện thoại <span class="required-indicator">*</span></label>
                             <input asp-for="PhoneNumber" class="form-control" />
                             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                         </div>
 
                         <div class="form-group">
-                            <label asp-for="DiaChi" class="control-label"></label>
+                            <label asp-for="DiaChi" class="form-label">Địa chỉ</label>
                             <input asp-for="DiaChi" class="form-control" />
                             <span asp-validation-for="DiaChi" class="text-danger"></span>
                         </div>
 
                         <div class="form-group">
-                            <label asp-for="PhuongId" class="control-label"></label>
+                            <label asp-for="PhuongId" class="form-label">Phường/Xã</label>
                             <select asp-for="PhuongId" asp-items="ViewBag.PhuongId" class="form-control">
                                 <option value="">-- Chọn phường --</option>
                             </select>
@@ -73,11 +196,11 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label">Vai trò</label>
+                            <label class="form-label">Vai trò <span class="required-indicator">*</span></label>
                             <div class="mt-2">
                                 @foreach (var role in ViewBag.Roles)
                                 {
-                                    <div class="form-check">
+                                    <div class="form-check mb-2">
                                         <input type="checkbox" name="SelectedRoles" value="@role.Name" id="role_@role.Id" class="form-check-input"
                                         @(Model.SelectedRoles != null && Model.SelectedRoles.Contains(role.Name) ? "checked" : "") />
                                         <label class="form-check-label" for="role_@role.Id">@role.Name</label>
@@ -88,9 +211,13 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+                <div class="form-group mt-4 d-flex">
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i class="bi bi-save me-1"></i> Lưu thay đổi
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Quay lại
+                    </a>
                 </div>
             </form>
         </div>
@@ -101,4 +228,49 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    
+    <script>
+        $(document).ready(function() {
+            // Highlight form fields on focus
+            $('input, select').on('focus', function() {
+                $(this).closest('.form-group').addClass('focused');
+            }).on('blur', function() {
+                $(this).closest('.form-group').removeClass('focused');
+            });
+            
+            // Custom form validation styling
+            $('.form-control').on('invalid', function() {
+                $(this).addClass('is-invalid');
+            });
+            
+            // Auto-capitalize the first letter of HoTen field
+            $('#HoTen').on('blur', function() {
+                var input = $(this);
+                var start = input[0].selectionStart;
+                var val = input.val();
+                
+                if (val) {
+                    input.val(val.replace(/(?:^|\s)\S/g, function(a) { 
+                        return a.toUpperCase(); 
+                    }));
+                    input[0].selectionStart = start;
+                    input[0].selectionEnd = start;
+                }
+            });
+            
+            // Show password confirmation field only when password field is filled
+            $('#Password').on('input', function() {
+                if ($(this).val().length > 0) {
+                    $('#ConfirmPassword').closest('.form-group').slideDown();
+                } else {
+                    $('#ConfirmPassword').closest('.form-group').slideUp();
+                }
+            });
+            
+            // Trigger the check on page load
+            if ($('#Password').val().length == 0) {
+                $('#ConfirmPassword').closest('.form-group').hide();
+            }
+        });
+    </script>
 }
