@@ -6,6 +6,12 @@ using QuanLySuaChua_BaoHanh.Areas.KhachHang.Services;
 using DinkToPdf;
 using DinkToPdf.Contracts;
 using System.IO;
+using QuanLySuaChua_BaoHanh.Services;
+
+
+var contextPdfAssemblyLoadContext = new CustomAssemblyLoadContext();
+var wkhtmltoxPath = Path.Combine(Directory.GetCurrentDirectory(), "NativeLibrary", "libwkhtmltox.dll");
+contextPdfAssemblyLoadContext.LoadUnmanagedLibrary(wkhtmltoxPath);
 
 var builder = WebApplication.CreateBuilder(args);
 
