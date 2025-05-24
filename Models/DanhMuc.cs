@@ -20,6 +20,7 @@ public partial class DanhMuc
     [Display(Name = "Tên danh mục")]
     public string TenDanhMuc { get; set; } = null!;
 
+    [Required(ErrorMessage = "Vui lòng chọn phân loại")]
     [StringLength(50)]
     [Unicode(false)]
     [Display(Name = "Phân loại")]

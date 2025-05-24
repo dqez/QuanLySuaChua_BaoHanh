@@ -52,8 +52,26 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         // GET: QuanTriVien/SanPhams/Create
         public IActionResult Create()
         {
-            ViewData["DanhMucId"] = new SelectList(_context.DanhMucs, "DanhMucId", "DanhMucId");
-            ViewData["KhachHangId"] = new SelectList(_context.NguoiDungs, "Id", "Id");
+            ViewBag.KhachHangId = _context.NguoiDungs
+                .Where(nd => nd.VaiTro == "KhachHang")
+                .Select(nd => new SelectListItem
+                {
+                    Value = nd.Id.ToString(),
+                    Text = nd.Id + " - " + nd.HoTen
+                })
+                .ToList();
+
+            ViewBag.DanhMucId = _context.DanhMucs
+                .Select(dm => new SelectListItem
+                {
+                    Value = dm.DanhMucId,
+                    Text = dm.DanhMucId + " - " + dm.TenDanhMuc
+                }
+                    )
+                .ToList();
+
+            //ViewData["DanhMucId"] = new SelectList(_context.DanhMucs, "DanhMucId", "DanhMucId");
+            //ViewData["KhachHangId"] = new SelectList(_context.NguoiDungs, "Id", "Id");
             return View();
         }
 
@@ -92,8 +110,28 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
             {
                 return NotFound();
             }
-            ViewData["DanhMucId"] = new SelectList(_context.DanhMucs, "DanhMucId", "DanhMucId", sanPham.DanhMucId);
-            ViewData["KhachHangId"] = new SelectList(_context.NguoiDungs, "Id", "Id", sanPham.KhachHangId);
+
+            ViewBag.KhachHangId = _context.NguoiDungs
+                .Where(nd => nd.VaiTro == "KhachHang")
+                .Select(nd => new SelectListItem
+                {
+                    Value = nd.Id.ToString(),
+                    Text = nd.Id + " - " + nd.HoTen,
+                    //Selected = sanPham.KhachHangId == nd.Id //aspnetcore sẽ tự động.
+                })
+                .ToList();
+
+            ViewBag.DanhMucId = _context.DanhMucs
+                .Select(dm => new SelectListItem
+                {
+                    Value = dm.DanhMucId,
+                    Text = dm.DanhMucId + " - " + dm.TenDanhMuc,
+                    //Selected = sanPham.DanhMucId == dm.DanhMucId
+                }
+                )
+                .ToList();
+            //ViewData["DanhMucId"] = new SelectList(_context.DanhMucs, "DanhMucId", "DanhMucId", sanPham.DanhMucId);
+            //ViewData["KhachHangId"] = new SelectList(_context.NguoiDungs, "Id", "Id", sanPham.KhachHangId);
             return View(sanPham);
         }
 

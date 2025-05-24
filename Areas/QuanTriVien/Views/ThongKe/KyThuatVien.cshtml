@@ -1,3 +1,5 @@
+@using Newtonsoft.Json
+
 @model QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models.KyThuatVienViewModel
 @{
     ViewData["Title"] = "Báo cáo kỹ thuật viên";
@@ -138,7 +140,7 @@
         });
 
         // Biểu đồ hiệu suất kỹ thuật viên
-        var techData = @Html.Raw(Json.Serialize(Model.HieuSuatKyThuatVien.Take(8).Select(x => new { 
+        var techData = @Html.Raw(JsonConvert.SerializeObject(Model.HieuSuatKyThuatVien.Take(8).Select(x => new { 
             x.TenKyThuat, 
             x.TongSoDon, 
             x.SoDonHoanThanh, 

@@ -23,7 +23,8 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         // GET: QuanTriVien/AssignTasks
         public async Task<IActionResult> Index()
         {
-            var bHSC_DbContext = _context.PhieuSuaChuas.Include(p => p.KhachHang).Include(p => p.KyThuat).Include(p => p.Phuong);
+            var trangThaiFilter = new[] { TrangThaiPhieu.DaXacNhan.ToString(), TrangThaiPhieu.DaPhanCong.ToString() };
+            var bHSC_DbContext = _context.PhieuSuaChuas.Include(p => p.KhachHang).Include(p => p.KyThuat).Include(p => p.Phuong).Where(tt => trangThaiFilter.Contains(tt.TrangThai));
             return View(await bHSC_DbContext.ToListAsync());
         }
 
@@ -106,8 +107,19 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
                 .Where(u => u.VaiTro == "KyThuatVien" && !assignedIds.Contains(u.Id))
                 .ToListAsync();
 
+
+            ViewBag.KyThuatId = _context.NguoiDungs
+                .Where(u => u.VaiTro == "KyThuatVien")
+                .Select(ktv => new SelectListItem
+                    {
+                        Value = ktv.Id,
+                        Text = ktv.Id + " - " + ktv.HoTen,
+
+                    }
+                )
+                .ToList();
             ViewData["KhachHangId"] = new SelectList(_context.NguoiDungs.Where(u => u.VaiTro == "KhachHang"), "Id", "Id", phieuSuaChua.KhachHangId);
-            ViewData["KyThuatId"] = new SelectList(_context.NguoiDungs.Where(u => u.VaiTro == "KyThuatVien"), "Id", "Id", phieuSuaChua.KyThuatId);
+            //ViewData["KyThuatId"] = new SelectList(_context.NguoiDungs.Where(u => u.VaiTro == "KyThuatVien"), "Id", "Id", phieuSuaChua.KyThuatId);
             ViewData["PhuongId"] = new SelectList(_context.Phuongs, "PhuongId", "PhuongId", phieuSuaChua.PhuongId);
             return View(phieuSuaChua);
         }

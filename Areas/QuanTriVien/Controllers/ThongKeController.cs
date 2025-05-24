@@ -66,17 +66,37 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
                 SoDonChoXacNhan = await _context.PhieuSuaChuas
                     .Where(p => p.NgayGui >= tuNgay && p.NgayGui <= denNgay && p.TrangThai == TrangThaiPhieu.ChoXacNhan.ToString())
                     .CountAsync(),
-                
-                SoDonDangXuLy = await _context.PhieuSuaChuas
-                    .Where(p => p.NgayGui >= tuNgay && p.NgayGui <= denNgay && 
-                           (p.TrangThai == TrangThaiPhieu.DangSuaChua.ToString()))
+
+                SoDonDaXacNhan = await _context.PhieuSuaChuas
+                    .Where(p => p.NgayGui >= tuNgay && p.NgayGui <= denNgay &&
+                           (p.TrangThai == TrangThaiPhieu.DaXacNhan.ToString()))
                     .CountAsync(),
-                
-                SoDonHoanThanh = await _context.PhieuSuaChuas
-                    .Where(p => p.NgayTra >= tuNgay && p.NgayTra <= denNgay && p.TrangThai == TrangThaiPhieu.HoanThanh.ToString())
+
+                SoDonDaPhanCong = await _context.PhieuSuaChuas
+                    .Where(p => p.NgayGui >= tuNgay && p.NgayGui <= denNgay && p.TrangThai == TrangThaiPhieu.DaPhanCong.ToString())
                     .CountAsync(),
-                
-                SoDonHuy = await _context.PhieuSuaChuas
+
+
+                SoDonChoKiemTra = await _context.PhieuSuaChuas
+                    .Where(p => p.NgayTra >= tuNgay && p.NgayTra <= denNgay && p.TrangThai == TrangThaiPhieu.ChoKiemTra.ToString())
+                    .CountAsync(),
+
+                SoDonDangSuaChua = await _context.PhieuSuaChuas
+                    .Where(p => p.NgayGui >= tuNgay && p.NgayGui <= denNgay && p.TrangThai == TrangThaiPhieu.DangSuaChua.ToString())
+                    .CountAsync(),
+                SoDonDaSuaXong = await _context.PhieuSuaChuas
+                    .Where(p => p.NgayGui >= tuNgay && p.NgayGui <= denNgay && p.TrangThai == TrangThaiPhieu.DaSuaXong.ToString())
+                    .CountAsync(),
+                SoDonDaThanhToan = await _context.PhieuSuaChuas
+                    .Where(p => p.NgayGui >= tuNgay && p.NgayGui <= denNgay && p.TrangThai == TrangThaiPhieu.DaThanhToan.ToString())
+                    .CountAsync(),
+                SoDonDangVanChuyen = await _context.PhieuSuaChuas
+                    .Where(p => p.NgayGui >= tuNgay && p.NgayGui <= denNgay && p.TrangThai == TrangThaiPhieu.DangVanChuyen.ToString())
+                    .CountAsync(),
+                SoDonDaHoanThanh = await _context.PhieuSuaChuas
+                    .Where(p => p.NgayGui >= tuNgay && p.NgayGui <= denNgay && p.TrangThai == TrangThaiPhieu.HoanThanh.ToString())
+                    .CountAsync(),
+                SoDonDaHuy = await _context.PhieuSuaChuas
                     .Where(p => p.NgayGui >= tuNgay && p.NgayGui <= denNgay && p.TrangThai == TrangThaiPhieu.DaHuy.ToString())
                     .CountAsync(),
 

@@ -1,3 +1,4 @@
+@using Newtonsoft.Json
 @model QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models.DonSuaChuaViewModel
 @{
     ViewData["Title"] = "Báo cáo đơn sửa chữa";
@@ -95,7 +96,20 @@
                                     {
                                         var percent = Model.TongSoDon > 0 ? (item.SoLuong * 100.0 / Model.TongSoDon) : 0;
                                         <tr>
-                                            <td>@item.TrangThai</td>
+                                            <td>
+                                                @{
+                                                    TrangThaiPhieu trangThaiEnum;
+                                                    if (Enum.TryParse(item.TrangThai, out trangThaiEnum))
+                                                    {
+                                                        @trangThaiEnum.GetDisplayName()
+                                                    }
+                                                    else
+                                                    {
+                                                        @item.TrangThai <!-- fallback nếu không parse được -->
+                                                    }
+                                                }
+                                            </td>
+
                                             <td>@item.SoLuong</td>
                                             <td>@Math.Round(percent, 1)%</td>
                                         </tr>
@@ -151,6 +165,27 @@
         </div>
     </div>
 </div>
+@{
+    var statusDataWithDisplayName = Model.ThongKeTrangThai.Select(item =>
+    {
+        if (Enum.TryParse<TrangThaiPhieu>(item.TrangThai, out var enumValue))
+        {
+            return new
+            {
+                DisplayName = enumValue.GetDisplayName(),
+                item.SoLuong
+            };
+        }
+        else
+        {
+            return new
+            {
+                DisplayName = item.TrangThai,
+                item.SoLuong
+            };
+        }
+    }).ToList();
+}
 
 @section Scripts {
     <!-- ChartJS -->
@@ -158,13 +193,14 @@
 
     <script>
         // Biểu đồ trạng thái đơn hàng
-        var statusData = @Html.Raw(Json.Serialize(Model.ThongKeTrangThai.Select(x => new { x.TrangThai, x.SoLuong })));
-        
-        var statusLabels = statusData.map(item => item.TrangThai);
+        // var statusData = @Html.Raw(Json.Serialize(Model.ThongKeTrangThai.Select(x => new { x.TrangThai, x.SoLuong })));
+        var statusData = @Html.Raw(JsonConvert.SerializeObject(statusDataWithDisplayName));
+        var statusLabels = statusData.map(item => item.DisplayName);
         var statusValues = statusData.map(item => item.SoLuong);
 
+
         var backgroundColors = [
-            '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#5a5c69', 
+            '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#5a5c69',
             '#6610f2', '#fd7e14', '#20c997', '#6f42c1'
         ];
 
@@ -196,7 +232,7 @@
                                 let label = context.label || '';
                                 let total = context.dataset.data.reduce((a, b) => a + b, 0);
                                 let percentage = Math.round((value / total * 100) * 10) / 10;
-                                
+
                                 return label + ': ' + value + ' đơn (' + percentage + '%)';
                             }
                         }
@@ -207,8 +243,7 @@
         });
 
         // Biểu đồ đơn hàng theo ngày
-        var ordersByDayData = @Html.Raw(Json.Serialize(Model.DonTheoNgay.OrderBy(x => x.Ngay).Select(x => new { Day = x.Ngay.Day, Month = x.Ngay.Month, x.SoLuongDon })));
-        
+        var ordersByDayData = @Html.Raw(JsonConvert.SerializeObject(Model.DonTheoNgay.OrderBy(x => x.Ngay).Select(x => new { Day = x.Ngay.Day, Month = x.Ngay.Month, x.SoLuongDon })));
         var dayLabels = ordersByDayData.map(item => item.Day + '/' + item.Month);
         var dayValues = ordersByDayData.map(item => item.SoLuongDon);
 

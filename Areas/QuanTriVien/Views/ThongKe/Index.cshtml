@@ -3,6 +3,8 @@
     ViewData["Title"] = "Thống kê và báo cáo";
     Layout = "~/Areas/QuanTriVien/Views/Shared/_LayoutAdmin.cshtml";
 }
+@using Newtonsoft.Json
+
 
 <style>
     /* Styles for ThongKe pages */
@@ -210,7 +212,7 @@
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                 Số đơn hoàn thành
                             </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.SoDonHoanThanh</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.SoDonDaHoanThanh</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-check-circle fa-2x text-gray-300"></i>
@@ -254,13 +256,31 @@
                             <i class="fas fa-circle text-primary"></i> Chờ xác nhận (@Model.SoDonChoXacNhan)
                         </span>
                         <span class="mr-2">
-                            <i class="fas fa-circle text-success"></i> Đang xử lý (@Model.SoDonDangXuLy)
+                            <i class="fas fa-circle text-primary"></i> Đã xác nhận (@Model.SoDonDaXacNhan)
                         </span>
                         <span class="mr-2">
-                            <i class="fas fa-circle text-info"></i> Hoàn thành (@Model.SoDonHoanThanh)
+                            <i class="fas fa-circle text-primary"></i> Đã phân công (@Model.SoDonDaPhanCong)
                         </span>
                         <span class="mr-2">
-                            <i class="fas fa-circle text-danger"></i> Hủy (@Model.SoDonHuy)
+                            <i class="fas fa-circle text-primary"></i> Chờ kiểm tra (@Model.SoDonChoKiemTra)
+                        </span>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-primary"></i> Đang sửa chữa (@Model.SoDonDangSuaChua)
+                        </span>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-primary"></i> Đã sửa xong (@Model.SoDonDaSuaXong)
+                        </span>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-primary"></i> Đã thanh toán (@Model.SoDonDaThanhToan)
+                        </span>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-success"></i> Đang vận chuyển  (@Model.SoDonDangVanChuyen)
+                        </span>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-info"></i> Hoàn thành (@Model.SoDonDaHoanThanh)
+                        </span>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-danger"></i> Hủy (@Model.SoDonDaHuy)
                         </span>
                     </div>
                 </div>
@@ -420,9 +440,9 @@
         var orderStatusChart = new Chart(document.getElementById("orderStatusChart"), {
             type: 'doughnut',
             data: {
-                labels: ["Chờ xác nhận", "Đang xử lý", "Hoàn thành", "Hủy"],
+                labels: ["Chờ xác nhận","Đã xác nhận", "Đã phân công", "Chờ kiểm tra", "Đang sửa chữa", "Đã sửa xong", "Đã thanh toán", "Đang vận chuyển", "Hoàn thành", "Hủy"],
                 datasets: [{
-                    data: [@Model.SoDonChoXacNhan, @Model.SoDonDangXuLy, @Model.SoDonHoanThanh, @Model.SoDonHuy],
+                    data: [@Model.SoDonChoXacNhan, @Model.SoDonDaXacNhan, @Model.SoDonDaPhanCong, @Model.SoDonChoKiemTra, @Model.SoDonDangSuaChua ,@Model.SoDonDaSuaXong ,@Model.SoDonDaThanhToan ,@Model.SoDonDangVanChuyen ,@Model.SoDonDaHoanThanh ,@Model.SoDonDaHuy],
                     backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#e74a3b'],
                 }],
             },
@@ -439,7 +459,7 @@
         });
 
         // Biểu đồ doanh thu theo ngày
-        var revenueData = @Html.Raw(Json.Serialize(Model.DoanhThuTheoNgay.Select(x => new { x.Ngay.Day, x.Ngay.Month, x.TongDoanhThu })));
+        var revenueData = @Html.Raw(JsonConvert.SerializeObject(Model.DoanhThuTheoNgay.Select(x => new { x.Ngay.Day, x.Ngay.Month, x.TongDoanhThu })));
         
         var revenueLabels = revenueData.map(item => item.Day + '/' + item.Month);
         var revenueValues = revenueData.map(item => item.TongDoanhThu);

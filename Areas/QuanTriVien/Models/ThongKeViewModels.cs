@@ -16,9 +16,15 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models
 
         // Thống kê đơn hàng theo trạng thái
         public int SoDonChoXacNhan { get; set; }
-        public int SoDonDangXuLy { get; set; }
-        public int SoDonHoanThanh { get; set; }
-        public int SoDonHuy { get; set; }
+        public int SoDonDaXacNhan { get; set; }
+        public int SoDonDaPhanCong { get; set; }
+        public int SoDonChoKiemTra { get; set; }
+        public int SoDonDangSuaChua { get; set; }
+        public int SoDonDaSuaXong { get; set; }
+        public int SoDonDaThanhToan { get; set; }
+        public int SoDonDangVanChuyen { get; set; }
+        public int SoDonDaHoanThanh { get; set; }
+        public int SoDonDaHuy { get; set; }
 
         // Thống kê linh kiện
         public int SoLuongLinhKienSuDung { get; set; }

@@ -1,3 +1,5 @@
+@using Newtonsoft.Json
+
 @model QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models.KhachHangViewModel
 @{
     ViewData["Title"] = "Báo cáo khách hàng";
@@ -188,7 +190,7 @@
         });
 
         // Biểu đồ phân bố khách hàng theo khu vực
-        var regionData = @Html.Raw(Json.Serialize(Model.ThongKeTheoKhuVuc.Select(x => new { x.TenThanhPho, x.SoLuongKhachHang })));
+        var regionData = @Html.Raw(JsonConvert.SerializeObject(Model.ThongKeTheoKhuVuc.Select(x => new { x.TenThanhPho, x.SoLuongKhachHang })));
         
         var regionLabels = regionData.map(item => item.TenThanhPho);
         var regionValues = regionData.map(item => item.SoLuongKhachHang);
@@ -237,7 +239,7 @@
         });
 
         // Biểu đồ top 10 khách hàng
-        var topCustomerData = @Html.Raw(Json.Serialize(Model.ThongKeKhachHang.OrderByDescending(x => x.TongChiTieu).Take(10).Select(x => new { 
+        var topCustomerData = @Html.Raw(JsonConvert.SerializeObject(Model.ThongKeKhachHang.OrderByDescending(x => x.TongChiTieu).Take(10).Select(x => new { 
             x.TenKhachHang, 
             x.TongChiTieu,
             x.SoDonHang

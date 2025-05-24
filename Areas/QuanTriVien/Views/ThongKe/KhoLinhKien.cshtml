@@ -1,3 +1,5 @@
+@using Newtonsoft.Json
+
 @model QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models.KhoLinhKienViewModel
 @{
     ViewData["Title"] = "Báo cáo kho linh kiện";
@@ -178,7 +180,7 @@
         });
 
         // Biểu đồ theo danh mục
-        var categoryData = @Html.Raw(Json.Serialize(Model.ThongKeTheoDanhMuc.Select(x => new { x.TenDanhMuc, x.TongGiaTri })));
+        var categoryData = @Html.Raw(JsonConvert.SerializeObject(Model.ThongKeTheoDanhMuc.Select(x => new { x.TenDanhMuc, x.TongGiaTri })));
         
         var categoryLabels = categoryData.map(item => item.TenDanhMuc);
         var categoryValues = categoryData.map(item => item.TongGiaTri);
