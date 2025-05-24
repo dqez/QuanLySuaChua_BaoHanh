@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QuanLySuaChua_BaoHanh.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
 {
     [Area("TuVanVien")]
+    [Authorize(Roles = "TuVanVien")]
     public class CapNhatKHController : Controller
     {
         private readonly BHSC_DbContext _context;

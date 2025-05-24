@@ -64,7 +64,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         // GET: NhanVienKho/LinhKiens/Create
         public IActionResult Create()
         {
-            ViewBag.DanhMucId = new SelectList(_context.DanhMucs, "DanhMucId", "TenDanhMuc");
+            ViewData["DanhMucId"] = new SelectList(_context.DanhMucs, "DanhMucId", "TenDanhMuc");
             return View();
         }
 
@@ -73,8 +73,10 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("LinhKienId,DanhMucId,TenLinhKien,SoLuongTon,DonGia,PhamViSuDung,GhiChu")] LinhKien linhKien)
+        public async Task<IActionResult> Create([Bind("DanhMucId,TenLinhKien,SoLuongTon,DonGia,PhamViSuDung,GhiChu")] LinhKien linhKien)
         {
+            linhKien.LinhKienId = await _idGenerator.GenerateLinhKienIdAsync();
+            ModelState.Remove("LinhKienId");
             if (ModelState.IsValid)
             {
                 _context.Add(linhKien);
@@ -82,6 +84,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["DanhMucId"] = new SelectList(_context.DanhMucs, "DanhMucId", "TenDanhMuc", linhKien.DanhMucId);
+
             return View(linhKien);
         }
 
