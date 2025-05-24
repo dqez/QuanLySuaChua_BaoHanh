@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Inter:wght@400;500&display=swap">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
     <style>
         :root {
             --blue-primary: #319BC5;
@@ -157,11 +159,86 @@
             padding: 20px;
             flex: 1;
         }
+
+        /* Responsive styles for mobile */
+        @@media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+                transition: width 0.3s ease;
+            }
+            
+            .sidebar.show {
+                width: 250px;
+            }
+            
+            .content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            
+            .header {
+                padding: 10px 15px;
+            }
+            
+            .table-responsive {
+                overflow-x: auto;
+            }
+            
+            .card-deck, .row {
+                flex-wrap: wrap;
+            }
+            
+            .col-md-6, .col-lg-6, .col-xl-3, .col-xl-4 {
+                flex: 0 0 100%;
+                max-width: 100%;
+                margin-bottom: 1rem;
+            }
+            
+            .chart-container {
+                height: 300px !important;
+            }
+            
+            /* Hide sidebar by default on small screens */
+            .sidebar {
+                transform: translateX(-250px);
+                position: fixed;
+                height: calc(100% - 70px);
+                z-index: 1010;
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .toggle-sidebar {
+                display: block !important;
+            }
+            
+            /* Better spacing for mobile forms */
+            .form-group {
+                margin-bottom: 1rem;
+            }
+            
+            /* Adjust buttons for mobile */
+            .btn-group {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .btn-group .btn {
+                margin-bottom: 0.5rem;
+                border-radius: 0.25rem !important;
+            }
+        }
     </style>
 </head>
-<body>
-    <!-- Header -->
+<body>    <!-- Header -->
     <header class="header">
+        <button class="toggle-sidebar d-md-none" style="display: none; background: none; border: none; font-size: 1.5rem;">
+            <i class="bi bi-list"></i>
+        </button>
+        
         <div class="logo-container">
             <h1 class="logo-text">Panasonic</h1>
             <p class="logo-subtext">Trung tâm bảo hành</p>
@@ -206,22 +283,22 @@
                 <span>Trang chủ</span>
             </a>            <a href="@Url.Action("Index", "ManageAccounts", new { area = "QuanTriVien" })" class="nav-item">
                 <i class="bi bi-gear"></i>
-                <span>Cập nhật tài khoản và phân quyền</span>
+                <span>Tài khoản và phân quyền</span>
             </a>
             <a href="@Url.Action("Index", "Locations", new { area = "QuanTriVien" })" class="nav-item">
                 <i class="bi bi-geo-alt"></i>
-                <span>Quản lý địa giới hành chính</span>
-            </a>            <a href="@Url.Action("Index", "ProductManagement", new { area = "QuanTriVien" })" class="nav-item">
+                <span>Địa chỉ</span>
+            </a>            
+            <a href="@Url.Action("Index", "ProductManagement", new { area = "QuanTriVien" })" class="nav-item">
                 <i class="bi bi-list-check"></i>
-                <span>Cập nhật danh mục và sản phẩm</span>
-            </a>
-            <a href="@Url.Action("Index", "AssignTasks")" class="nav-item">
+                <span>Danh mục và sản phẩm</span>
+            </a>            <a href="@Url.Action("Index", "AssignTasks")" class="nav-item">
                 <i class="bi bi-clipboard-check"></i>
                 <span>Phân công nhiệm vụ</span>
             </a>
-            <a href="@Url.Action("Reports", "Statistics")" class="nav-item">
+            <a href="@Url.Action("Index", "ThongKe", new { area = "QuanTriVien" })" class="nav-item">
                 <i class="bi bi-bar-chart"></i>
-                <span>Xem báo cáo thống kê</span>
+                <span>Thống kê và báo cáo</span>
             </a>
         </nav>
     </aside>
@@ -284,6 +361,31 @@
                 navItems[0].classList.add('active');
                 localStorage.setItem('activeNavItem', navItems[0].getAttribute('href'));
             }
+        });
+    </script>
+    <!-- Toggle sidebar on mobile -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleBtn = document.querySelector('.toggle-sidebar');
+            const sidebar = document.querySelector('.sidebar');
+            
+            toggleBtn.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+            });
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (!sidebar.contains(event.target) && !toggleBtn.contains(event.target) && window.innerWidth <= 768) {
+                    sidebar.classList.remove('show');
+                }
+            });
+            
+            // Adjust for screen resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    sidebar.classList.remove('show');
+                }
+            });
         });
     </script>
     @await RenderSectionAsync("Scripts", required: false)
