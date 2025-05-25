@@ -19,12 +19,12 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
         public IActionResult CapNhatDon()
         {
             var donHangs = _context.PhieuSuaChuas
-                            .Include(p => p.KhachHang)
-                            .ToList();
+                .Include(p => p.KhachHang)
+                .Where(p => p.TrangThai.ToLower().Trim() == "dasuaxong")
+                .ToList();
 
             return View("CapNhatDon", donHangs);
         }
-
         public IActionResult CapNhatTrangThaiDon(string id)
         {
             var phieu = _context.PhieuSuaChuas
