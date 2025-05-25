@@ -23,7 +23,7 @@
                                 foreach (var item in ViewBag.Products)
                                 {
                                     var conBaoHanh = item.NgayHetHanBh > DateOnly.FromDateTime(DateTime.Now);
-                                    var trangThai = conBaoHanh ? "Hết BH" : "Còn BH";
+                                    var trangThai = conBaoHanh ? "Còn BH" : "Hết BH";
                                     <option value="@item.SanPhamId">@item.SanPhamId - @item.TenSanPham - @trangThai</option>
                                 }
                             }
