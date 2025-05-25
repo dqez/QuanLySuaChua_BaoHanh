@@ -17,25 +17,29 @@
                 <div class="card-body">
                     <form asp-area="NhanVienKho" asp-controller="PhieuXuats" asp-action="Edit" autocomplete="off">
                         <input type="hidden" asp-for="PhieuXuatId" />
-
+                        <input type="hidden" asp-for="KhoId" />
+                        <input type="hidden" asp-for="NgayXuat" />
+                        <input type="hidden" asp-for="TongTien" />
+                                                
                         <div class="mb-3">
-                            <label asp-for="KhoId" class="form-label"></label>
-                            <select asp-for="KhoId" class="form-select" asp-items="ViewBag.KhoId"></select>
-                            <span asp-validation-for="KhoId" class="text-danger"></span>
+                            <label class="form-label">Chọn phiếu sửa chữa</label>
+                            <select name="phieuSuaChuaIds" class="form-select" multiple>
+                                @foreach (var item in ViewBag.PhieuSuaChuaList as List<SelectListItem>)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                            <span class="text-danger">@ViewData.ModelState["phieuSuaChuaIds"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="NgayXuat" class="form-label"></label>
-                            <input asp-for="NgayXuat" class="form-control" type="date" />
-                            <span asp-validation-for="NgayXuat" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="TongTien" class="form-label"></label>
-                            <input asp-for="TongTien" class="form-control" />
-                            <span asp-validation-for="TongTien" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="TrangThai" class="form-label"></label>
-                            <input asp-for="TrangThai" class="form-control" />
+                            <label class="form-label">Trạng thái</label>
+                            <div>
+                                <input type="radio" asp-for="TrangThai" value="Done" id="trangthai-daxong" />
+                                <label for="trangthai-daxong" class="form-check-label">!!!</label>
+                                &nbsp;&nbsp;
+                                <input type="radio" asp-for="TrangThai" value="!!!" id="trangthai-chuaxong" />
+                                <label for="trangthai-chuaxong" class="form-check-label">!!!</label>
+                            </div>
                             <span asp-validation-for="TrangThai" class="text-danger"></span>
                         </div>
                         <div class="mb-3">

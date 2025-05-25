@@ -25,20 +25,29 @@
                         </div>
                         <input type="hidden" asp-for="NgayXuat" />
                         <input type="hidden" asp-for="KhoId" />
+
                         <div class="mb-3">
                             <label class="form-label">Chọn phiếu sửa chữa</label>
-                            <select name="phieuSuaChuaIds" class="form-select" multiple="multiple" size="6">
-                                @if (ViewBag.PhieuSuaChuaList != null)
+                            <select name="phieuSuaChuaIds" class="form-select" multiple>
+                                @foreach (var item in ViewBag.PhieuSuaChuaList as List<SelectListItem>)
                                 {
-                                    foreach (var id in (string[])ViewBag.PhieuSuaChuaList)
-                                    {
-                                        <option value="@id">@id</option>
-                                    }
+                                    <option value="@item.Value">@item.Text</option>
                                 }
                             </select>
+
                             <span class="text-danger">@ViewData.ModelState["phieuSuaChuaIds"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
                         </div>
-
+                        <div class="mb-3">
+                            <label class="form-label">Trạng thái</label>
+                            <div>
+                                <input type="radio" asp-for="TrangThai" value="Done" id="trangthai-daxong" />
+                                <label for="trangthai-daxong" class="form-check-label">Done</label>
+                                &nbsp;&nbsp;
+                                <input type="radio" asp-for="TrangThai" value="!!!" id="trangthai-chuaxong" />
+                                <label for="trangthai-chuaxong" class="form-check-label">!!!</label>
+                            </div>
+                            <span asp-validation-for="TrangThai" class="text-danger"></span>
+                        </div>
                         <div class="mb-3">
                             <label asp-for="GhiChu" class="form-label">Ghi chú</label>
                             <input asp-for="GhiChu" class="form-control" />

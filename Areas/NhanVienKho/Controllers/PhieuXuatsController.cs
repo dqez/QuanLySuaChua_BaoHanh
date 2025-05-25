@@ -48,20 +48,19 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var phieuXuat = await _context.PhieuXuats
-                .Include(p => p.Kho)
-                .FirstOrDefaultAsync(m => m.PhieuXuatId == id);
+                .Include(px => px.ChiTietPxes) // load chi tiết phiếu xuất
+                    .ThenInclude(ct => ct.PhieuSuaChua) // load phiếu sửa chữa trong chi tiết phiếu xuất
+                .FirstOrDefaultAsync(px => px.PhieuXuatId == id);
+
             if (phieuXuat == null)
-            {
                 return NotFound();
-            }
 
             return View(phieuXuat);
         }
+
 
         // GET: NhanVienKho/PhieuXuats/Create
         public IActionResult Create()
@@ -75,20 +74,26 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
                 return View();
             }
 
+            // Lấy toàn bộ Phiếu Sửa Chữa
+            var phieuSuaChuaList = _context.PhieuSuaChuas
+                .Select(p => new SelectListItem
+                {
+                    Value = p.PhieuSuaChuaId.ToString(),
+                    Text = "Phiếu #" + p.PhieuSuaChuaId
+                })
+                .ToList();
+
+            ViewBag.PhieuSuaChuaList = phieuSuaChuaList;
+
             var model = new PhieuXuat
             {
                 KhoId = nguoiDung.Id,
-                NgayXuat = DateTime.Now,
+                NgayXuat = DateTime.Now
             };
-
-            // Lấy danh sách phiếu sửa chữa có thể xuất
-            ViewBag.PhieuSuaChuaList = _context.PhieuSuaChuas
-                .Where(p => p.TrangThai == "HoanThanh") // ví dụ
-                .Select(p => p.PhieuSuaChuaId)
-                .ToArray();
 
             return View(model);
         }
+
 
 
         // POST: NhanVienKho/PhieuXuats/Create
@@ -106,7 +111,6 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
             phieuXuat.KhoId = nguoiDung.Id;
             phieuXuat.NgayXuat = DateTime.Now;
             phieuXuat.TongTien = 0;
-            phieuXuat.TrangThai = "...";
 
             if (ModelState.IsValid)
             {
@@ -158,45 +162,79 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
             {
                 return NotFound();
             }
+
+            // Populate ViewBag.PhieuSuaChuaList
+            var phieuSuaChuaList = _context.PhieuSuaChuas
+                .Select(p => new SelectListItem
+                {
+                    Value = p.PhieuSuaChuaId.ToString(),
+                    Text = "Phiếu #" + p.PhieuSuaChuaId
+                })
+                .ToList();
+            ViewBag.PhieuSuaChuaList = phieuSuaChuaList;
+
             ViewData["KhoId"] = new SelectList(_context.NguoiDungs, "Id", "Id", phieuXuat.KhoId);
             return View(phieuXuat);
         }
 
+
         // POST: NhanVienKho/PhieuXuats/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("PhieuXuatId,KhoId,NgayXuat,TongTien,TrangThai,GhiChu")] PhieuXuat phieuXuat)
+        public async Task<IActionResult> Edit(string id, string[] phieuSuaChuaIds, [Bind("PhieuXuatId,KhoId,NgayXuat,TongTien,TrangThai,GhiChu")] PhieuXuat phieuXuat)
         {
-            if (id != phieuXuat.PhieuXuatId)
-            {
-                return NotFound();
-            }
+            if (id != phieuXuat.PhieuXuatId) return NotFound();
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    // Xóa chi tiết cũ
+                    var chiTietCu = _context.ChiTietPxes.Where(c => c.PhieuXuatId == id);
+                    _context.ChiTietPxes.RemoveRange(chiTietCu);
+                    await _context.SaveChangesAsync();
+
+                    // Reset tổng tiền
+                    phieuXuat.TongTien = 0;
+
+                    // Thêm chi tiết mới
+                    foreach (var phieuSuaChuaId in phieuSuaChuaIds)
+                    {
+                        var ctpx = new ChiTietPx
+                        {
+                            PhieuXuatId = id,
+                            PhieuSuaChuaId = phieuSuaChuaId,
+                            GhiChu = phieuXuat.GhiChu
+                        };
+                        _context.ChiTietPxes.Add(ctpx);
+
+                        var psc = await _context.PhieuSuaChuas.FindAsync(phieuSuaChuaId);
+                        if (psc != null && psc.TongTien.HasValue)
+                        {
+                            phieuXuat.TongTien += psc.TongTien.Value;
+                        }
+                    }
+
+                    // Cập nhật lại phiếu xuất
                     _context.Update(phieuXuat);
                     await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PhieuXuatExists(phieuXuat.PhieuXuatId))
-                    {
+                    if (!_context.PhieuXuats.Any(e => e.PhieuXuatId == phieuXuat.PhieuXuatId))
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
-                return RedirectToAction(nameof(Index));
             }
+
             ViewData["KhoId"] = new SelectList(_context.NguoiDungs, "Id", "Id", phieuXuat.KhoId);
             return View(phieuXuat);
         }
+
+
 
         // GET: NhanVienKho/PhieuXuats/Delete/5
         public async Task<IActionResult> Delete(string id)
@@ -222,6 +260,17 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
+            // Xóa toàn bộ chi tiết phiếu xuất liên quan
+            var chiTietList = await _context.ChiTietPxes
+                .Where(x => x.PhieuXuatId == id)
+                .ToListAsync();
+
+            if (chiTietList.Any())
+            {
+                _context.ChiTietPxes.RemoveRange(chiTietList);
+            }
+
+            // Xóa phiếu xuất
             var phieuXuat = await _context.PhieuXuats.FindAsync(id);
             if (phieuXuat != null)
             {
@@ -231,6 +280,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool PhieuXuatExists(string id)
         {
