@@ -63,7 +63,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         //    return View(phieuNhap);
         //}
 
-        // GET: NhanVienKho/PhieuNhaps/Create
+        // GET: NhanVienKho/ChiTietPns/Create
         public IActionResult Create()
         {
             // Lấy UserName (tên tài khoản) của user hiện tại
@@ -85,20 +85,20 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
             return View(model);
         }
 
-        // POST: NhanVienKho/PhieuNhaps/Create
+        // POST: NhanVienKho/ChiTietPns/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PhieuNhapId,KhoId,NgayNhap,TongTien,TrangThai,GhiChu")] PhieuNhap phieuNhap)
         {
-            //var tongTien = _context.ChiTietPns.Where(ct => ct.PhieuNhapId == phieuNhap.PhieuNhapId)
-            //    .Sum(ct => ct.SoLuong*ct.LinhKien.DonGia);
+            var tongTien = _context.ChiTietPns.Where(ct => ct.PhieuNhapId == phieuNhap.PhieuNhapId)
+                .Sum(ct => ct.SoLuong * ct.LinhKien.DonGia);
 
             phieuNhap.PhieuNhapId = await _idGenerator.GeneratePhieuNhapIdAsync();
             phieuNhap.NgayNhap = DateTime.Now;
-            phieuNhap.TongTien = 0;
+            phieuNhap.TongTien = tongTien;
 
             if (ModelState.IsValid)
-            {                
+            {
                 _context.Add(phieuNhap);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
