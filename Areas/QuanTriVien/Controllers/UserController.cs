@@ -192,7 +192,13 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
                 .ThenInclude(q => q.ThanhPho)
                 .ToListAsync();
 
-            ViewBag.PhuongId = new SelectList(phuongs, "PhuongId", "TenPhuong");
+            //list
+            ViewBag.PhuongId = new SelectList(phuongs, "PhuongId", "TenPhuong", user.PhuongId);
+
+            //selected
+            ViewBag.SelectedPhuongId = user.PhuongId;
+            ViewBag.SelectedQuanId = user.Phuong?.QuanId;
+            ViewBag.SelectedThanhPhoId = user.Phuong?.Quan?.ThanhPhoId;
 
 
             return View(model);

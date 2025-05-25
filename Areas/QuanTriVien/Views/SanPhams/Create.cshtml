@@ -19,12 +19,18 @@
                     <div class="col-md-6">
                         <div class="form-group mb-3">
                             <label asp-for="KhachHangId" class="form-label fw-bold">Khách Hàng</label>
-                            <select asp-for="KhachHangId" class="form-select" asp-items="ViewBag.KhachHangId"></select>
+                            <select asp-for="KhachHangId" class="form-select" asp-items="ViewBag.KhachHangId">
+                                <option value="">-- Chọn khách hàng --</option>
+                            </select>
+                            <span asp-validation-for="KhachHangId" class="text-danger"></span>
                         </div>
                         
                         <div class="form-group mb-3">
                             <label asp-for="DanhMucId" class="form-label fw-bold">Danh Mục</label>
-                            <select asp-for="DanhMucId" class="form-select" asp-items="ViewBag.DanhMucId"></select>
+                            <select asp-for="DanhMucId" class="form-select" asp-items="ViewBag.DanhMucId">
+                                <option value="">-- Chọn danh mục --</option>
+                            </select>
+                            <span asp-validation-for="DanhMucId" class="text-danger"></span>
                         </div>
                         
                         <div class="form-group mb-3">
@@ -42,19 +48,19 @@
                     <div class="col-md-6">
                         <div class="form-group mb-3">
                             <label asp-for="NgayMua" class="form-label fw-bold">Ngày Mua</label>
-                            <input asp-for="NgayMua" type="date" class="form-control" />
+                            <input asp-for="NgayMua" type="date" class="form-control" id="ngayMua" />
                             <span asp-validation-for="NgayMua" class="text-danger"></span>
                         </div>
                         
                         <div class="form-group mb-3">
                             <label asp-for="ThoiGianBaoHanh" class="form-label fw-bold">Thời Gian Bảo Hành (tháng)</label>
-                            <input asp-for="ThoiGianBaoHanh" class="form-control" placeholder="Nhập số tháng bảo hành" />
+                            <input asp-for="ThoiGianBaoHanh" class="form-control" id="baoHanhThang" placeholder="Nhập số tháng bảo hành" />
                             <span asp-validation-for="ThoiGianBaoHanh" class="text-danger"></span>
                         </div>
                         
                         <div class="form-group mb-3">
                             <label asp-for="NgayHetHanBh" class="form-label fw-bold">Ngày Hết Hạn Bảo Hành</label>
-                            <input asp-for="NgayHetHanBh" type="date" class="form-control" />
+                            <input asp-for="NgayHetHanBh" type="date" class="form-control" id="hetHan" />
                             <span asp-validation-for="NgayHetHanBh" class="text-danger"></span>
                         </div>
                         
@@ -80,4 +86,38 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+    (function(){
+      // Lấy element theo id
+      const ngayMuaInput = document.getElementById('ngayMua');
+      const thangInput   = document.getElementById('baoHanhThang');
+      const hetHanInput  = document.getElementById('hetHan');
+      const form         = hetHanInput.closest('form');
+
+      // Hàm tính ngày hết hạn
+      function capNhatHetHan() {
+        const mua = ngayMuaInput.value;
+        const thang = parseInt(thangInput.value, 10);
+        if (!mua || isNaN(thang) || thang <= 0) return;
+        const d = new Date(mua);
+        d.setMonth(d.getMonth() + thang);
+        const yyyy = d.getFullYear();
+        const mm   = String(d.getMonth() + 1).padStart(2, '0');
+        const dd   = String(d.getDate()).padStart(2, '0');
+        hetHanInput.value = `${yyyy}-${mm}-${dd}`;
+      }
+
+      // Gắn event listener
+      ngayMuaInput.addEventListener('change', capNhatHetHan);
+      thangInput.addEventListener('input', capNhatHetHan);
+
+      // Đảm bảo trước khi submit
+      form.addEventListener('submit', function(){
+        if (!hetHanInput.value) {
+          capNhatHetHan();
+        }
+      });
+    })();
+    </script>
 }

@@ -16,6 +16,7 @@ public partial class DanhMuc
     [Display(Name = "Mã danh mục")]
     public string DanhMucId { get; set; }
 
+    [Required(ErrorMessage = "Vui lòng nhập tên danh mục")]
     [StringLength(255)]
     [Display(Name = "Tên danh mục")]
     public string TenDanhMuc { get; set; } = null!;

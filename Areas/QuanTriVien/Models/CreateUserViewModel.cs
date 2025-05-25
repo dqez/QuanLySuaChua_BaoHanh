@@ -63,13 +63,16 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models
         [Compare("Password", ErrorMessage = "Xác nhận mật khẩu không khớp.")]
         public string ConfirmPassword { get; set; }
 
+        [Required(ErrorMessage = "Họ tên là bắt buộc")]
         [Display(Name = "Họ tên")]
         public string HoTen { get; set; }
 
+        [Required(ErrorMessage = "Số điện thoại là bắt buộc")]
         [Phone]
         [Display(Name = "Số điện thoại")]
         public string PhoneNumber { get; set; }
 
+        [Required(ErrorMessage = "Địa chỉ là bắt buộc")]
         [Display(Name = "Địa chỉ")]
         public string DiaChi { get; set; }
 

@@ -13,7 +13,7 @@
         --gray-light: #F8F8F8;
         --gray-border: #DDDDDD;
     }
-    
+
     .page-title {
         font-family: 'Baloo 2', cursive;
         font-weight: 700;
@@ -21,7 +21,7 @@
         margin-bottom: 1.5rem;
         font-size: 2rem;
     }
-    
+
     .content-card {
         background-color: var(--white);
         border-radius: 8px;
@@ -30,7 +30,7 @@
         margin-bottom: 1.5rem;
         width: 100%;
     }
-    
+
     .card-header-custom {
         background-color: var(--blue-primary);
         color: var(--white);
@@ -41,73 +41,73 @@
         display: flex;
         align-items: center;
     }
-    
-    .card-header-custom i {
-        margin-right: 0.5rem;
-        font-size: 1.25rem;
-    }
-    
+
+        .card-header-custom i {
+            margin-right: 0.5rem;
+            font-size: 1.25rem;
+        }
+
     .form-group {
         margin-bottom: 1.25rem;
     }
-    
+
     .form-control {
         border-radius: 6px;
         border: 1px solid var(--gray-border);
         padding: 0.5rem 0.75rem;
         transition: all 0.2s;
     }
-    
-    .form-control:focus {
-        border-color: var(--blue-primary);
-        box-shadow: 0 0 0 0.2rem rgba(49, 155, 197, 0.25);
-    }
-    
+
+        .form-control:focus {
+            border-color: var(--blue-primary);
+            box-shadow: 0 0 0 0.2rem rgba(49, 155, 197, 0.25);
+        }
+
     .form-label {
         font-weight: 500;
         margin-bottom: 0.5rem;
         color: #212529;
     }
-    
+
     .btn {
         border-radius: 6px;
         padding: 0.5rem 1.25rem;
         font-weight: 500;
         transition: all 0.2s;
     }
-    
+
     .btn-primary {
         background-color: var(--blue-primary);
         border-color: var(--blue-primary);
     }
-    
-    .btn-primary:hover {
-        background-color: #2689b0;
-        border-color: #2689b0;
-    }
-    
+
+        .btn-primary:hover {
+            background-color: #2689b0;
+            border-color: #2689b0;
+        }
+
     .btn-secondary {
         background-color: #6c757d;
         border-color: #6c757d;
     }
-    
-    .btn-secondary:hover {
-        background-color: #5a6268;
-        border-color: #545b62;
-    }
-    
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
     .form-check-input:checked {
         background-color: var(--blue-primary);
         border-color: var(--blue-primary);
     }
-    
+
     .required-indicator {
         color: #dc3545;
         font-weight: normal;
         font-size: 0.875rem;
         margin-left: 0.25rem;
     }
-    
+
     @@media (max-width: 768px) {
         .row [class*="col-"] {
             margin-bottom: 1rem;
@@ -173,13 +173,42 @@
                             <span asp-validation-for="DiaChi" class="text-danger"></span>
                         </div>
 
-                        <div class="form-group">
-                            <label asp-for="PhuongId" class="form-label">Phường/Xã</label>
-                            <select asp-for="PhuongId" asp-items="ViewBag.PhuongId" class="form-control">
-                                <option value="">-- Chọn Phường --</option>
-                            </select>
-                            <span asp-validation-for="PhuongId" class="text-danger"></span>
+                        @* <div class="form-group"> *@
+                        @*     <label asp-for="PhuongId" class="form-label">Phường/Xã</label> *@
+                        @*     <select asp-for="PhuongId" asp-items="ViewBag.PhuongId" class="form-control"> *@
+                        @*         <option value="">-- Chọn Phường --</option> *@
+                        @*     </select> *@
+                        @*     <span asp-validation-for="PhuongId" class="text-danger"></span> *@
+                        @* </div> *@
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">Tỉnh/Thành phố:</label>
+                                    <select id="thanhPho" class="form-select" required>
+                                        <option value="">Chọn tỉnh/thành phố</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">Quận/Huyện:</label>
+                                    <select id="quan" class="form-select" required>
+                                        <option value="">Chọn quận/huyện</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">Phường/Xã:</label>
+                                    <select asp-for="PhuongId" id="phuong" class="form-select">
+                                        <option value="">Chọn phường/xã</option>
+                                    </select>
+                                    <span asp-validation-for="PhuongId" class="text-danger"></span>
+                                </div>
+                            </div>
                         </div>
+
 
                         <div class="form-group">
                             <label class="form-label">Vai trò <span class="required-indicator">*</span></label>
@@ -213,7 +242,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    
+
     <script>
         $(document).ready(function() {
             // Highlight form fields on focus
@@ -222,24 +251,65 @@
             }).on('blur', function() {
                 $(this).closest('.form-group').removeClass('focused');
             });
-            
+
             // Custom form validation styling
             $('.form-control').on('invalid', function() {
                 $(this).addClass('is-invalid');
             });
-            
+
             // Auto-capitalize the first letter of HoTen field
             $('#HoTen').on('blur', function() {
                 var input = $(this);
                 var start = input[0].selectionStart;
                 var val = input.val();
-                
+
                 if (val) {
-                    input.val(val.replace(/(?:^|\s)\S/g, function(a) { 
-                        return a.toUpperCase(); 
+                    input.val(val.replace(/(?:^|\s)\S/g, function(a) {
+                        return a.toUpperCase();
                     }));
                     input[0].selectionStart = start;
                     input[0].selectionEnd = start;
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(function () {
+            $.get('/api/cities', function (cities) {
+                $('#thanhPho').append(cities.map(city =>
+                    `<option value="${city.id}">${city.name}</option>`
+                ));
+            });
+
+            $('#thanhPho').change(function () {
+                const cityId = $(this).val();
+                $('#quan').empty().append('<option value="">Chọn quận/huyện</option>');
+                $('#phuong').empty().append('<option value="">Chọn phường/xã</option>');
+                if (cityId) {
+                    $.get(`/api/districts/${cityId}`, function (districts) {
+                        $('#quan')
+                            .empty()
+                            .append('<option value="">Chọn quận/huyện</option>')
+                            .append(districts.map(d =>
+                                `<option value="${d.id}">${d.name}</option>`
+                            ));
+                    });
+                }
+            });
+
+            $('#quan').change(function () {
+                const districtId = $(this).val();
+                $('#phuong').empty().append('<option value="">Chọn phường/xã</option>');
+                if (districtId) {
+                    $.get(`/api/wards/${districtId}`, function (wards) {
+                        $('#phuong')
+                            .empty()
+                            .append('<option value="">Chọn phường/xã</option>')
+                            .append(wards.map(w =>
+                                `<option value="${w.id}">${w.name}</option>`
+                            ));
+                    });
                 }
             });
         });
