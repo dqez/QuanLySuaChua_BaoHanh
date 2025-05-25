@@ -39,7 +39,8 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
             }
 
             phieuNhapQuery = phieuNhapQuery.OrderBy(pn => pn.KhoId);
-            
+
+            // Đảm bảo trả về đúng kiểu model
             return View(await PaginatedList<PhieuNhap>.CreateAsync(
                 phieuNhapQuery.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
@@ -63,7 +64,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         //    return View(phieuNhap);
         //}
 
-        // GET: NhanVienKho/ChiTietPns/Create
+        // GET: NhanVienKho/PhieuNhaps/Create
         public IActionResult Create()
         {
             // Lấy UserName (tên tài khoản) của user hiện tại
@@ -74,37 +75,36 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
             if (nguoiDung == null)
             {
                 ModelState.AddModelError("", "Không tìm thấy mã kho hợp lệ cho tài khoản này.");
-                return View();
+                return View(new PhieuNhap());
             }
 
             var model = new PhieuNhap
             {
                 KhoId = nguoiDung.Id,
                 NgayNhap = DateTime.Now,
+                TongTien = 0
             };
             return View(model);
         }
 
-        // POST: NhanVienKho/ChiTietPns/Create
+        // POST: NhanVienKho/PhieuNhaps/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PhieuNhapId,KhoId,NgayNhap,TongTien,TrangThai,GhiChu")] PhieuNhap phieuNhap)
         {
-            var tongTien = _context.ChiTietPns.Where(ct => ct.PhieuNhapId == phieuNhap.PhieuNhapId)
-                .Sum(ct => ct.SoLuong * ct.LinhKien.DonGia);
-
-            phieuNhap.PhieuNhapId = await _idGenerator.GeneratePhieuNhapIdAsync();
-            phieuNhap.NgayNhap = DateTime.Now;
-            phieuNhap.TongTien = tongTien;
-
             if (ModelState.IsValid)
             {
+                phieuNhap.PhieuNhapId = await _idGenerator.GeneratePhieuNhapIdAsync();
+                phieuNhap.NgayNhap = DateTime.Now;
+                phieuNhap.TongTien = 0; // Ban đầu chưa có chi tiết
+
                 _context.Add(phieuNhap);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                // Sau khi tạo xong, chuyển sang trang tạo chi tiết phiếu nhập
+                return RedirectToAction("Create", "ChiTietPns", new { area = "NhanVienKho", phieuNhapId = phieuNhap.PhieuNhapId });
             }
 
-            //ViewData["KhoId"] = new SelectList(_context.NguoiDungs, "Id", "UserName", phieuNhap.KhoId);
             return View(phieuNhap);
         }
 

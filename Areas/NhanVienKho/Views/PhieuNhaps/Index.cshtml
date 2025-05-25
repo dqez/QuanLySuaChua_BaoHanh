@@ -33,6 +33,7 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
+                            <th>Mã phiếu nhập</th>
                             <th>Ngày nhập</th>
                             <th>Tổng tiền</th>
                             <th>Trạng thái</th>
@@ -53,6 +54,7 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
+									<td>@item.PhieuNhapId</td>
                                     <td>@item.NgayNhap.ToString("dd/MM/yyyy")</td>
                                     <td>@item.TongTien</td>
                                     <td>

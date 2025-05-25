@@ -206,7 +206,11 @@
 	<aside class="sidebar">
 		<div class="sidebar-image text-center mb-3">
 			<i class="bi bi-person-fill-gear" style="font-size: 48px;"></i>
+			<div class="mt-2 fw-bold" style="color: #fff;">
+				@User.Identity.Name
+			</div>
 		</div>
+
 		<nav>
 			<a href="@Url.Action("Index", "Home")" class="nav-item">
 				<i class="bi bi-house-door"></i>

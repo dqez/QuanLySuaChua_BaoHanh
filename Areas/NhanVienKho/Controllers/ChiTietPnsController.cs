@@ -87,14 +87,42 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(chiTietPn);
+
+                // Tăng số lượng tồn cho linh kiện
+                var linhKien = await _context.LinhKiens.FindAsync(chiTietPn.LinhKienId);
+                if (linhKien != null)
+                {
+                    linhKien.SoLuongTon += chiTietPn.SoLuong;
+
+                    // Nếu cần kiểm tra điều kiện tồn kho, ví dụ không vượt quá 10000
+                    // if (linhKien.SoLuongTon > 10000)
+                    // {
+                    //     ModelState.AddModelError("", "Số lượng tồn vượt quá giới hạn.");
+                    //     return View(chiTietPn);
+                    // }
+                }
+
                 await _context.SaveChangesAsync();
+
+                // Cập nhật lại tổng tiền cho phiếu nhập
+                var tongTien = _context.ChiTietPns
+                    .Where(ct => ct.PhieuNhapId == chiTietPn.PhieuNhapId)
+                    .Sum(ct => ct.SoLuong * ct.LinhKien.DonGia);
+
+                var phieuNhap = await _context.PhieuNhaps.FindAsync(chiTietPn.PhieuNhapId);
+                if (phieuNhap != null)
+                {
+                    phieuNhap.TongTien = tongTien;
+                    await _context.SaveChangesAsync();
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["PhieuNhapId"] = new SelectList(_context.PhieuNhaps, "PhieuNhapId", "PhieuNhapId");
             ViewData["LinhKienId"] = new SelectList(_context.LinhKiens, "LinhKienId", "TenLinhKien");
-
             return View(chiTietPn);
         }
+
         //public async Task<IActionResult> HoanTatPhieuNhap(string phieuNhapId)
         //{
         //    var chiTietList = await _context.ChiTietPns
@@ -136,18 +164,16 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
 
 
         // GET: NhanVienKho/ChiTietPns/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(string phieuNhapId, string linhKienId)
         {
-            if (id == null)
-            {
+            if (phieuNhapId == null || linhKienId == null)
                 return NotFound();
-            }
 
-            var chiTietPn = await _context.ChiTietPns.FindAsync(id);
+            var chiTietPn = await _context.ChiTietPns
+                .FirstOrDefaultAsync(x => x.PhieuNhapId == phieuNhapId && x.LinhKienId == linhKienId);
+
             if (chiTietPn == null)
-            {
                 return NotFound();
-            }
             ViewData["LinhKienId"] = new SelectList(_context.LinhKiens, "LinhKienId", "LinhKienId", chiTietPn.LinhKienId);
             ViewData["PhieuNhapId"] = new SelectList(_context.PhieuNhaps, "PhieuNhapId", "PhieuNhapId", chiTietPn.PhieuNhapId);
             return View(chiTietPn);
@@ -158,19 +184,45 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("PhieuNhapId,LinhKienId,SoLuong")] ChiTietPn chiTietPn)
+        public async Task<IActionResult> Edit(string phieuNhapId, string linhKienId, [Bind("PhieuNhapId,LinhKienId,SoLuong")] ChiTietPn chiTietPn)
         {
-            if (id != chiTietPn.PhieuNhapId)
-            {
+            if (phieuNhapId != chiTietPn.PhieuNhapId || linhKienId != chiTietPn.LinhKienId)
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    // Lấy chi tiết cũ để tính lại số lượng tồn
+                    var oldChiTiet = await _context.ChiTietPns
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(x => x.PhieuNhapId == phieuNhapId && x.LinhKienId == linhKienId);
+
+                    if (oldChiTiet != null)
+                    {
+                        var linhKien = await _context.LinhKiens.FindAsync(linhKienId);
+                        if (linhKien != null)
+                        {
+                            // Trừ số lượng cũ, cộng số lượng mới
+                            linhKien.SoLuongTon = linhKien.SoLuongTon - oldChiTiet.SoLuong + chiTietPn.SoLuong;
+                            if (linhKien.SoLuongTon < 0) linhKien.SoLuongTon = 0;
+                        }
+                    }
+
                     _context.Update(chiTietPn);
                     await _context.SaveChangesAsync();
+
+                    // Cập nhật lại tổng tiền cho phiếu nhập
+                    var tongTien = await _context.ChiTietPns
+                        .Where(ct => ct.PhieuNhapId == phieuNhapId)
+                        .SumAsync(ct => ct.SoLuong * ct.LinhKien.DonGia);
+
+                    var phieuNhap = await _context.PhieuNhaps.FindAsync(phieuNhapId);
+                    if (phieuNhap != null)
+                    {
+                        phieuNhap.TongTien = tongTien;
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -190,40 +242,61 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
             return View(chiTietPn);
         }
 
-        // GET: NhanVienKho/ChiTietPns/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var chiTietPn = await _context.ChiTietPns
-                .Include(c => c.LinhKien)
-                .Include(c => c.PhieuNhap)
-                .FirstOrDefaultAsync(m => m.PhieuNhapId == id);
-            if (chiTietPn == null)
-            {
-                return NotFound();
-            }
+        //// GET: NhanVienKho/ChiTietPns/Delete/5
+        //public async Task<IActionResult> Delete(string phieuNhapId, string linhKienId)
+        //{
+        //    if (phieuNhapId == null || linhKienId == null)
+        //        return NotFound();
 
-            return View(chiTietPn);
-        }
+        //    var chiTietPn = await _context.ChiTietPns
+        //        .FirstOrDefaultAsync(x => x.PhieuNhapId == phieuNhapId && x.LinhKienId == linhKienId);
+
+        //    if (chiTietPn == null)
+        //        return NotFound();
+
+        //    return View(chiTietPn);
+        //}
 
         // POST: NhanVienKho/ChiTietPns/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(string phieuNhapId, string linhKienId)
         {
-            var chiTietPn = await _context.ChiTietPns.FindAsync(id);
+            var chiTietPn = await _context.ChiTietPns
+                .Include(x => x.LinhKien)
+                .FirstOrDefaultAsync(x => x.PhieuNhapId == phieuNhapId && x.LinhKienId == linhKienId);
+
             if (chiTietPn != null)
             {
+                // Giảm số lượng tồn của linh kiện
+                var linhKien = chiTietPn.LinhKien;
+                if (linhKien != null)
+                {
+                    linhKien.SoLuongTon -= chiTietPn.SoLuong;
+                    if (linhKien.SoLuongTon < 0) linhKien.SoLuongTon = 0;
+                }
+
                 _context.ChiTietPns.Remove(chiTietPn);
+                await _context.SaveChangesAsync();
+
+                // Cập nhật lại tổng tiền cho phiếu nhập
+                var tongTien = await _context.ChiTietPns
+                    .Where(ct => ct.PhieuNhapId == phieuNhapId)
+                    .SumAsync(ct => ct.SoLuong * ct.LinhKien.DonGia);
+
+                var phieuNhap = await _context.PhieuNhaps.FindAsync(phieuNhapId);
+                if (phieuNhap != null)
+                {
+                    phieuNhap.TongTien = tongTien;
+                    await _context.SaveChangesAsync();
+                }
             }
 
-            await _context.SaveChangesAsync();
+            TempData["Success"] = "Xóa chi tiết phiếu nhập thành công!";
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool ChiTietPnExists(string id)
         {
