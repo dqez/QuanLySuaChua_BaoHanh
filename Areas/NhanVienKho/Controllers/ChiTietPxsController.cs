@@ -10,11 +10,11 @@ using QuanLySuaChua_BaoHanh.Models;
 namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
 {
     [Area("NhanVienKho")]
-    public class ChiTietPxesController : Controller
+    public class ChiTietPxsController : Controller
     {
         private readonly BHSC_DbContext _context;
 
-        public ChiTietPxesController(BHSC_DbContext context)
+        public ChiTietPxsController(BHSC_DbContext context)
         {
             _context = context;
         }
