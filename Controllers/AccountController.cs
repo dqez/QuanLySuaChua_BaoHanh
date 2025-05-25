@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -158,6 +159,167 @@ namespace QuanLySuaChua_BaoHanh.Controllers
             return View();
         }
 
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
 
+            // Lấy thông tin phường, quận, thành phố
+            var phuong = await _context.Phuongs
+                .Include(p => p.Quan)
+                .ThenInclude(q => q.ThanhPho)
+                .FirstOrDefaultAsync(p => p.PhuongId.ToString() == user.PhuongId);            var viewModel = new ProfileViewModel
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                HoTen = user.HoTen,
+                PhoneNumber = user.PhoneNumber,
+                DiaChi = user.DiaChi,
+                PhuongId = user.PhuongId,
+                VaiTro = user.VaiTro,
+                TenPhuong = phuong?.TenPhuong,
+                TenQuan = phuong?.Quan?.TenQuan,
+                TenThanhPho = phuong?.Quan?.ThanhPho?.TenThanhPho,
+                ThanhPhoId = phuong?.Quan?.ThanhPho?.ThanhPhoId.ToString(),
+                QuanId = phuong?.Quan?.QuanId.ToString()
+            };
+
+            return View(viewModel);
+        }        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> EditProfile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Lấy thông tin phường, quận, thành phố hiện tại
+            var phuong = await _context.Phuongs
+                .Include(p => p.Quan)
+                .ThenInclude(q => q.ThanhPho)
+                .FirstOrDefaultAsync(p => p.PhuongId.ToString() == user.PhuongId);
+
+            var viewModel = new ProfileViewModel
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                HoTen = user.HoTen,
+                PhoneNumber = user.PhoneNumber,
+                DiaChi = user.DiaChi,
+                PhuongId = user.PhuongId,
+                VaiTro = user.VaiTro,
+                ThanhPhoId = phuong?.Quan?.ThanhPho?.ThanhPhoId.ToString(),
+                QuanId = phuong?.Quan?.QuanId.ToString()
+            };
+
+            // Set ViewBag for selected values
+            ViewBag.SelectedThanhPhoId = phuong?.Quan?.ThanhPho?.ThanhPhoId.ToString();
+            ViewBag.SelectedQuanId = phuong?.Quan?.QuanId.ToString();
+            ViewBag.SelectedPhuongId = user.PhuongId;
+
+            return View(viewModel);
+        }        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditProfile(ProfileViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Set ViewBag for selected values when validation fails
+                var phuong = await _context.Phuongs
+                    .Include(p => p.Quan)
+                    .ThenInclude(q => q.ThanhPho)
+                    .FirstOrDefaultAsync(p => p.PhuongId.ToString() == model.PhuongId);
+                
+                ViewBag.SelectedThanhPhoId = phuong?.Quan?.ThanhPho?.ThanhPhoId.ToString();
+                ViewBag.SelectedQuanId = phuong?.Quan?.QuanId.ToString();
+                ViewBag.SelectedPhuongId = model.PhuongId;
+                return View(model);
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Cập nhật thông tin người dùng - chỉ cập nhật PhuongId
+            user.Email = model.Email;
+            user.HoTen = model.HoTen;
+            user.PhoneNumber = model.PhoneNumber;
+            user.DiaChi = model.DiaChi;
+            user.PhuongId = model.PhuongId; // Chỉ lưu PhuongId
+
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                TempData["SuccessMessage"] = "Cập nhật thông tin thành công!";
+                return RedirectToAction("Profile");
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            // Set ViewBag for selected values when update fails
+            var phuongForError = await _context.Phuongs
+                .Include(p => p.Quan)
+                .ThenInclude(q => q.ThanhPho)
+                .FirstOrDefaultAsync(p => p.PhuongId.ToString() == model.PhuongId);
+            
+            ViewBag.SelectedThanhPhoId = phuongForError?.Quan?.ThanhPho?.ThanhPhoId.ToString();
+            ViewBag.SelectedQuanId = phuongForError?.Quan?.QuanId.ToString();
+            ViewBag.SelectedPhuongId = model.PhuongId;
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            if (changePasswordResult.Succeeded)
+            {
+                await _signInManager.RefreshSignInAsync(user);
+                TempData["SuccessMessage"] = "Đổi mật khẩu thành công!";
+                return RedirectToAction("Profile");
+            }
+
+            foreach (var error in changePasswordResult.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return View(model);
+        }
     }
 }

@@ -1,0 +1,531 @@
+@model QuanLySuaChua_BaoHanh.ViewModels.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Chỉnh sửa thông tin cá nhân";
+}
+
+<style>
+    .edit-profile-container {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        min-height: calc(100vh - 140px);
+        padding: 2rem 0;
+    }
+    
+    .edit-profile-card {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border: none;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .edit-profile-content {
+        display: flex;
+        flex-direction: row;
+    }
+    
+    .edit-profile-sidebar {
+        background: linear-gradient(135deg, #ffc107, #e0a800);
+        color: #212529;
+        width: 300px;
+        padding: 2.5rem 1.5rem;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .edit-profile-sidebar::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        transform: rotate(45deg);
+        z-index: 0;
+    }
+    
+    .edit-avatar {
+        width: 100px;
+        height: 100px;
+        background: rgba(33, 37, 41, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2.5rem;
+        position: relative;
+        z-index: 1;
+        border: 3px solid rgba(255,255,255,0.3);
+    }
+    
+    .edit-title {
+        font-family: 'Baloo 2', cursive;
+        font-weight: 700;
+        font-size: 1.6rem;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .edit-subtitle {
+        opacity: 0.8;
+        font-size: 1rem;
+        margin: 0.5rem 0 1.5rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .edit-profile-steps {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 1.5rem;
+        width: 100%;
+        margin-top: 1rem;
+        position: relative;
+        z-index: 1;
+        text-align: left;
+    }
+    
+    .edit-profile-steps h6 {
+        font-weight: 700;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.1rem;
+    }
+    
+    .edit-profile-steps ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .edit-profile-steps li {
+        padding: 0.5rem 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .edit-profile-steps li i {
+        margin-top: 0.3rem;
+    }
+    
+    .edit-form-body {
+        padding: 2.5rem;
+        flex: 1;
+    }
+    
+    .form-group-custom {
+        margin-bottom: 1.8rem;
+    }
+    
+    .form-label-custom {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+        display: block;
+        font-size: 0.9rem;
+    }
+    
+    .form-control-custom {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background-color: #f8f9fa;
+        width: 100%;
+    }
+    
+    .form-control-custom:focus {
+        border-color: #319BC5;
+        box-shadow: 0 0 0 0.2rem rgba(49, 155, 197, 0.25);
+        background-color: white;
+        outline: none;
+    }
+    
+    .form-select-custom {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background-color: #f8f9fa;
+        width: 100%;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.75rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+    }
+    
+    .form-select-custom:focus {
+        border-color: #319BC5;
+        box-shadow: 0 0 0 0.2rem rgba(49, 155, 197, 0.25);
+        background-color: white;
+        outline: none;
+    }
+    
+    .readonly-field {
+        background-color: #e9ecef !important;
+        cursor: not-allowed;
+    }
+    
+    .text-danger {
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+    
+    .form-row {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 0;
+    }
+    
+    .form-row .form-group-custom {
+        flex: 1;
+    }
+    
+    .form-buttons {
+        background-color: #f8f9fa;
+        padding: 1.5rem 2rem;
+        text-align: right;
+        border-top: 1px solid #e9ecef;
+    }
+    
+    .btn-custom {
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 500;
+        margin: 0 0 0 0.5rem;
+        transition: all 0.3s ease;
+        border: none;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .btn-success-custom {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+    }
+    
+    .btn-success-custom:hover {
+        background: linear-gradient(135deg, #20c997, #1e7e34);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    }
+    
+    .btn-secondary-custom {
+        background: #6c757d;
+        color: white;
+    }
+    
+    .btn-secondary-custom:hover {
+        background: #5a6268;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+    }
+    
+    .btn-home-custom {
+        background: linear-gradient(135deg, #319BC5, #2a86ab);
+        color: white;
+    }
+    
+    .btn-home-custom:hover {
+        background: linear-gradient(135deg, #2a86ab, #1f6b8a);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(49, 155, 197, 0.3);
+    }
+    
+    .breadcrumb-custom {
+        background: transparent;
+        padding: 1rem 0 0 0;
+        margin-bottom: 0;
+    }
+    
+    .breadcrumb-custom .breadcrumb-item a {
+        color: #319BC5;
+        text-decoration: none;
+    }
+    
+    .breadcrumb-custom .breadcrumb-item.active {
+        color: #6c757d;
+    }
+    .container{
+        margin-top:20px
+    }
+    
+    @@media (max-width: 992px) {
+        .edit-profile-content {
+            flex-direction: column;
+        }
+        
+        .edit-profile-sidebar {
+            width: 100%;
+            padding: 2rem 1.5rem;
+        }
+        
+        .edit-profile-steps {
+            max-width: 500px;
+            margin: 1rem auto 0;
+        }
+    }
+    
+    @@media (max-width: 768px) {
+        .edit-profile-container {
+            padding: 1rem 0;
+        }
+        
+        .edit-form-body {
+            padding: 1.5rem;
+        }
+        
+        .form-row {
+            flex-direction: column;
+            gap: 0;
+        }
+        
+        .form-buttons {
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .btn-custom {
+            width: 100%;
+            margin: 0.25rem 0;
+            justify-content: center;
+        }
+    }
+</style>
+
+<div class="edit-profile-container">
+    <div class="container">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="breadcrumb-custom">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fas fa-home"></i> Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="@Url.Action("Profile")">Thông tin cá nhân</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Chỉnh sửa</li>
+            </ol>
+        </nav>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-md-12">
+                <div class="card edit-profile-card">
+                    <div class="edit-profile-content">
+                        <!-- Left sidebar with profile info -->
+                        <div class="edit-profile-sidebar">
+                            <div class="edit-avatar">
+                                <i class="fas fa-user-edit"></i>
+                            </div>
+                            <h4 class="edit-title">@ViewData["Title"]</h4>
+                            <p class="edit-subtitle">Cập nhật thông tin cá nhân của bạn</p>
+                            
+                            <div class="edit-profile-steps">
+                                <h6><i class="fas fa-info-circle"></i> Hướng dẫn</h6>
+                                <ul>
+                                    <li><i class="fas fa-check-circle"></i> Cập nhật thông tin cá nhân của bạn để nhận được dịch vụ tốt nhất</li>
+                                    <li><i class="fas fa-check-circle"></i> Địa chỉ email và số điện thoại sẽ được sử dụng để liên hệ</li>
+                                    <li><i class="fas fa-check-circle"></i> Địa chỉ chính xác giúp quá trình giao nhận sản phẩm thuận tiện hơn</li>
+                                    <li><i class="fas fa-check-circle"></i> Nhấn "Lưu thay đổi" khi hoàn tất việc cập nhật</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- Right side with form fields -->
+                        <div class="edit-form-body">
+                            <form id="editform" asp-action="EditProfile" method="post">
+                                @Html.AntiForgeryToken()
+                                <div asp-validation-summary="All" class="text-danger mb-4"></div>
+                                <input type="hidden" asp-for="Id" />
+                                <input type="hidden" asp-for="VaiTro" />
+
+                                <div class="form-row">
+                                    <div class="form-group-custom">
+                                        <label asp-for="UserName" class="form-label-custom">@Html.DisplayNameFor(model => model.UserName)</label>
+                                        <input type="text" class="form-control-custom readonly-field" value="@Model.UserName" readonly />
+                                        <small class="form-text text-muted">Tên đăng nhập không thể thay đổi</small>
+                                    </div>
+                                    
+                                    <div class="form-group-custom">
+                                        <label asp-for="HoTen" class="form-label-custom">@Html.DisplayNameFor(model => model.HoTen)</label>
+                                        <input asp-for="HoTen" class="form-control-custom" placeholder="Nhập họ và tên đầy đủ" />
+                                        <span asp-validation-for="HoTen" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group-custom">
+                                        <label asp-for="Email" class="form-label-custom">@Html.DisplayNameFor(model => model.Email)</label>
+                                        <input asp-for="Email" class="form-control-custom" placeholder="Nhập địa chỉ email" />
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                    
+                                    <div class="form-group-custom">
+                                        <label asp-for="PhoneNumber" class="form-label-custom">@Html.DisplayNameFor(model => model.PhoneNumber)</label>
+                                        <input asp-for="PhoneNumber" class="form-control-custom" placeholder="Nhập số điện thoại" />
+                                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group-custom">
+                                    <label asp-for="DiaChi" class="form-label-custom">@Html.DisplayNameFor(model => model.DiaChi)</label>
+                                    <input asp-for="DiaChi" class="form-control-custom" placeholder="Nhập địa chỉ cụ thể" />
+                                    <span asp-validation-for="DiaChi" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group-custom">
+                                        <label class="form-label-custom">Thành phố/Tỉnh</label>
+                                        <select class="form-select-custom" id="thanhPho">
+                                            <option value="">-- Chọn Thành phố/Tỉnh --</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group-custom">
+                                        <label class="form-label-custom">Quận/Huyện</label>
+                                        <select class="form-select-custom" id="quan">
+                                            <option value="">-- Chọn Quận/Huyện --</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group-custom">
+                                        <label asp-for="PhuongId" class="form-label-custom">@Html.DisplayNameFor(model => model.PhuongId)</label>
+                                        <select asp-for="PhuongId" class="form-select-custom" id="phuong">
+                                            <option value="">-- Chọn Phường/Xã --</option>
+                                        </select>
+                                        <span asp-validation-for="PhuongId" class="text-danger"></span>
+                                    </div>
+                                    
+                                    <div class="form-group-custom">
+                                        <label class="form-label-custom">@Html.DisplayNameFor(model => model.VaiTro)</label>
+                                        <input type="text" class="form-control-custom readonly-field" value="@Model.VaiTro" readonly />
+                                        <small class="form-text text-muted">Vai trò không thể thay đổi</small>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="form-buttons">
+                        <button type="submit" form="editform" class="btn-custom btn-success-custom">
+                            <i class="fas fa-save"></i>
+                            Lưu thay đổi
+                        </button>
+                        <a href="@Url.Action("Profile")" class="btn-custom btn-secondary-custom">
+                            <i class="fas fa-times"></i>
+                            Hủy bỏ
+                        </a>
+                        <a href="@Url.Action("Index", "Home")" class="btn-custom btn-home-custom">
+                            <i class="fas fa-home"></i>
+                            Về trang chủ
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    @{
+        var thanhPhoId = ViewBag.SelectedThanhPhoId as string;
+        var quanId = ViewBag.SelectedQuanId as string;
+        var phuongId = ViewBag.SelectedPhuongId as string;
+    }
+
+    <script>
+        $(function () {
+            const selectedThanhPhoId = '@thanhPhoId';
+            const selectedQuanId = '@quanId';
+            const selectedPhuongId = '@phuongId';
+
+            // Flag để phân biệt init vs user action
+            let isInitializing = true;
+
+            // 1. Load thành phố, gán selected nhưng KHÔNG trigger change
+            $.get('/api/cities', data => {
+                $('#thanhPho').append(data.map(c =>
+                    `<option value="${c.id}" ${c.id === selectedThanhPhoId ? 'selected' : ''}>${c.name}</option>`
+                ));
+            })
+            .always(() => {
+                // 2. Sau khi load xong thành phố, load tiếp quận cho selectedThanhPhoId
+                if (selectedThanhPhoId) {
+                    $.get(`/api/districts/${selectedThanhPhoId}`, data => {
+                        $('#quan').append(data.map(q =>
+                            `<option value="${q.id}" ${q.id === selectedQuanId ? 'selected' : ''}>${q.name}</option>`
+                        ));
+                    })
+                    .always(() => {
+                        // 3. Sau khi load quận, load tiếp phường cho selectedQuanId
+                        if (selectedQuanId) {
+                            $.get(`/api/wards/${selectedQuanId}`, data => {
+                                $('#phuong').append(data.map(p =>
+                                    `<option value="${p.id}" ${p.id === selectedPhuongId ? 'selected' : ''}>${p.name}</option>`
+                                ));                            })
+                            .always(() => {
+                                isInitializing = false;
+                            });                        } else {
+                            // Nếu không có selectedQuanId thì kết thúc init sớm
+                            isInitializing = false;
+                        }
+                    });                } else {
+                    // Nếu không có selectedThanhPhoId
+                    isInitializing = false;
+                }
+            });            // Handler THÀNH PHỐ → QUẬN
+            $('#thanhPho').change(function () {
+                if (isInitializing) return; // bỏ qua lúc init
+                const cityId = this.value;
+                $('#quan').empty().append('<option value="">-- Chọn Quận/Huyện --</option>');
+                $('#phuong').empty().append('<option value="">-- Chọn Phường/Xã --</option>');
+                
+                if (!cityId) return;
+                $.get(`/api/districts/${cityId}`, function (quans) {
+                    $('#quan').append(quans.map(q =>
+                        `<option value="${q.id}">${q.name}</option>`
+                    ));
+                });
+            });
+
+            // Handler QUẬN → PHƯỜNG
+            $('#quan').change(function () {
+                if (isInitializing) return; // bỏ qua lúc init
+                const quanId = this.value;
+                $('#phuong').empty().append('<option value="">-- Chọn Phường/Xã --</option>');
+                
+                if (!quanId) return;
+                $.get(`/api/wards/${quanId}`, function (phuongs) {
+                    $('#phuong').append(phuongs.map(p =>
+                        `<option value="${p.id}">${p.name}</option>`
+                    ));
+                });
+            });
+
+            // Không cần handler cho #phuong vì giá trị đã được bind tự động với asp-for
+        });
+    </script>
+}
