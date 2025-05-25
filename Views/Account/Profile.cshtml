@@ -1,0 +1,439 @@
+@model QuanLySuaChua_BaoHanh.ViewModels.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Thông tin cá nhân";
+}
+@{
+    var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
+    var homeController = "Home";
+    var homeAction = "Index";
+    
+    // Nếu đang ở area Admin, điều hướng về Admin/Home/Index
+    // Nếu không có area hoặc area khác, điều hướng về Home/Index
+    if (!string.IsNullOrEmpty(currentArea))
+    {
+        // Giữ nguyên area hiện tại và điều hướng về Home/Index của area đó
+    }
+    else
+    {
+        currentArea = ""; // Về trang chủ chính (không có area)
+    }
+}
+<style>
+    .profile-container {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        min-height: calc(100vh - 140px);
+        padding: 2rem 0;
+    }
+
+    .profile-card {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border: none;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .profile-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .profile-content {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .profile-sidebar {
+        background: linear-gradient(135deg, #319BC5, #2a86ab);
+        color: white;
+        width: 300px;
+        padding: 2.5rem 1.5rem;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .profile-sidebar::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        transform: rotate(45deg);
+        z-index: 0;
+    }
+
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2.5rem;
+        position: relative;
+        z-index: 1;
+        border: 3px solid rgba(255,255,255,0.3);
+    }
+
+    .profile-title {
+        font-family: 'Baloo 2', cursive;
+        font-weight: 700;
+        font-size: 1.8rem;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .profile-subtitle {
+        opacity: 0.9;
+        font-size: 1rem;
+        margin: 0.5rem 0 1.5rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .profile-stats {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 1.5rem;
+        width: 100%;
+        margin-top: 1rem;
+        position: relative;
+        z-index: 1;
+        text-align: center;
+    }
+
+    .profile-role {
+        margin-top: 1.5rem;
+    }
+
+    .profile-role .role-badge {
+        font-size: 1rem;
+        padding: 0.75rem 1.5rem;
+    }
+
+    .profile-body {
+        padding: 2.5rem;
+        flex: 1;
+    }
+
+    .info-row {
+        padding: 1rem 0;
+        border-bottom: 1px solid #f1f3f4;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .info-row:last-child {
+        border-bottom: none;
+    }
+
+    .info-row:hover {
+        background-color: rgba(49, 155, 197, 0.05);
+        margin: 0 -1rem;
+        padding: 1rem;
+        border-radius: 8px;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #495057;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        width: 150px;
+        flex-shrink: 0;
+    }
+
+    .info-value {
+        color: #212529;
+        font-size: 1.1rem;
+        word-break: break-word;
+        flex: 1;
+    }
+
+    .role-badge {
+        background: linear-gradient(135deg, #319BC5, #2a86ab);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 500;
+        display: inline-block;
+    }
+
+    .address-secondary {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
+
+    .action-buttons {
+        background-color: #f8f9fa;
+        padding: 1.5rem 2rem;
+        text-align: right;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .btn-custom {
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 500;
+        margin: 0 0 0 0.5rem;
+        transition: all 0.3s ease;
+        border: none;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-primary-custom {
+        background: linear-gradient(135deg, #319BC5, #2a86ab);
+        color: white;
+    }
+
+    .btn-primary-custom:hover {
+        background: linear-gradient(135deg, #2a86ab, #1f6b8a);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(49, 155, 197, 0.3);
+    }
+
+    .btn-warning-custom {
+        background: linear-gradient(135deg, #ffc107, #e0a800);
+        color: #212529;
+    }
+
+    .btn-warning-custom:hover {
+        background: linear-gradient(135deg, #e0a800, #c69500);
+        color: #212529;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+    }
+
+    .btn-secondary-custom {
+        background: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary-custom:hover {
+        background: #5a6268;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+    }
+
+    .btn-home-custom {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+    }
+
+    .btn-home-custom:hover {
+        background: linear-gradient(135deg, #20c997, #1e7e34);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    }
+
+    .breadcrumb-custom {
+        background: transparent;
+        padding: 1rem 0 0 0;
+        margin-bottom: 0;
+    }
+
+    .breadcrumb-custom .breadcrumb-item a {
+        color: #319BC5;
+        text-decoration: none;
+    }
+
+    .breadcrumb-custom .breadcrumb-item.active {
+        color: #6c757d;
+    }
+    .container{
+        margin-top:45px
+    }
+    @@media (max-width: 992px) {
+        .profile-content {
+            flex-direction: column;
+        }
+        
+        .profile-sidebar {
+            width: 100%;
+            padding: 2rem 1.5rem;
+        }
+    }
+    
+    @@media (max-width: 768px) {
+        .profile-container {
+            padding: 1rem 0;
+        }
+
+        .profile-body {
+            padding: 1.5rem;
+        }
+        
+        .info-row {
+            flex-direction: column;
+        }
+        
+        .info-label {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-buttons {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .btn-custom {
+            width: 100%;
+            margin: 0.25rem 0;
+            justify-content: center;
+        }
+
+        .info-row:hover {
+            margin: 0;
+            padding: 1rem 0;
+            background-color: transparent;
+        }
+    }
+</style>
+
+<div class="profile-container">
+    <div class="container">
+        <!-- Breadcrumb -->
+        <!-- <nav aria-label="breadcrumb" class="breadcrumb-custom">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fas fa-home"></i> Trang chủ</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Thông tin cá nhân</li>
+            </ol>
+        </nav> -->
+
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-md-12">
+                <div class="card profile-card">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    
+                    <div class="profile-content">
+                        <!-- Left sidebar with profile info -->
+                        <div class="profile-sidebar">
+                            <div class="profile-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h4 class="profile-title">@Model.HoTen</h4>
+                            <p class="profile-subtitle">@Model.UserName</p>
+                            
+                            <div class="profile-stats">
+                                <div><i class="fas fa-envelope me-2"></i> @Model.Email</div>
+                                <div class="mt-2"><i class="fas fa-phone me-2"></i> @Model.PhoneNumber</div>
+                            </div>
+                            
+                            <div class="profile-role">
+                                <span class="role-badge">
+                                    <i class="fas fa-user-tag me-2"></i>
+                                    @Model.VaiTro
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- Right side with profile details -->
+                        <div class="profile-body">
+                            <h5 class="mb-4"><i class="fas fa-info-circle me-2"></i>Thông tin chi tiết</h5>
+                            
+                            <div class="info-row">
+                                <div class="info-label">@Html.DisplayNameFor(model => model.UserName)</div>
+                                <div class="info-value">@Html.DisplayFor(model => model.UserName)</div>
+                            </div>
+
+                            <div class="info-row">
+                                <div class="info-label">@Html.DisplayNameFor(model => model.HoTen)</div>
+                                <div class="info-value">@Html.DisplayFor(model => model.HoTen)</div>
+                            </div>
+
+                            <div class="info-row">
+                                <div class="info-label">@Html.DisplayNameFor(model => model.Email)</div>
+                                <div class="info-value">@Html.DisplayFor(model => model.Email)</div>
+                            </div>
+
+                            <div class="info-row">
+                                <div class="info-label">@Html.DisplayNameFor(model => model.PhoneNumber)</div>
+                                <div class="info-value">@Html.DisplayFor(model => model.PhoneNumber)</div>
+                            </div>
+
+                            <div class="info-row">
+                                <div class="info-label">@Html.DisplayNameFor(model => model.DiaChi)</div>
+                                <div class="info-value">@Html.DisplayFor(model => model.DiaChi)</div>
+                            </div>
+
+                            <div class="info-row">
+                                <div class="info-label">Địa chỉ đầy đủ</div>
+                                <div class="info-value">
+                                    @if (!string.IsNullOrEmpty(Model.TenPhuong))
+                                    {
+                                        <span>@Model.DiaChi</span>
+                                        <div class="address-secondary">@Model.TenPhuong, @Model.TenQuan, @Model.TenThanhPho</div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Chưa cập nhật thông tin địa chỉ</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <a asp-area="" asp-controller="Account" asp-action="Login" class="btn btn-custom btn-home-custom">
+                            <i class="fas fa-home"></i>
+                            Trang chủ
+                        </a>
+                        <a href="@Url.Action("EditProfile")" class="btn btn-custom btn-primary-custom">
+                            <i class="fas fa-edit"></i>
+                            Chỉnh sửa thông tin
+                        </a>
+                        <a href="@Url.Action("ChangePassword")" class="btn btn-custom btn-warning-custom">
+                            <i class="fas fa-key"></i>
+                            Đổi mật khẩu
+                        </a>
+                        <a href="javascript:history.back()" class="btn btn-custom btn-secondary-custom">
+                            <i class="fas fa-arrow-left"></i>
+                            Quay lại
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Tự động ẩn thông báo thành công sau 5 giây
+        setTimeout(function() {
+            $('.alert-success').fadeOut();
+        }, 5000);
+    </script>
+}
