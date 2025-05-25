@@ -47,46 +47,37 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         // GET: NhanVienKho/ChiTietPns/Create
         public IActionResult Create(string phieuNhapId)
         {
-            ViewBag.PhieuNhapId = phieuNhapId;
+            ViewData["PhieuNhapId"] = new SelectList(_context.PhieuNhaps, "PhieuNhapId", "PhieuNhapId");
             ViewData["LinhKienId"] = new SelectList(_context.LinhKiens, "LinhKienId", "TenLinhKien");
-            // Lấy danh sách chi tiết đã nhập
-            var chiTietList = _context.ChiTietPns
-                .Include(x => x.LinhKien)
-                .Where(x => x.PhieuNhapId == phieuNhapId)
-                .ToList();
-            ViewBag.ChiTietList = chiTietList;
-            // Lấy tổng tiền
-            var tongTien = chiTietList.Sum(x => x.SoLuong * x.LinhKien.DonGia);
-            ViewBag.TongTien = tongTien;
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SaveAfterChiTiet(string phieuNhapId, decimal tongTien)
-        {
-            var existingPhieuNhap = await _context.PhieuNhaps.FindAsync(phieuNhapId);
-            if (existingPhieuNhap == null)
-            {
-                // Chỉ tạo mới nếu chưa tồn tại
-                var newPhieuNhap = new PhieuNhap
-                {
-                    PhieuNhapId = phieuNhapId,
-                    NgayNhap = DateTime.Now,
-                    TongTien = tongTien
-                };
-                _context.PhieuNhaps.Add(newPhieuNhap);
-            }
-            else
-            {
-                // Nếu đã tồn tại thì cập nhật lại tổng tiền
-                existingPhieuNhap.TongTien = tongTien;
-                _context.PhieuNhaps.Update(existingPhieuNhap);
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> SaveAfterChiTiet(string phieuNhapId, decimal tongTien)
+        //{
+        //    var existingPhieuNhap = await _context.PhieuNhaps.FindAsync(phieuNhapId);
+        //    if (existingPhieuNhap == null)
+        //    {
+        //        // Chỉ tạo mới nếu chưa tồn tại
+        //        var newPhieuNhap = new PhieuNhap
+        //        {
+        //            PhieuNhapId = phieuNhapId,
+        //            NgayNhap = DateTime.Now,
+        //            TongTien = tongTien
+        //        };
+        //        _context.PhieuNhaps.Add(newPhieuNhap);
+        //    }
+        //    else
+        //    {
+        //        // Nếu đã tồn tại thì cập nhật lại tổng tiền
+        //        existingPhieuNhap.TongTien = tongTien;
+        //        _context.PhieuNhaps.Update(existingPhieuNhap);
+        //    }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index"); // hoặc trang danh sách phiếu nhập
-        }
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction("Index"); // hoặc trang danh sách phiếu nhập
+        //}
 
 
         [HttpPost]
@@ -97,69 +88,51 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
             {
                 _context.Add(chiTietPn);
                 await _context.SaveChangesAsync();
-
-                // Cập nhật tổng tiền cho phiếu nhập
-                var tongTien = _context.ChiTietPns
-                    .Where(x => x.PhieuNhapId == chiTietPn.PhieuNhapId)
-                    .Sum(x => x.SoLuong * x.LinhKien.DonGia);
-
-                var phieuNhap = await _context.PhieuNhaps.FindAsync(chiTietPn.PhieuNhapId);
-                if (phieuNhap != null)
-                {
-                    phieuNhap.TongTien = tongTien;
-                    await _context.SaveChangesAsync();
-                }
-
-                // Quay lại trang tạo chi tiết để nhập tiếp
-                return RedirectToAction("Create", new { phieuNhapId = chiTietPn.PhieuNhapId });
+                return RedirectToAction(nameof(Index));
             }
-            // Nếu lỗi, load lại dữ liệu
-            ViewBag.PhieuNhapId = chiTietPn.PhieuNhapId;
-            ViewData["LinhKienId"] = new SelectList(_context.LinhKiens, "LinhKienId", "TenLinhKien", chiTietPn.LinhKienId);
-            ViewBag.ChiTietList = _context.ChiTietPns
-                .Include(x => x.LinhKien)
-                .Where(x => x.PhieuNhapId == chiTietPn.PhieuNhapId)
-                .ToList();
+            ViewData["PhieuNhapId"] = new SelectList(_context.PhieuNhaps, "PhieuNhapId", "PhieuNhapId");
+            ViewData["LinhKienId"] = new SelectList(_context.LinhKiens, "LinhKienId", "TenLinhKien");
+
             return View(chiTietPn);
         }
-        public async Task<IActionResult> HoanTatPhieuNhap(string phieuNhapId)
-        {
-            var chiTietList = await _context.ChiTietPns
-                .Include(x => x.LinhKien)
-                .Where(x => x.PhieuNhapId == phieuNhapId)
-                .ToListAsync();
+        //public async Task<IActionResult> HoanTatPhieuNhap(string phieuNhapId)
+        //{
+        //    var chiTietList = await _context.ChiTietPns
+        //        .Include(x => x.LinhKien)
+        //        .Where(x => x.PhieuNhapId == phieuNhapId)
+        //        .ToListAsync();
 
-            if (!chiTietList.Any())
-            {
-                TempData["Error"] = "Bạn chưa nhập chi tiết nào!";
-                return RedirectToAction("Create", new { phieuNhapId });
-            }
+        //    if (!chiTietList.Any())
+        //    {
+        //        TempData["Error"] = "Bạn chưa nhập chi tiết nào!";
+        //        return RedirectToAction("Create", new { phieuNhapId });
+        //    }
 
-            var tongTien = chiTietList.Sum(x => x.SoLuong * x.LinhKien.DonGia);
+        //    var tongTien = chiTietList.Sum(x => x.SoLuong * x.LinhKien.DonGia);
 
-            // Kiểm tra xem đã tồn tại chưa
-            var existingPhieu = await _context.PhieuNhaps.FindAsync(phieuNhapId);
-            if (existingPhieu == null)
-            {
-                var phieu = new PhieuNhap
-                {
-                    PhieuNhapId = phieuNhapId,
-                    NgayNhap = DateTime.Now,
-                    TongTien = tongTien
-                };
+        //    // Kiểm tra xem đã tồn tại chưa
+        //    var existingPhieu = await _context.PhieuNhaps.FindAsync(phieuNhapId);
+        //    if (existingPhieu == null)
+        //    {
+        //        var phieu = new PhieuNhap
+        //        {
+        //            PhieuNhapId = phieuNhapId,
+        //            NgayNhap = DateTime.Now,
+        //            TongTien = tongTien
+        //        };
 
-                _context.PhieuNhaps.Add(phieu);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                existingPhieu.TongTien = tongTien;
-                await _context.SaveChangesAsync();
-            }
+        //        _context.PhieuNhaps.Add(phieu);
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    else
+        //    {
+        //        existingPhieu.TongTien = tongTien;
+        //        await _context.SaveChangesAsync();
+        //    }
 
-            TempData["Success"] = "Tạo phiếu nhập thành công!";
-            return RedirectToAction("Index", "PhieuNhaps");
-        }     
+        //    TempData["Success"] = "Tạo phiếu nhập thành công!";
+        //    return RedirectToAction("Index", "PhieuNhaps");
+        //}     
 
 
         // GET: NhanVienKho/ChiTietPns/Edit/5
