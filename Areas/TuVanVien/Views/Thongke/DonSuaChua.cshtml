@@ -1,5 +1,6 @@
-﻿@{
-    ViewData["Title"] = "Báo cáo doanh thu";
+﻿@using System.Text.Json
+@{
+    ViewData["Title"] = "Báo cáo đơn sửa chữa";
     Layout = "~/Areas/TuVanVien/Views/Shared/_LayoutTuVanVien.cshtml";
 
     DateTime tuNgay = ViewBag.TuNgay as DateTime? ?? DateTime.Now.AddDays(-30);
@@ -7,17 +8,12 @@
 
     int tongSoDon = ViewBag.TongSoDon ?? 0;
     double thoiGianTB = ViewBag.ThoiGianTrungBinh ?? 0;
-    decimal tongDoanhThu = ViewBag.TongDoanhThu ?? 0;
-
-    IEnumerable<dynamic> thongKeTrangThai = ViewBag.ThongKeTrangThai as IEnumerable<dynamic> ?? Enumerable.Empty<dynamic>();
-    IEnumerable<dynamic> donTheoNgay = ViewBag.DonTheoNgay as IEnumerable<dynamic> ?? Enumerable.Empty<dynamic>();
 }
-
 
 <div class="container-fluid p-4">
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
         <h2 class="text-primary">
-            <i class="bi bi-graph-up-arrow me-2"></i>Báo cáo doanh thu
+            <i class="bi bi-wrench-adjustable-circle me-2"></i>Báo cáo đơn sửa chữa
         </h2>
         <a href="@Url.Action("Index", "ThongKe")" class="btn btn-outline-primary">
             <i class="bi bi-arrow-left me-2"></i>Quay lại tổng quan
@@ -26,7 +22,7 @@
 
     <div class="card mb-4">
         <div class="card-body">
-            <form asp-action="DoanhThu" method="get" class="row g-3 align-items-end">
+            <form asp-action="DonSuaChua" method="get" class="row g-3 align-items-end">
                 <div class="col-md-4">
                     <label class="form-label">Từ ngày:</label>
                     <input type="date" name="tuNgay" class="form-control" value="@tuNgay.ToString("yyyy-MM-dd")" />
@@ -45,29 +41,106 @@
     </div>
 
     <div class="row mb-4">
-        <div class="col-xl-6 col-md-6 mb-4">
-            <div class="card shadow-sm border-left-success h-100 py-2">
+        <div class="col-xl-6 mb-4">
+            <div class="card shadow-sm border-left-primary h-100 py-2">
                 <div class="card-body">
-                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                        Tổng doanh thu
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        Tổng số đơn sửa chữa
                     </div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                        @String.Format("{0:N0} VNĐ", tongDoanhThu)
-                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">@tongSoDon</div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-6 col-md-6 mb-4">
-            <div class="card shadow-sm border-left-info h-100 py-2">
+        <div class="col-xl-6 mb-4">
+            <div class="card shadow-sm border-left-warning h-100 py-2">
                 <div class="card-body">
-                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                        Số đơn hoàn thành
+                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                        Thời gian xử lý trung bình
                     </div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.SoDonHoanThanh đơn</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">@thoiGianTB.ToString("0.##") ngày</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="alert alert-info">Thêm biểu đồ và bảng chi tiết doanh thu từ ViewBag nếu cần.</div>
+    <div class="row">
+        <div class="col-md-6">
+            <h5 class="text-primary">Số lượng đơn theo ngày</h5>
+            <canvas id="chartDonTheoNgay" style="max-height: 300px;"></canvas>
+        </div>
+        <div class="col-md-6">
+            <h5 class="text-primary">Thống kê theo trạng thái</h5>
+            <canvas id="chartTrangThai" style="max-height: 300px;"></canvas>
+        </div>
+    </div>
+
+
+    <h5 class="text-primary mt-4">Chi tiết đơn hàng theo ngày</h5>
+    <table class="table table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>Ngày</th>
+                <th>Số lượng đơn</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.DonTheoNgay)
+            {
+                <tr>
+                    <td>@(((DateTime)item.Ngay).ToString("dd/MM/yyyy"))</td>
+                    <td>@item.SoLuongDon</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const donTheoNgay = @Html.Raw(JsonSerializer.Serialize(ViewBag.DonTheoNgay));
+        const trangThai = @Html.Raw(ViewBag.ThongKeTrangThaiJson); // ✅ Dùng đúng JSON đã xử lý DisplayName
+
+        const ctx1 = document.getElementById('chartDonTheoNgay').getContext('2d');
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: donTheoNgay.map(x => new Date(x.Ngay).toLocaleDateString()),
+                datasets: [{
+                    label: 'Số đơn',
+                    data: donTheoNgay.map(x => x.SoLuongDon),
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 }
+                    }
+                }
+            }
+        });
+
+        const ctx2 = document.getElementById('chartTrangThai').getContext('2d');
+        new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: trangThai.map(x => x.TrangThai),
+                datasets: [{
+                    data: trangThai.map(x => x.SoLuong),
+                    backgroundColor: ['#36A2EB', '#4BC0C0', '#FF6384', '#FFCE56', '#9966FF']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    </script>
+}
+
+}

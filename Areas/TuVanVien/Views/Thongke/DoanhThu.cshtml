@@ -56,7 +56,42 @@
         </div>
     </div>
 
-    <!-- Bạn có thể thêm biểu đồ, bảng chi tiết về doanh thu theo ViewBag.DoanhThuTheoThang hoặc khác -->
+    <h5 class="text-primary mt-4">Doanh thu theo tháng</h5>
+    <canvas id="bieuDoDoanhThu" height="100"></canvas>
+
+    @section Scripts {
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            const data = @Html.Raw(Json.Serialize(ViewBag.BieuDoDoanhThu));
+
+            const ctx = document.getElementById('bieuDoDoanhThu').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(x => x.ThangNam),
+                    datasets: [
+                        {
+                            label: 'Doanh thu',
+                            data: data.map(x => x.DoanhThu),
+                            backgroundColor: 'rgba(54, 162, 235, 0.7)'
+                        },
+                        {
+                            label: 'Số đơn',
+                            data: data.map(x => x.SoDon),
+                            backgroundColor: 'rgba(75, 192, 192, 0.7)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        </script>
+    }
+
 
     <div class="alert alert-info">Thêm biểu đồ và bảng chi tiết doanh thu từ ViewBag nếu cần.</div>
 </div>

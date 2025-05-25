@@ -20,7 +20,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
         {
             var donHangs = _context.PhieuSuaChuas
                 .Include(p => p.KhachHang)
-                .Where(p => p.TrangThai.ToLower().Trim() == "dasuachua")
+                .Where(p => p.TrangThai.ToLower().Trim() == "dasuaxong")
                 .ToList();
 
             return View("CapNhatDon", donHangs);

@@ -22,7 +22,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
                 .Include(p => p.KhachHang)
                 .Include(p => p.ChiTietSuaChuas)
                     .ThenInclude(ct => ct.SanPham)
-                .Where(p => p.TrangThai == "ChuaDuyet")
+                .Where(p => p.TrangThai == "ChoXacNhan")
                 .OrderByDescending(p => p.NgayGui)
                 .ToListAsync();
 

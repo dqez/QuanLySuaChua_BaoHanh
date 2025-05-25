@@ -5,6 +5,7 @@ using QuanLySuaChua_BaoHanh.Enums;
 using QuanLySuaChua_BaoHanh.Models;
 using System;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
@@ -35,7 +36,6 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
             }
         }
 
-        // Trang tổng quan thống kê
         public async Task<IActionResult> Index(DateTime? tuNgay, DateTime? denNgay)
         {
             ValidateAndPrepareDateRange(ref tuNgay, ref denNgay);
@@ -68,6 +68,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
 
             return View();
         }
+
         [HttpGet]
         public async Task<IActionResult> DoanhThu(DateTime? tuNgay, DateTime? denNgay)
         {
@@ -84,11 +85,22 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
                 .Where(p => p.NgayTra >= tuNgay && p.NgayTra <= denNgay && p.TrangThai == TrangThaiPhieu.HoanThanh.ToString())
                 .CountAsync();
 
-            return View(); // Sử dụng View: DoanhThu.cshtml
+            var doanhThuTheoThang = await _context.PhieuSuaChuas
+                .Where(p => p.NgayThanhToan >= tuNgay && p.NgayThanhToan <= denNgay)
+                .GroupBy(p => new { p.NgayThanhToan.Value.Month, p.NgayThanhToan.Value.Year })
+                .Select(g => new
+                {
+                    ThangNam = $"{g.Key.Month:D2}/{g.Key.Year}",
+                    DoanhThu = g.Sum(p => p.TongTien ?? 0),
+                    SoDon = g.Count(),
+                    TrungBinh = g.Average(p => p.TongTien ?? 0)
+                }).ToListAsync();
+
+            ViewBag.BieuDoDoanhThu = doanhThuTheoThang;
+
+            return View();
         }
 
-        [HttpGet]
-        [HttpGet]
         [HttpGet]
         public async Task<IActionResult> DonSuaChua(DateTime? tuNgay, DateTime? denNgay)
         {
@@ -101,7 +113,6 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
 
             ViewBag.TongSoDon = await phieu.CountAsync();
 
-            // Tính thời gian trung bình xử lý (sử dụng client-side để tránh lỗi EF không dịch được)
             var donTra = await phieu
                 .Where(p => p.NgayTra.HasValue)
                 .Select(p => new { p.NgayGui, NgayTra = p.NgayTra.Value })
@@ -113,21 +124,32 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
 
             ViewBag.ThoiGianTrungBinh = thoiGianTrungBinh;
 
-            // Thống kê trạng thái
-            ViewBag.ThongKeTrangThai = await phieu
+            var donTheoNgay = await phieu
+                .GroupBy(p => p.NgayGui.Date)
+                .Select(g => new { Ngay = g.Key, SoLuongDon = g.Count() })
+                .ToListAsync();
+
+            var thongKeTrangThai = await phieu
                 .GroupBy(p => p.TrangThai)
                 .Select(g => new { TrangThai = g.Key, SoLuong = g.Count() })
                 .ToListAsync();
 
-            ViewBag.DonTheoNgay = await phieu
-     .GroupBy(p => p.NgayGui.Date)
-     .Select(g => new { Ngay = g.Key, SoLuongDon = g.Count() })
-     .ToListAsync();
+            ViewBag.DonTheoNgay = donTheoNgay;
+            ViewBag.ThongKeTrangThai = thongKeTrangThai;
+
+        
+            var thongKeConvert = thongKeTrangThai.Select(x => new
+            {
+                TrangThai = Enum.TryParse<TrangThaiPhieu>(x.TrangThai, out var tt)
+                    ? tt.GetDisplayName()
+                    : x.TrangThai,
+                SoLuong = x.SoLuong
+            }).ToList();
+
+            ViewBag.DonTheoNgayJson = JsonSerializer.Serialize(donTheoNgay.ToList());
+            ViewBag.ThongKeTrangThaiJson = JsonSerializer.Serialize(thongKeConvert);
 
             return View();
         }
-
-
-
     }
 }
