@@ -10,7 +10,7 @@
                     <i class="bi bi-file-earmark-text order-icon"></i>
                     #@Model.PhieuSuaChuaId
                 </div>
-                
+
                 @{
                     string statusClass = Model.TrangThai switch
                     {
@@ -52,19 +52,19 @@
                     }
                 </span>
             </div>
-            
+
             <div class="basic-info">               
                 <div class="info-row">
                     <span class="date-created">
                         <i class="bi bi-calendar-check icon"></i>
                         Ngày gửi: @Model.NgayGui.ToString("dd/MM/yyyy")
                     </span>
-                    
+
                     <span class="product-count">
                         <i class="bi bi-box-seam icon"></i>
                         @Model.ChiTietSuaChuas.Count sản phẩm
                     </span>
-                      @if (Model.TrangThai == nameof(QuanLySuaChua_BaoHanh.Enums.TrangThaiPhieu.ChoKiemTra) && Model.NgayHen.HasValue)
+                    @if (Model.TrangThai == nameof(QuanLySuaChua_BaoHanh.Enums.TrangThaiPhieu.ChoKiemTra) && Model.NgayHen.HasValue)
                     {
                         <span class="appointment-time">
                             <i class="bi bi-clock-history icon text-warning"></i>
@@ -72,22 +72,40 @@
                         </span>
                     }
                 </div>
-                
+
                 <div class="d-flex gap-2">
                     <a href="/KhachHang/DonSuaChua/ChiTiet/@Model.PhieuSuaChuaId" 
-                       class="btn btn-details">
+                    class="btn btn-details">
                         <i class="bi bi-eye me-1"></i>
                         Chi tiết
                     </a>
-                    
+
                     @if (Model.TrangThai == nameof(QuanLySuaChua_BaoHanh.Enums.TrangThaiPhieu.ChoXacNhan))
                     {
                         <button type="button" 
-                                class="btn btn-cancel cancel-order" 
-                                data-id="@Model.PhieuSuaChuaId">
+                        class="btn btn-cancel cancel-order" 
+                        data-id="@Model.PhieuSuaChuaId">
                             <i class="bi bi-x-circle me-1"></i>
                             Hủy đơn
                         </button>
+                    }                    
+                    @if (Model.TrangThai == nameof(QuanLySuaChua_BaoHanh.Enums.TrangThaiPhieu.DaSuaXong) ||
+                      Model.TrangThai == nameof(QuanLySuaChua_BaoHanh.Enums.TrangThaiPhieu.DaThanhToan))
+                    {
+                        if (Model.TrangThai == nameof(QuanLySuaChua_BaoHanh.Enums.TrangThaiPhieu.DaSuaXong))
+                        {
+                            <a href="/khach-hang/chon-phuong-thuc-thanh-toan/@Model.PhieuSuaChuaId" class="btn btn-payment">
+                                <i class="bi bi-credit-card-2-front me-1"></i>
+                                Thanh toán
+                            </a>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-paid" disabled>
+                                <i class="bi bi-check-circle me-1"></i>
+                                Đã thanh toán
+                            </button>
+                        }
                     }
                 </div>
             </div>
@@ -240,10 +258,38 @@
         font-weight: 500;
         transition: all 0.2s ease;
     }
-    
-    .btn-details:hover {
+      .btn-details:hover {
         background-color: #bae7ff;
         border-color: #69c0ff;
+    }
+    
+    .btn-payment {
+        background-color: #f6ffed;
+        border: 1px solid #b7eb8f;
+        color: #52c41a;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .btn-payment:hover {
+        background-color: #d9f7be;
+        border-color: #95de64;
+        color: #389e0d;
+    }
+    
+    .btn-paid {
+        background-color: #f0f5ff;
+        border: 1px solid #d6e4ff;
+        color: #597ef7;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        cursor: default;
     }
     
     .appointment-time {

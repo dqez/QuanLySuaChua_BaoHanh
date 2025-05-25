@@ -7,6 +7,7 @@ using DinkToPdf;
 using DinkToPdf.Contracts;
 using System.IO;
 using QuanLySuaChua_BaoHanh.Services;
+using QuanLySuaChua_BaoHanh.Areas.KhachHang.Models;
 
 
 var contextPdfAssemblyLoadContext = new CustomAssemblyLoadContext();
@@ -30,6 +31,8 @@ builder.Services.AddIdentity<NguoiDung,IdentityRole<string>>(options =>
     .AddEntityFrameworkStores<BHSC_DbContext>()
     .AddDefaultTokenProviders();
 
+// Cấu hình VnPay
+builder.Services.Configure<VnPayConfig>(builder.Configuration.GetSection("VnPay"));
 
 //cau hinh cookie
 builder.Services.ConfigureApplicationCookie(options => {

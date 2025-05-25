@@ -25,15 +25,15 @@
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="Areas\KhachHang\Services\" />
-		<Folder Include="Areas\KyThuatVien\Models\" />
-		<Folder Include="Areas\TuVanVien\Controllers\" />
-		<Folder Include="Areas\TuVanVien\Models\" />
-		<Folder Include="Areas\NhanVienKho\Controllers\" />
-		<Folder Include="Areas\NhanVienKho\Models\" />
-		<Folder Include="Areas\KhachHang\Models\" />
-	</ItemGroup>
+  <ItemGroup>
+    <Folder Include="Areas\KhachHang\Services\" />
+    <Folder Include="Areas\KyThuatVien\Models\" />
+    <Folder Include="Areas\TuVanVien\Controllers\" />
+    <Folder Include="Areas\TuVanVien\Models\" />
+    <Folder Include="Areas\NhanVienKho\Controllers\" />
+    <Folder Include="Areas\NhanVienKho\Models\" />
+    <Folder Include="Areas\KhachHang\Models\" />
+  </ItemGroup>
 	<ItemGroup>
 		<None Update="NativeLibrary\libwkhtmltox.dll">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
