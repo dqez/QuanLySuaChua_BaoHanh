@@ -15,25 +15,30 @@
                     </h4>
                 </div>
                 <div class="card-body">
-                    <form method="post" asp-controller="PhieuXuats" asp-action="Create">
+                    <form method="post" asp-area="NhanVienKho" asp-controller="PhieuXuats" asp-action="Create">
                         @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                        @Html.AntiForgeryToken()
                         <div class="mb-3">
-                            <label asp-for="KhoId" class="form-label">Mã kho</label>
-                            <select asp-for="KhoId" class="form-select" asp-items="ViewBag.KhoId">
-                                <option value="">-- Chọn kho --</option>
+                            <label asp-for="PhieuXuatId" class="form-label">Mã phiếu xuất</label>
+                            <input asp-for="PhieuXuatId" class="form-control" />
+                            <span asp-validation-for="PhieuXuatId" class="text-danger"></span>
+                        </div>
+                        <input type="hidden" asp-for="NgayXuat" />
+                        <input type="hidden" asp-for="KhoId" />
+                        <div class="mb-3">
+                            <label class="form-label">Chọn phiếu sửa chữa</label>
+                            <select name="phieuSuaChuaIds" class="form-select" multiple="multiple" size="6">
+                                @if (ViewBag.PhieuSuaChuaList != null)
+                                {
+                                    foreach (var id in (string[])ViewBag.PhieuSuaChuaList)
+                                    {
+                                        <option value="@id">@id</option>
+                                    }
+                                }
                             </select>
+                            <span class="text-danger">@ViewData.ModelState["phieuSuaChuaIds"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
                         </div>
-                        <input hidden name="PhieuXuatId" value="temp" />
-                        <div class="mb-3">
-                            <label asp-for="TongTien" class="form-label">Tổng tiền</label>
-                            <input asp-for="TongTien" class="form-control" />
-                            <span asp-validation-for="TongTien" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="TrangThai" class="form-label">Trạng thái</label>
-                            <input asp-for="TrangThai" class="form-control" />
-                            <span asp-validation-for="TrangThai" class="text-danger"></span>
-                        </div>
+
                         <div class="mb-3">
                             <label asp-for="GhiChu" class="form-label">Ghi chú</label>
                             <input asp-for="GhiChu" class="form-control" />

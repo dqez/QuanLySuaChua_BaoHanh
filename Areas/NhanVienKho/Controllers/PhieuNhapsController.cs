@@ -45,24 +45,24 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
                 phieuNhapQuery.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
-        //// GET: NhanVienKho/PhieuNhaps/Details/5
-        //public async Task<IActionResult> Details(string id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // GET: NhanVienKho/PhieuNhaps/Details/5
+        public async Task<IActionResult> Details(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        //    var phieuNhap = await _context.PhieuNhaps
-        //        .Include(p => p.Kho)
-        //        .FirstOrDefaultAsync(m => m.PhieuNhapId == id);
-        //    if (phieuNhap == null)
-        //    {
-        //        return NotFound();
-        //    }
+            var phieuNhap = await _context.PhieuNhaps
+                .Include(p => p.Kho)
+                .FirstOrDefaultAsync(m => m.PhieuNhapId == id);
+            if (phieuNhap == null)
+            {
+                return NotFound();
+            }
 
-        //    return View(phieuNhap);
-        //}
+            return View(phieuNhap);
+        }
 
         // GET: NhanVienKho/PhieuNhaps/Create
         public IActionResult Create()

@@ -44,31 +44,29 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
                 phieuXuatQuery.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
-        // GET: NhanVienKho/PhieuXuats/Details/5
-        //public async Task<IActionResult> Details(string id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        //GET: NhanVienKho/PhieuXuats/Details/5
+        public async Task<IActionResult> Details(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        //    var phieuXuat = await _context.PhieuXuats
-        //        .Include(p => p.Kho)
-        //        .FirstOrDefaultAsync(m => m.PhieuXuatId == id);
-        //    if (phieuXuat == null)
-        //    {
-        //        return NotFound();
-        //    }
+            var phieuXuat = await _context.PhieuXuats
+                .Include(p => p.Kho)
+                .FirstOrDefaultAsync(m => m.PhieuXuatId == id);
+            if (phieuXuat == null)
+            {
+                return NotFound();
+            }
 
-        //    return View(phieuXuat);
-        //}
+            return View(phieuXuat);
+        }
 
         // GET: NhanVienKho/PhieuXuats/Create
         public IActionResult Create()
         {
-            // Lấy UserName (tên tài khoản) của user hiện tại
             var userName = User.Identity?.Name;
-            // Tìm user theo UserName (cột TaiKhoan trong DB)
             var nguoiDung = _context.NguoiDungs.FirstOrDefault(x => x.UserName == userName);
 
             if (nguoiDung == null)
@@ -82,28 +80,70 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
                 KhoId = nguoiDung.Id,
                 NgayXuat = DateTime.Now,
             };
+
+            // Lấy danh sách phiếu sửa chữa có thể xuất
+            ViewBag.PhieuSuaChuaList = _context.PhieuSuaChuas
+                .Where(p => p.TrangThai == "HoanThanh") // ví dụ
+                .Select(p => p.PhieuSuaChuaId)
+                .ToArray();
+
             return View(model);
         }
+
 
         // POST: NhanVienKho/PhieuXuats/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PhieuXuatId,KhoId,NgayXuat,TongTien,TrangThai,GhiChu")] PhieuXuat phieuXuat)
+        public async Task<IActionResult> Create(string[] phieuSuaChuaIds, [Bind("PhieuXuatId,KhoId,NgayXuat,TongTien,TrangThai,GhiChu")] PhieuXuat phieuXuat)
         {
-            phieuXuat.PhieuXuatId = await _idGenerator.GeneratePhieuXuatIdAsync();
+            var userName = User.Identity?.Name;
+            var nguoiDung = _context.NguoiDungs.FirstOrDefault(x => x.UserName == userName);
+
+            // Sinh mã phiếu xuất nếu cần
+            if (string.IsNullOrEmpty(phieuXuat.PhieuXuatId))
+                phieuXuat.PhieuXuatId = await _idGenerator.GeneratePhieuXuatIdAsync();
+
+            phieuXuat.KhoId = nguoiDung.Id;
             phieuXuat.NgayXuat = DateTime.Now;
             phieuXuat.TongTien = 0;
+            phieuXuat.TrangThai = "...";
 
             if (ModelState.IsValid)
             {
+                // Thêm phiếu xuất trước để có PhieuXuatId
                 _context.Add(phieuXuat);
                 await _context.SaveChangesAsync();
-                RedirectToAction("Create", "ChiTietPxs", new { area = "NhanVienKho", phieuXuatId = phieuXuat.PhieuXuatId });
+
+                // Thêm các chi tiết phiếu xuất
+                foreach (var phieuSuaChuaId in phieuSuaChuaIds)
+                {
+                    var ctpx = new ChiTietPx
+                    {
+                        PhieuXuatId = phieuXuat.PhieuXuatId,
+                        PhieuSuaChuaId = phieuSuaChuaId,
+                        GhiChu = phieuXuat.GhiChu
+                    };
+                    _context.ChiTietPxes.Add(ctpx);
+
+                    // Tính tổng tiền cho phiếu xuất
+                    var phieu = await _context.PhieuSuaChuas.FindAsync(phieuSuaChuaId);
+                    if (phieu != null && phieu.TongTien.HasValue)
+                    {
+                        phieuXuat.TongTien += phieu.TongTien.Value;
+                    }
+                }
+
+                // Cập nhật tổng tiền sau khi thêm chi tiết
+                _context.Update(phieuXuat);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
             }
 
-            //ViewData["KhoId"] = new SelectList(_context.NguoiDungs, "Id", "UserName", phieuNhap.KhoId);
+            // Nếu có lỗi, trả lại view với model
             return View(phieuXuat);
         }
+
 
         // GET: NhanVienKho/PhieuXuats/Edit/5
         public async Task<IActionResult> Edit(string id)

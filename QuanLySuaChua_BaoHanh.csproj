@@ -33,12 +33,6 @@
 		<Folder Include="Areas\KhachHang\Models\" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Content Update="Areas\NhanVienKho\Views\ChiTietPns\Edit.cshtml">
-	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-	  </Content>
-	</ItemGroup>
-	<ItemGroup>
 		<None Update="NativeLibrary\libwkhtmltox.dll">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
