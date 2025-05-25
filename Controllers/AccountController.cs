@@ -84,10 +84,6 @@ namespace QuanLySuaChua_BaoHanh.Controllers
                 // string[] roleNames = { "QuanTriVien", "KhachHang", "KyThuatVien", "NhanVienKho", "TuVanVien" };
                 if (await _userManager.IsInRoleAsync(user, "KhachHang"))
                 {
-                    return RedirectToAction("Index", "Home", new { area = "KhachHang" });
-                }
-                else if (await _userManager.IsInRoleAsync(user, "QuanTriVien"))
-                {
                     return RedirectToAction("Index", "Home", new { area = "QuanTriVien" });
                 }
                 else if (await _userManager.IsInRoleAsync(user, "KyThuatVien"))
@@ -101,6 +97,10 @@ namespace QuanLySuaChua_BaoHanh.Controllers
                 else if (await _userManager.IsInRoleAsync(user, "TuVanVien"))
                 {
                     return RedirectToAction("Index", "Home", new { area = "TuVanVien" });
+                }
+                else if (await _userManager.IsInRoleAsync(user, "QuanTriVien"))
+                {
+                    return RedirectToAction("Index", "Home", new { area = "KhachHang" });
                 }
                 else
                 {

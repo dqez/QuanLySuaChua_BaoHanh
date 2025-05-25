@@ -3,7 +3,22 @@
 @{
     ViewData["Title"] = "Thông tin cá nhân";
 }
-
+@{
+    var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
+    var homeController = "Home";
+    var homeAction = "Index";
+    
+    // Nếu đang ở area Admin, điều hướng về Admin/Home/Index
+    // Nếu không có area hoặc area khác, điều hướng về Home/Index
+    if (!string.IsNullOrEmpty(currentArea))
+    {
+        // Giữ nguyên area hiện tại và điều hướng về Home/Index của area đó
+    }
+    else
+    {
+        currentArea = ""; // Về trang chủ chính (không có area)
+    }
+}
 <style>
     .profile-container {
         background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
@@ -250,7 +265,7 @@
         color: #6c757d;
     }
     .container{
-        margin-top:20px
+        margin-top:45px
     }
     @@media (max-width: 992px) {
         .profile-content {
@@ -303,12 +318,12 @@
 <div class="profile-container">
     <div class="container">
         <!-- Breadcrumb -->
-        <nav aria-label="breadcrumb" class="breadcrumb-custom">
+        <!-- <nav aria-label="breadcrumb" class="breadcrumb-custom">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fas fa-home"></i> Trang chủ</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Thông tin cá nhân</li>
             </ol>
-        </nav>
+        </nav> -->
 
         <div class="row justify-content-center">
             <div class="col-lg-10 col-md-12">
@@ -391,7 +406,7 @@
                     </div>
                     
                     <div class="action-buttons">
-                        <a href="@Url.Action("Index", "Home")" class="btn btn-custom btn-home-custom">
+                        <a asp-area="" asp-controller="Account" asp-action="Login" class="btn btn-custom btn-home-custom">
                             <i class="fas fa-home"></i>
                             Trang chủ
                         </a>
