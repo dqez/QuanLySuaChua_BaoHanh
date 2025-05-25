@@ -4,77 +4,318 @@
     Layout = "_LayoutAdmin";
 }
 
-<div class="container-fluid">
-    <h1 class="mt-4">Trang chủ</h1>
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item active">Trang chủ</li>
-    </ol>
+<style>
+    /* Dashboard specific styles */
+    .dashboard-container {
+        padding: 1.5rem;
+    }
+    
+    .page-title {
+        font-family: 'Baloo 2', cursive;
+        font-weight: 700;
+        color: var(--blue-primary);
+        margin-bottom: 1.5rem;
+        font-size: 2rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    .page-title i {
+        margin-right: 0.75rem;
+        font-size: 1.75rem;
+    }
+    
+    .breadcrumb {
+        background-color: transparent;
+        padding: 0;
+        margin-bottom: 1.5rem;
+        border-radius: 0;
+        font-size: 0.9rem;
+    }
+    
+    .breadcrumb-item.active {
+        color: var(--blue-primary);
+        font-weight: 500;
+    }
+    
+    .stat-card {
+        background-color: var(--white);
+        border-radius: 8px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        margin-bottom: 1.5rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stat-card.users {
+        border-left: 4px solid var(--blue-primary);
+    }
+    
+    .stat-card.roles {
+        border-left: 4px solid #28a745;
+    }
+    
+    .stat-card.products {
+        border-left: 4px solid #17a2b8;
+    }
+    
+    .stat-card.orders {
+        border-left: 4px solid #dc3545;
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+        flex: 1;
+    }
+    
+    .stat-value {
+        font-family: 'Baloo 2', cursive;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #6c757d;
+    }
+    
+    .card-footer {
+        background-color: rgba(0, 0, 0, 0.03);
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 0.75rem 1.5rem;
+        border-radius: 0 0 8px 8px;
+    }
+    
+    .card-footer a {
+        color: var(--blue-primary);
+        font-weight: 500;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+    
+    .card-footer a i {
+        transition: transform 0.2s;
+    }
+    
+    .card-footer a:hover i {
+        transform: translateX(3px);
+    }
+    
+    .orders-card {
+        background-color: var(--white);
+        border-radius: 8px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        margin: 2rem 0;
+    }
+    
+    .card-header-custom {
+        padding: 1.25rem 1.5rem;
+        background-color: var(--white);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        border-radius: 8px 8px 0 0;
+        display: flex;
+        align-items: center;
+        font-family: 'Baloo 2', cursive;
+        font-weight: 600;
+        font-size: 1.25rem;
+        color: #333;
+    }
+    
+    .card-header-custom i {
+        margin-right: 0.75rem;
+        color: var(--blue-primary);
+    }
+    
+    .table-container {
+        padding: 1.5rem;
+    }
+    
+    .dashboard-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    
+    .dashboard-table th {
+        background-color: rgba(0, 0, 0, 0.02);
+        font-weight: 600;
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+        color: #495057;
+    }
+    
+    .dashboard-table td {
+        padding: 1rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        vertical-align: middle;
+    }
+    
+    .dashboard-table tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .dashboard-table tr:hover {
+        background-color: rgba(0, 0, 0, 0.01);
+    }
+    
+    .badge {
+        padding: 0.5rem 0.75rem;
+        border-radius: 30px;
+        font-weight: 500;
+        font-size: 0.75rem;
+    }
+    
+    .badge-warning {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    
+    .badge-info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+    }
+    
+    .badge-success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    
+    .badge-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    
+    .badge-secondary {
+        background-color: #e2e3e5;
+        color: #383d41;
+    }
+    
+    .amount {
+        font-weight: 600;
+        color: #333;
+    }
+    
+    @@media (max-width: 768px) {
+        .dashboard-table {
+            min-width: 650px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+    }
+</style>
+
+<div class="dashboard-container">
+    <h1 class="page-title">
+        <i class="bi bi-speedometer2"></i>Trang chủ
+    </h1>
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active">Trang chủ</li>
+        </ol>
+    </nav>
 
     <div class="row">
         <div class="col-xl-3 col-md-6">
-            <div class="card bg-primary text-white mb-4">
+            <div class="stat-card users">
                 <div class="card-body">
-                    <h2>@ViewBag.TotalUsers</h2>
-                    <div>Tổng số người dùng</div>
+                    <div class="stat-value">@ViewBag.TotalUsers</div>
+                    <div class="stat-label">
+                        <i class="bi bi-people me-1"></i>
+                        Tổng số người dùng
+                    </div>
                 </div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" asp-area="QuanTriVien" asp-controller="User" asp-action="Index">Xem chi tiết</a>
-                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                <div class="card-footer">
+                    <a asp-area="QuanTriVien" asp-controller="User" asp-action="Index">
+                        Xem chi tiết
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
                 </div>
             </div>
         </div>
 
         <div class="col-xl-3 col-md-6">
-            <div class="card bg-success text-white mb-4">
+            <div class="stat-card roles">
                 <div class="card-body">
-                    <h2>@ViewBag.TotalRoles</h2>
-                    <div>Tổng số vai trò</div>
+                    <div class="stat-value">@ViewBag.TotalRoles</div>
+                    <div class="stat-label">
+                        <i class="bi bi-person-badge me-1"></i>
+                        Tổng số vai trò
+                    </div>
                 </div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" asp-area="QuanTriVien" asp-controller="Role" asp-action="Index">Xem chi tiết</a>
-                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                <div class="card-footer">
+                    <a asp-area="QuanTriVien" asp-controller="Role" asp-action="Index">
+                        Xem chi tiết
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
                 </div>
             </div>
         </div>
 
         <div class="col-xl-3 col-md-6">
-            <div class="card bg-info text-white mb-4">
+            <div class="stat-card products">
                 <div class="card-body">
-                    <h2>@ViewBag.TotalProducts</h2>
-                    <div>Tổng số sản phẩm</div>
+                    <div class="stat-value">@ViewBag.TotalProducts</div>
+                    <div class="stat-label">
+                        <i class="bi bi-box-seam me-1"></i>
+                        Tổng số sản phẩm
+                    </div>
                 </div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="#">Xem chi tiết</a>
-                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                <div class="card-footer">
+                    <a asp-area="QuanTriVien" asp-controller="SanPhams" asp-action="Index">
+                        Xem chi tiết
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
                 </div>
             </div>
         </div>
 
         <div class="col-xl-3 col-md-6">
-            <div class="card bg-danger text-white mb-4">
+            <div class="stat-card orders">
                 <div class="card-body">
-                    <h2>@ViewBag.TotalOrders</h2>
-                    <div>Tổng số đơn sửa chữa</div>
+                    <div class="stat-value">@ViewBag.TotalOrders</div>
+                    <div class="stat-label">
+                        <i class="bi bi-clipboard-check me-1"></i>
+                        Tổng số đơn sửa chữa
+                    </div>
                 </div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="#">Xem chi tiết</a>
-                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                <div class="card-footer">
+                    <a asp-area="QuanTriVien" asp-controller="AssignTasks" asp-action="Index">
+                        Xem chi tiết
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card mb-4">
-        <div class="card-header">
-            <i class="fas fa-table mr-1"></i>
+    <div class="orders-card">
+        <div class="card-header-custom">
+            <i class="bi bi-table"></i>
             Đơn sửa chữa mới nhất
         </div>
-        <div class="card-body">
+        <div class="table-container">
             <div class="table-responsive">
-                <table class="table table-bordered" width="100%" cellspacing="0">
+                <table class="dashboard-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Mã</th>
                             <th>Khách hàng</th>
                             <th>Ngày gửi</th>
                             <th>Trạng thái</th>
@@ -92,23 +333,38 @@
                                     @switch (order.TrangThai)
                                     {
                                         case "ChoXuLy":
-                                            <span class="badge badge-warning">Chờ xử lý</span>
+                                            <span class="badge badge-warning">
+                                                <i class="bi bi-hourglass-split me-1"></i>
+                                                Chờ xử lý
+                                            </span>
                                             break;
                                         case "DangXuLy":
-                                            <span class="badge badge-info">Đang xử lý</span>
+                                            <span class="badge badge-info">
+                                                <i class="bi bi-gear-wide-connected me-1"></i>
+                                                Đang xử lý
+                                            </span>
                                             break;
                                         case "HoanThanh":
-                                            <span class="badge badge-success">Hoàn thành</span>
+                                            <span class="badge badge-success">
+                                                <i class="bi bi-check2-circle me-1"></i>
+                                                Hoàn thành
+                                            </span>
                                             break;
                                         case "DaHuy":
-                                            <span class="badge badge-danger">Đã hủy</span>
+                                            <span class="badge badge-danger">
+                                                <i class="bi bi-x-circle me-1"></i>
+                                                Đã hủy
+                                            </span>
                                             break;
                                         default:
-                                            <span class="badge badge-secondary">@order.TrangThai</span>
+                                            <span class="badge badge-secondary">
+                                                <i class="bi bi-question-circle me-1"></i>
+                                                @order.TrangThai
+                                            </span>
                                             break;
                                     }
                                 </td>
-                                <td>@(order.TongTien?.ToString("N0") ?? "0") đ</td>
+                                <td class="amount">@(order.TongTien?.ToString("N0") ?? "0") đ</td>
                             </tr>
                         }
                     </tbody>
@@ -117,3 +373,24 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        // Add subtle hover animations to the stat cards
+        $('.stat-card').hover(
+            function() {
+                $(this).find('.bi').addClass('animate__animated animate__heartBeat');
+            },
+            function() {
+                $(this).find('.bi').removeClass('animate__animated animate__heartBeat');
+            }
+        );
+        
+        // Add a slight delay for better UX when hovering over table rows
+        $('.dashboard-table tr').hover(
+            function() {
+                $(this).css('transition', 'background-color 0.2s ease');
+            }
+        );
+    });
+</script>

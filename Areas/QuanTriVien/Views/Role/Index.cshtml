@@ -116,7 +116,7 @@
     }
 </style>
 
-<h1 class="page-title"><i class="bi bi-shield-check me-2"></i>Quản lý Roles</h1>
+<h1 class="page-title"><i class="bi bi-shield-check me-2"></i>Quản lý quyền hạn</h1>
 
 @if (TempData["SuccessMessage"] != null)
 {
@@ -138,10 +138,10 @@
             <i class="bi bi-arrow-left me-1"></i> Quay lại
         </a>
         <a asp-area="QuanTriVien" asp-controller="Role" asp-action="Create" class="btn btn-primary btn-primary-custom h-100 d-flex align-items-center">
-            <i class="bi bi-plus-circle me-2"></i> Thêm role mới
+            <i class="bi bi-plus-circle me-2"></i> Thêm quyền hạn mới
         </a>
         <a asp-area="QuanTriVien" asp-controller="Role" asp-action="AssignRoles" class="btn btn-success btn-success-custom h-100 d-flex align-items-center">
-            <i class="bi bi-person-check me-2"></i> Phân quyền
+            <i class="bi bi-person-check me-2"></i> Phân quyền hạn
         </a>
     </div>
 
@@ -150,8 +150,8 @@
         <table class="custom-table">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Tên Role</th>
+                    <th>Mã quyền hạn</th>
+                    <th>Tên quyền hạn</th>
                     <th>Tùy chọn</th>
                 </tr>
             </thead>

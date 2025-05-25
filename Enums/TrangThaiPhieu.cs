@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
 namespace QuanLySuaChua_BaoHanh.Enums
 {
@@ -49,4 +50,25 @@ namespace QuanLySuaChua_BaoHanh.Enums
         [Display(Name = "Đã hủy")]
         DaHuy
     }
+
+    public static class TrangThaiPhieuExtension
+    {
+        public static string GetDisplayName(this TrangThaiPhieu trangThai)
+        {
+            var field = trangThai.GetType().GetField(trangThai.ToString());
+            var attribute = field?.GetCustomAttribute<DisplayAttribute>();
+            return attribute?.Name ?? trangThai.ToString();
+        }
+    }
+
+
+    //cách dùng: thay thế  "<td>@Html.DisplayFor(modelItem => item.TrangThai)</td>" trong file cshtml bằng code dưới
+
+    //              <td>
+    //                  @{
+    //                      var trangThaiEnum = Enum.TryParse<QuanLySuaChua_BaoHanh.Enums.TrangThaiPhieu>(item.TrangThai, out var t) ? t : default;
+    //                   }
+    //                  @trangThaiEnum.GetDisplayName()
+    //              </td >
+
 }

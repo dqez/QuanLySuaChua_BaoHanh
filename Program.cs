@@ -3,7 +3,16 @@ using Microsoft.EntityFrameworkCore;
 using QuanLySuaChua_BaoHanh.Models;
 using QuanLySuaChua_BaoHanh.Services;
 using QuanLySuaChua_BaoHanh.Areas.KhachHang.Services;
+using DinkToPdf;
+using DinkToPdf.Contracts;
+using System.IO;
+using QuanLySuaChua_BaoHanh.Services;
 using QuanLySuaChua_BaoHanh.Areas.KhachHang.Models;
+
+
+var contextPdfAssemblyLoadContext = new CustomAssemblyLoadContext();
+var wkhtmltoxPath = Path.Combine(Directory.GetCurrentDirectory(), "NativeLibrary", "libwkhtmltox.dll");
+contextPdfAssemblyLoadContext.LoadUnmanagedLibrary(wkhtmltoxPath);
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +41,8 @@ builder.Services.ConfigureApplicationCookie(options => {
     options.AccessDeniedPath = "/Account/AccessDenied";
     options.ExpireTimeSpan = TimeSpan.FromDays(1);
     options.SlidingExpiration = true;
+    options.Cookie.MaxAge = TimeSpan.FromDays(1);
+    options.Cookie.IsEssential = true; 
 });
 
 //dang ky IDGenerator
@@ -39,6 +50,10 @@ builder.Services.AddScoped<IDGenerator>();
 
 // Đăng ký service PhieuSuaChua
 builder.Services.AddScoped<IPhieuSuaChuaService, PhieuSuaChuaService>();
+
+// Đăng ký service Export
+builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+builder.Services.AddScoped<IExportService, ExportService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

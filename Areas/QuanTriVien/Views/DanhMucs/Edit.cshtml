@@ -29,7 +29,11 @@
                 
                 <div class="form-group mb-4">
                     <label asp-for="PhanLoai" class="form-label fw-bold">Phân Loại</label>
-                    <input asp-for="PhanLoai" class="form-control" />
+                    <select asp-for="PhanLoai" class="form-control">
+                        <option value="SanPham" selected="@(Model.PhanLoai == "SanPham")">Sản phẩm</option>
+                        <option value="LinhKien" selected="@(Model.PhanLoai == "LinhKien")">Linh kiện</option>
+                    </select>
+                    @* <input asp-for="PhanLoai" class="form-control" /> *@
                     <span asp-validation-for="PhanLoai" class="text-danger"></span>
                 </div>
                 

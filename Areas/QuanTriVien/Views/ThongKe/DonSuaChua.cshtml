@@ -1,0 +1,276 @@
+@using Newtonsoft.Json
+@model QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models.DonSuaChuaViewModel
+@{
+    ViewData["Title"] = "Báo cáo đơn sửa chữa";
+    Layout = "~/Areas/QuanTriVien/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">Báo cáo đơn sửa chữa</h2>
+        <a href="@Url.Action("Index", "ThongKe")" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left mr-2"></i>Quay lại tổng quan
+        </a>
+    </div>
+
+    <!-- Bộ lọc thời gian -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <form asp-action="DonSuaChua" method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Từ ngày:</label>
+                    <input type="date" name="tuNgay" class="form-control" value="@Model.TuNgay.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Đến ngày:</label>
+                    <input type="date" name="denNgay" class="form-control" value="@Model.DenNgay.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary">Áp dụng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Thông tin tổng quan -->
+    <div class="row mb-4">
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Tổng số đơn sửa chữa
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TongSoDon</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Thời gian xử lý trung bình
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Math.Round(Model.ThoiGianXuLyTrungBinh, 1) ngày</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clock fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Biểu đồ trạng thái đơn hàng -->
+        <div class="col-lg-5">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Thống kê theo trạng thái</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-pie pt-4">
+                        <canvas id="orderStatusChart"></canvas>
+                    </div>
+                    <div class="mt-4">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Trạng thái</th>
+                                        <th>Số lượng</th>
+                                        <th>Tỉ lệ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.ThongKeTrangThai)
+                                    {
+                                        var percent = Model.TongSoDon > 0 ? (item.SoLuong * 100.0 / Model.TongSoDon) : 0;
+                                        <tr>
+                                            <td>
+                                                @{
+                                                    TrangThaiPhieu trangThaiEnum;
+                                                    if (Enum.TryParse(item.TrangThai, out trangThaiEnum))
+                                                    {
+                                                        @trangThaiEnum.GetDisplayName()
+                                                    }
+                                                    else
+                                                    {
+                                                        @item.TrangThai <!-- fallback nếu không parse được -->
+                                                    }
+                                                }
+                                            </td>
+
+                                            <td>@item.SoLuong</td>
+                                            <td>@Math.Round(percent, 1)%</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Biểu đồ đơn hàng theo ngày -->
+        <div class="col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Số lượng đơn theo ngày</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="ordersByDayChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bảng chi tiết đơn theo ngày -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Chi tiết đơn hàng theo ngày</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Ngày</th>
+                            <th>Số lượng đơn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.DonTheoNgay.OrderByDescending(x => x.Ngay))
+                        {
+                            <tr>
+                                <td>@item.Ngay.ToString("dd/MM/yyyy")</td>
+                                <td>@item.SoLuongDon</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    var statusDataWithDisplayName = Model.ThongKeTrangThai.Select(item =>
+    {
+        if (Enum.TryParse<TrangThaiPhieu>(item.TrangThai, out var enumValue))
+        {
+            return new
+            {
+                DisplayName = enumValue.GetDisplayName(),
+                item.SoLuong
+            };
+        }
+        else
+        {
+            return new
+            {
+                DisplayName = item.TrangThai,
+                item.SoLuong
+            };
+        }
+    }).ToList();
+}
+
+@section Scripts {
+    <!-- ChartJS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Biểu đồ trạng thái đơn hàng
+        // var statusData = @Html.Raw(Json.Serialize(Model.ThongKeTrangThai.Select(x => new { x.TrangThai, x.SoLuong })));
+        var statusData = @Html.Raw(JsonConvert.SerializeObject(statusDataWithDisplayName));
+        var statusLabels = statusData.map(item => item.DisplayName);
+        var statusValues = statusData.map(item => item.SoLuong);
+
+
+        var backgroundColors = [
+            '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#5a5c69',
+            '#6610f2', '#fd7e14', '#20c997', '#6f42c1'
+        ];
+
+        var statusChart = new Chart(document.getElementById("orderStatusChart"), {
+            type: 'doughnut',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    data: statusValues,
+                    backgroundColor: backgroundColors.slice(0, statusLabels.length),
+                    hoverBackgroundColor: backgroundColors.slice(0, statusLabels.length),
+                    hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            boxWidth: 12
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let value = context.raw;
+                                let label = context.label || '';
+                                let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                let percentage = Math.round((value / total * 100) * 10) / 10;
+
+                                return label + ': ' + value + ' đơn (' + percentage + '%)';
+                            }
+                        }
+                    }
+                },
+                cutout: '70%'
+            },
+        });
+
+        // Biểu đồ đơn hàng theo ngày
+        var ordersByDayData = @Html.Raw(JsonConvert.SerializeObject(Model.DonTheoNgay.OrderBy(x => x.Ngay).Select(x => new { Day = x.Ngay.Day, Month = x.Ngay.Month, x.SoLuongDon })));
+        var dayLabels = ordersByDayData.map(item => item.Day + '/' + item.Month);
+        var dayValues = ordersByDayData.map(item => item.SoLuongDon);
+
+        var ordersByDayChart = new Chart(document.getElementById("ordersByDayChart"), {
+            type: 'bar',
+            data: {
+                labels: dayLabels,
+                datasets: [{
+                    label: "Số đơn",
+                    backgroundColor: "#4e73df",
+                    hoverBackgroundColor: "#2e59d9",
+                    borderColor: "#4e73df",
+                    data: dayValues,
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}

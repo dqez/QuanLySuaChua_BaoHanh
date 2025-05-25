@@ -23,7 +23,12 @@
                 
                 <div class="form-group mb-4">
                     <label asp-for="PhanLoai" class="form-label fw-bold">Phân Loại</label>
-                    <input asp-for="PhanLoai" class="form-control" placeholder="Nhập phân loại" />
+                    <select asp-for="PhanLoai" class="form-control">
+                        <option value="">-- Chọn phân loại --</option>
+                        <option value="SanPham">Sản phẩm</option>
+                        <option value="LinhKien">Linh kiện</option>
+                    </select>
+                    @* <input asp-for="PhanLoai" class="form-control" placeholder="Nhập phân loại" /> *@
                     <span asp-validation-for="PhanLoai" class="text-danger"></span>
                 </div>
                 
