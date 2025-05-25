@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "Báo cáo doanh thu";
+    Layout = "~/Areas/TuVanVien/Views/Shared/_LayoutTuVanVien.cshtml";
+
+    DateTime tuNgay = ViewBag.TuNgay as DateTime? ?? DateTime.Now.AddDays(-30);
+    DateTime denNgay = ViewBag.DenNgay as DateTime? ?? DateTime.Now;
+
+    int tongSoDon = ViewBag.TongSoDon ?? 0;
+    double thoiGianTB = ViewBag.ThoiGianTrungBinh ?? 0;
+    decimal tongDoanhThu = ViewBag.TongDoanhThu ?? 0;
+
+    IEnumerable<dynamic> thongKeTrangThai = ViewBag.ThongKeTrangThai as IEnumerable<dynamic> ?? Enumerable.Empty<dynamic>();
+    IEnumerable<dynamic> donTheoNgay = ViewBag.DonTheoNgay as IEnumerable<dynamic> ?? Enumerable.Empty<dynamic>();
+}
+
+
+<div class="container-fluid p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+        <h2 class="text-primary">
+            <i class="bi bi-graph-up-arrow me-2"></i>Báo cáo doanh thu
+        </h2>
+        <a href="@Url.Action("Index", "ThongKe")" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left me-2"></i>Quay lại tổng quan
+        </a>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form asp-action="DoanhThu" method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Từ ngày:</label>
+                    <input type="date" name="tuNgay" class="form-control" value="@tuNgay.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Đến ngày:</label>
+                    <input type="date" name="denNgay" class="form-control" value="@denNgay.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-filter me-1"></i> Áp dụng
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card shadow-sm border-left-success h-100 py-2">
+                <div class="card-body">
+                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                        Tổng doanh thu
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        @String.Format("{0:N0} VNĐ", tongDoanhThu)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card shadow-sm border-left-info h-100 py-2">
+                <div class="card-body">
+                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                        Số đơn hoàn thành
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.SoDonHoanThanh đơn</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-info">Thêm biểu đồ và bảng chi tiết doanh thu từ ViewBag nếu cần.</div>
+</div>
