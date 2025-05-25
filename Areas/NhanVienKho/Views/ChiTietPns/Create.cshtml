@@ -1,0 +1,50 @@
+﻿@model QuanLySuaChua_BaoHanh.Models.ChiTietPn
+@{
+    var chiTietList = ViewBag.ChiTietList as List<QuanLySuaChua_BaoHanh.Models.ChiTietPn>;
+    var tongTien = ViewBag.TongTien ?? 0;
+}
+<h2>Thêm chi tiết phiếu nhập</h2>
+<form asp-action="Create" method="post">
+    <input type="hidden" asp-for="PhieuNhapId" value="@ViewBag.PhieuNhapId" />
+    <div class="mb-3">
+        <label>Linh kiện</label>
+        <select asp-for="LinhKienId" asp-items="ViewBag.LinhKienId" class="form-control"></select>
+    </div>
+    <div class="mb-3">
+        <label>Số lượng</label>
+        <input asp-for="SoLuong" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-success">Thêm chi tiết</button>
+</form>
+
+<h3 class="mt-4">Danh sách chi tiết đã nhập</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Linh kiện</th>
+            <th>Số lượng</th>
+            <th>Đơn giá</th>
+            <th>Thành tiền</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (chiTietList != null)
+        {
+            foreach (var ct in chiTietList)
+            {
+                <tr>
+                    <td>@ct.LinhKien?.TenLinhKien</td>
+                    <td>@ct.SoLuong</td>
+                    <td>@ct.LinhKien?.DonGia.ToString("N0")</td>
+                    <td>@((ct.SoLuong * (ct.LinhKien?.DonGia ?? 0)).ToString("N0"))</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<div class="fw-bold">Tổng tiền: @tongTien.ToString("N0")</div>
+<form asp-controller="PhieuNhaps" asp-action="SaveAfterChiTiet" method="post">
+    <input type="hidden" name="phieuNhapId" value="@ViewBag.PhieuNhapId" />
+    <input type="hidden" name="tongTien" value="@tongTien" />
+    <button type="submit" class="btn btn-primary mt-3">Lưu phiếu nhập</button>
+</form>

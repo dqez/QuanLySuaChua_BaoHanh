@@ -44,46 +44,67 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
                 phieuNhapQuery.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
-        // GET: NhanVienKho/PhieuNhaps/Details/5
-        public async Task<IActionResult> Details(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //// GET: NhanVienKho/PhieuNhaps/Details/5
+        //public async Task<IActionResult> Details(string id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var phieuNhap = await _context.PhieuNhaps
-                .Include(p => p.Kho)
-                .FirstOrDefaultAsync(m => m.PhieuNhapId == id);
-            if (phieuNhap == null)
-            {
-                return NotFound();
-            }
+        //    var phieuNhap = await _context.PhieuNhaps
+        //        .Include(p => p.Kho)
+        //        .FirstOrDefaultAsync(m => m.PhieuNhapId == id);
+        //    if (phieuNhap == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(phieuNhap);
-        }
+        //    return View(phieuNhap);
+        //}
 
         // GET: NhanVienKho/PhieuNhaps/Create
         public IActionResult Create()
         {
-            ViewData["KhoId"] = new SelectList(_context.NguoiDungs, "Id", "Id");
-            return View();
+            // Lấy UserName (tên tài khoản) của user hiện tại
+            var userName = User.Identity?.Name;
+            // Tìm user theo UserName (cột TaiKhoan trong DB)
+            var nguoiDung = _context.NguoiDungs.FirstOrDefault(x => x.UserName == userName);
+
+            if (nguoiDung == null)
+            {
+                ModelState.AddModelError("", "Không tìm thấy mã kho hợp lệ cho tài khoản này.");
+                return View();
+            }
+
+            var model = new PhieuNhap
+            {
+                KhoId = nguoiDung.Id,
+                NgayNhap = DateTime.Now,
+            };
+            return View(model);
         }
 
         // POST: NhanVienKho/PhieuNhaps/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PhieuNhapId,KhoId,NgayNhap,TongTien,TrangThai,GhiChu")] PhieuNhap phieuNhap)
         {
+            //var tongTien = _context.ChiTietPns.Where(ct => ct.PhieuNhapId == phieuNhap.PhieuNhapId)
+            //    .Sum(ct => ct.SoLuong*ct.LinhKien.DonGia);
+
+            phieuNhap.PhieuNhapId = await _idGenerator.GeneratePhieuNhapIdAsync();
+            phieuNhap.NgayNhap = DateTime.Now;
+            phieuNhap.TongTien = 0;
+
             if (ModelState.IsValid)
-            {
+            {                
                 _context.Add(phieuNhap);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["KhoId"] = new SelectList(_context.NguoiDungs, "Id", "Id", phieuNhap.KhoId);
+
+            //ViewData["KhoId"] = new SelectList(_context.NguoiDungs, "Id", "UserName", phieuNhap.KhoId);
             return View(phieuNhap);
         }
 

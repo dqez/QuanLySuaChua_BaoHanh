@@ -61,7 +61,7 @@
                                         </span>
                                     </td>
                                     <td>@item.GhiChu</td>
-                                    <td>@item.Kho?.Id</td>
+                                    <td>@item.KhoId</td>
                                     <td class="text-center">
                                         <a href="/NhanVienKho/PhieuNhaps/Edit/@item.PhieuNhapId" class="btn btn-primary btn-sm me-1">
                                             <i class="bi bi-pencil"></i> Sửa
@@ -82,7 +82,14 @@
             @if (Model.HasPreviousPage)
             {
                 <li class="page-item">
-                    <a class="page-link" href="/NhanVienKho/PhieuNhaps/Index" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">« Trước</a>
+                    <a class="page-link"
+                       asp-area="NhanVienKho"
+                       asp-controller="PhieuNhaps"
+                       asp-action="Index"
+                       asp-route-pageNumber="@(Model.PageIndex - 1)"
+                       asp-route-currentFilter="@(ViewData["CurrentFilter"])">
+                        « Trước
+                    </a>
                 </li>
             }
             else
@@ -99,7 +106,14 @@
             @if (Model.HasNextPage)
             {
                 <li class="page-item">
-                    <a class="page-link" href="/NhanVienKho/PhieuNhaps/Index" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">Tiếp »</a>
+                    <a class="page-link"
+                       asp-area="NhanVienKho"
+                       asp-controller="PhieuNhaps"
+                       asp-action="Index"
+                       asp-route-pageNumber="@(Model.PageIndex + 1)"
+                       asp-route-currentFilter="@(ViewData["CurrentFilter"])">
+                        « Tiếp
+                    </a>
                 </li>
             }
             else

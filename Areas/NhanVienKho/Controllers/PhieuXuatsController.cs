@@ -45,45 +45,63 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         }
 
         // GET: NhanVienKho/PhieuXuats/Details/5
-        public async Task<IActionResult> Details(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Details(string id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var phieuXuat = await _context.PhieuXuats
-                .Include(p => p.Kho)
-                .FirstOrDefaultAsync(m => m.PhieuXuatId == id);
-            if (phieuXuat == null)
-            {
-                return NotFound();
-            }
+        //    var phieuXuat = await _context.PhieuXuats
+        //        .Include(p => p.Kho)
+        //        .FirstOrDefaultAsync(m => m.PhieuXuatId == id);
+        //    if (phieuXuat == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(phieuXuat);
-        }
+        //    return View(phieuXuat);
+        //}
 
         // GET: NhanVienKho/PhieuXuats/Create
         public IActionResult Create()
         {
-            ViewData["KhoId"] = new SelectList(_context.NguoiDungs, "Id", "Id");
-            return View();
+            // Lấy UserName (tên tài khoản) của user hiện tại
+            var userName = User.Identity?.Name;
+            // Tìm user theo UserName (cột TaiKhoan trong DB)
+            var nguoiDung = _context.NguoiDungs.FirstOrDefault(x => x.UserName == userName);
+
+            if (nguoiDung == null)
+            {
+                ModelState.AddModelError("", "Không tìm thấy mã kho hợp lệ cho tài khoản này.");
+                return View();
+            }
+
+            var model = new PhieuXuat
+            {
+                KhoId = nguoiDung.Id,
+                NgayXuat = DateTime.Now,
+            };
+            return View(model);
         }
 
         // POST: NhanVienKho/PhieuXuats/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PhieuXuatId,KhoId,NgayXuat,TongTien,TrangThai,GhiChu")] PhieuXuat phieuXuat)
         {
+            phieuXuat.PhieuXuatId = await _idGenerator.GeneratePhieuXuatIdAsync();
+            phieuXuat.NgayXuat = DateTime.Now;
+            phieuXuat.TongTien = 0;
+
             if (ModelState.IsValid)
             {
                 _context.Add(phieuXuat);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                RedirectToAction("Create", "ChiTietPxs", new { area = "NhanVienKho", phieuXuatId = phieuXuat.PhieuXuatId });
             }
-            ViewData["KhoId"] = new SelectList(_context.NguoiDungs, "Id", "Id", phieuXuat.KhoId);
+
+            //ViewData["KhoId"] = new SelectList(_context.NguoiDungs, "Id", "UserName", phieuNhap.KhoId);
             return View(phieuXuat);
         }
 

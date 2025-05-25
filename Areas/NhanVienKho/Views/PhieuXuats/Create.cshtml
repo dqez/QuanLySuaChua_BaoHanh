@@ -15,16 +15,15 @@
                     </h4>
                 </div>
                 <div class="card-body">
-                    <form asp-area="NhanVienKho" asp-controller="PhieuXuats" asp-action="Create" autocomplete="off">
+                    <form method="post" asp-controller="PhieuXuats" asp-action="Create">
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
                         <div class="mb-3">
                             <label asp-for="KhoId" class="form-label">Mã kho</label>
-                            <select asp-for="KhoId" class="form-select" asp-items="ViewBag.KhoId"></select>
+                            <select asp-for="KhoId" class="form-select" asp-items="ViewBag.KhoId">
+                                <option value="">-- Chọn kho --</option>
+                            </select>
                         </div>
-                        <div class="mb-3">
-                            <label asp-for="NgayXuat" class="form-label">Ngày xuất</label>
-                            <input asp-for="NgayXuat" class="form-control" type="date" />
-                            <span asp-validation-for="NgayXuat" class="text-danger"></span>
-                        </div>
+                        <input hidden name="PhieuXuatId" value="temp" />
                         <div class="mb-3">
                             <label asp-for="TongTien" class="form-label">Tổng tiền</label>
                             <input asp-for="TongTien" class="form-control" />
