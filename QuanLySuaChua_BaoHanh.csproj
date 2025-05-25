@@ -1,25 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.15" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.15" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.15">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.15" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.15">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="ArIpO.HtmlToPdf" Version="1.0.0" />
+		<PackageReference Include="DinkToPdf" Version="1.0.8" />
+		<PackageReference Include="EPPlus" Version="6.2.8" />
+		<PackageReference Include="HtmlRenderer.PdfSharp" Version="1.5.0.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.15" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.15" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.15">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.15" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.15">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+	</ItemGroup>
 
   <ItemGroup>
     <Folder Include="Areas\KhachHang\Services\" />
@@ -30,5 +34,10 @@
     <Folder Include="Areas\NhanVienKho\Models\" />
     <Folder Include="Areas\KhachHang\Models\" />
   </ItemGroup>
+	<ItemGroup>
+		<None Update="NativeLibrary\libwkhtmltox.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>

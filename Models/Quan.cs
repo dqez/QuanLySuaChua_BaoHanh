@@ -16,10 +16,12 @@ public partial class Quan
     [Display(Name = "Mã quận")]
     public string QuanId { get; set; }
 
+    [Required(ErrorMessage = "Tên quận là bắt buộc")]
     [StringLength(100)]
     [Display(Name = "Tên quận")]
     public string TenQuan { get; set; } = null!;
 
+    [Required(ErrorMessage = "Thành phố là bắt buộc")]
     [Column("ThanhPhoID")]
     [StringLength(20)]
     [Unicode(false)]

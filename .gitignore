@@ -9,6 +9,9 @@ obj/
 *.dll
 *.exe
 
+# Exception for specific DLL
+!NativeLibrary/libwkhtmltox.dll
+
 # Bỏ qua thư mục của Visual Studio
 .vscode/
 *.suo

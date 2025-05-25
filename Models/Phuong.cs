@@ -16,10 +16,12 @@ public partial class Phuong
     [Display(Name = "Mã phường")]
     public string PhuongId { get; set; }
 
+    [Required(ErrorMessage = "Tên phường là bắt buộc")]
     [StringLength(100)]
     [Display(Name = "Tên phường")]
     public string TenPhuong { get; set; } = null!;
 
+    [Required(ErrorMessage = "Quận là bắt buộc")]
     [Column("QuanID")]
     [StringLength(20)]
     [Unicode(false)]

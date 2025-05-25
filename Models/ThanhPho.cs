@@ -16,6 +16,7 @@ public partial class ThanhPho
     [Display(Name = "Mã thành phố")]
     public string ThanhPhoId { get; set; }
 
+    [Required(ErrorMessage = "Chưa nhập tên thành phố")]
     [StringLength(100)]
     [Display(Name = "Tên thành phố")]
     public string TenThanhPho { get; set; } = null!;

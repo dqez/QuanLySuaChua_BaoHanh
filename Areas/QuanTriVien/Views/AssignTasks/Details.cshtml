@@ -100,13 +100,21 @@
                 <div class="info-row row">
                     <dt class="col-sm-4">@Html.DisplayNameFor(model => model.TrangThai)</dt>
                     <dd class="col-sm-8">
-                        @if (Model.TrangThai == "DaPhanCong")
+                        @if (Model.TrangThai == TrangThaiPhieu.DaPhanCong.ToString())
                         {
-                            <span class="badge bg-success">@Html.DisplayFor(model => model.TrangThai)</span>
+                            <span class="badge bg-success">
+                                    @{
+                                        var trangThaiEnum = Enum.TryParse<QuanLySuaChua_BaoHanh.Enums.TrangThaiPhieu>(@Model.TrangThai, out var t) ? t : default;
+                                    }
+                                    @trangThaiEnum.GetDisplayName()
+                            </span>
                         }
                         else
                         {
-                            <span class="badge bg-warning">@Html.DisplayFor(model => model.TrangThai)</span>
+                            <span class="badge bg-warning"> @{
+                                                                var trangThaiEnum = Enum.TryParse<QuanLySuaChua_BaoHanh.Enums.TrangThaiPhieu>(@Model.TrangThai, out var t) ? t : default;
+                                                            }
+                                @trangThaiEnum.GetDisplayName()</span>
                         }
                     </dd>
                 </div>
@@ -161,11 +169,11 @@
             <dl>
                 <div class="info-row row">
                     <dt class="col-sm-4">@Html.DisplayNameFor(model => model.KhachHang)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(model => model.KhachHang.Id)</dd>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.KhachHang.Id) - @Html.DisplayFor(model => model.KhachHang.HoTen)</dd>
                 </div>
                 <div class="info-row row">
                     <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Phuong)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(model => model.Phuong.PhuongId)</dd>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.Phuong.TenPhuong) - @Html.DisplayFor(model => model.Phuong.TenPhuong)</dd>
                 </div>
             </dl>
         </div>
@@ -180,7 +188,7 @@
                         }
                         else
                         {
-                            @Html.DisplayFor(model => model.KyThuat.Id)
+                            <span>@Html.DisplayFor(model => model.KyThuat.Id) - @Html.DisplayFor(model => model.KyThuat.HoTen)</span>
                         }
                     </dd>
                 </div>

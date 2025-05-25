@@ -23,7 +23,8 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         // GET: QuanTriVien/AssignTasks
         public async Task<IActionResult> Index()
         {
-            var bHSC_DbContext = _context.PhieuSuaChuas.Include(p => p.KhachHang).Include(p => p.KyThuat).Include(p => p.Phuong);
+            var trangThaiFilter = new[] { TrangThaiPhieu.DaXacNhan.ToString(), TrangThaiPhieu.DaPhanCong.ToString() };
+            var bHSC_DbContext = _context.PhieuSuaChuas.Include(p => p.KhachHang).Include(p => p.KyThuat).Include(p => p.Phuong).Where(tt => trangThaiFilter.Contains(tt.TrangThai));
             return View(await bHSC_DbContext.ToListAsync());
         }
 
@@ -106,15 +107,24 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
                 .Where(u => u.VaiTro == "KyThuatVien" && !assignedIds.Contains(u.Id))
                 .ToListAsync();
 
+
+            ViewBag.KyThuatId = _context.NguoiDungs
+                .Where(u => u.VaiTro == "KyThuatVien")
+                .Select(ktv => new SelectListItem
+                {
+                    Value = ktv.Id,
+                    Text = ktv.Id + " - " + ktv.HoTen,
+
+                }
+                )
+                .ToList();
             ViewData["KhachHangId"] = new SelectList(_context.NguoiDungs.Where(u => u.VaiTro == "KhachHang"), "Id", "Id", phieuSuaChua.KhachHangId);
-            ViewData["KyThuatId"] = new SelectList(_context.NguoiDungs.Where(u => u.VaiTro == "KyThuatVien"), "Id", "Id", phieuSuaChua.KyThuatId);
+            //ViewData["KyThuatId"] = new SelectList(_context.NguoiDungs.Where(u => u.VaiTro == "KyThuatVien"), "Id", "Id", phieuSuaChua.KyThuatId);
             ViewData["PhuongId"] = new SelectList(_context.Phuongs, "PhuongId", "PhuongId", phieuSuaChua.PhuongId);
             return View(phieuSuaChua);
         }
 
         // POST: QuanTriVien/AssignTasks/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("PhieuSuaChuaId,KyThuatId,TrangThai")] PhieuSuaChua phieuSuaChua)
@@ -143,9 +153,15 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
 
                     if (!string.IsNullOrEmpty(phieuSuaChua.KyThuatId))
                     {
-                        existingPhieuSuaChua.TrangThai = TrangThaiPhieu.DaPhanCong;
+                        existingPhieuSuaChua.TrangThai = TrangThaiPhieu.DaPhanCong.ToString();
+                    }
+                    else
+                    {
+                        existingPhieuSuaChua.TrangThai = TrangThaiPhieu.DaXacNhan.ToString();
                     }
 
+                    // Đã dùng existingPhieuSuaChua thì không cần update() nữa. theo dõi 1 thực thể at a time
+                    //_context.Update(phieuSuaChua);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -161,23 +177,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-
-            var assignedIds = await _context.PhieuSuaChuas
-                .Where(p => p.KyThuatId != null && p.PhieuSuaChuaId != id)
-                .Select(p => p.KyThuatId)
-                .ToListAsync();
-
-            ViewBag.AssignedTechnicians = await _context.NguoiDungs
-                .Where(u => assignedIds.Contains(u.Id))
-                .ToListAsync();
-
-            ViewBag.UnassignedTechnicians = await _context.NguoiDungs
-                .Where(u => u.VaiTro == "KyThuatVien" && !assignedIds.Contains(u.Id))
-                .ToListAsync();
-
-            ViewData["KhachHangId"] = new SelectList(_context.NguoiDungs.Where(u => u.VaiTro == "KhachHang"), "Id", "Id", phieuSuaChua.KhachHangId);
-            ViewData["KyThuatId"] = new SelectList(_context.NguoiDungs.Where(u => u.VaiTro == "KyThuatVien"), "Id", "Id", phieuSuaChua.KyThuatId);
-            ViewData["PhuongId"] = new SelectList(_context.Phuongs, "PhuongId", "PhuongId", phieuSuaChua.PhuongId);
+            ViewData["KyThuatId"] = new SelectList(_context.NguoiDungs, "Id", "Id", phieuSuaChua.KyThuatId);
             return View(phieuSuaChua);
         }
 

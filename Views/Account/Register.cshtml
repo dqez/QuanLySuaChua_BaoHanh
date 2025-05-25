@@ -76,7 +76,7 @@
         <h2 class="register-title">@ViewData["Title"]</h2>
         
         <form asp-controller="Account" asp-action="Register" method="post">
-            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+            @* <div asp-validation-summary="All" class="text-danger mb-3"></div> *@
 
             <div class="row">
                 <div class="col-md-6">
@@ -135,12 +135,39 @@
                 <span asp-validation-for="DiaChi" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="PhuongId" class="form-label"></label>
-                <select asp-for="PhuongId" asp-items="ViewBag.Phuongs" class="form-control">
-                    <option value="">-- Chọn phường --</option>
-                </select>
-                <span asp-validation-for="PhuongId" class="text-danger"></span>
+            @* <div class="mb-3"> *@
+            @*     <label asp-for="PhuongId" class="form-label"></label> *@
+            @*     <select asp-for="PhuongId" asp-items="ViewBag.Phuongs" class="form-control"> *@
+            @*         <option value="">-- Chọn phường --</option> *@
+            @*     </select> *@
+            @*     <span asp-validation-for="PhuongId" class="text-danger"></span> *@
+            @* </div> *@
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Tỉnh/Thành phố:</label>
+                        <select id="thanhPho" class="form-control" required>
+                            <option value="">- Chọn tỉnh/thành phố -</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Quận/Huyện:</label>
+                        <select id="quan" class="form-control" required>
+                            <option value="">- Chọn quận/huyện -</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Phường/Xã:</label>
+                        <select asp-for="PhuongId" id="phuong" class="form-control">
+                            <option value="">- Chọn phường/xã -</option>
+                        </select>
+                        <span asp-validation-for="PhuongId" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
 
             <button type="submit" class="btn btn-register">Đăng ký</button>
@@ -161,4 +188,45 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
     @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        $(function () {
+            $.get('/api/cities', function (cities) {
+                $('#thanhPho').append(cities.map(city =>
+                    `<option value="${city.id}">${city.name}</option>`
+                ));
+            });
+
+            $('#thanhPho').change(function () {
+                const cityId = $(this).val();
+                $('#quan').empty().append('<option value="">Chọn quận/huyện</option>');
+                $('#phuong').empty().append('<option value="">Chọn phường/xã</option>');
+                if (cityId) {
+                    $.get(`/api/districts/${cityId}`, function (districts) {
+                        $('#quan')
+                            .empty()
+                            .append('<option value="">Chọn quận/huyện</option>')
+                            .append(districts.map(d =>
+                                `<option value="${d.id}">${d.name}</option>`
+                            ));
+                    });
+                }
+            });
+
+            $('#quan').change(function () {
+                const districtId = $(this).val();
+                $('#phuong').empty().append('<option value="">Chọn phường/xã</option>');
+                if (districtId) {
+                    $.get(`/api/wards/${districtId}`, function (wards) {
+                        $('#phuong')
+                            .empty()
+                            .append('<option value="">Chọn phường/xã</option>')
+                            .append(wards.map(w =>
+                                `<option value="${w.id}">${w.name}</option>`
+                            ));
+                    });
+                }
+            });
+        });
+    </script>
 }

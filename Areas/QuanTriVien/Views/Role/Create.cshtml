@@ -1,6 +1,6 @@
 ﻿@model QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models.RoleViewModel
 @{
-    ViewData["Title"] = "Thêm role mới";
+    ViewData["Title"] = "Thêm quyền hạn mới";
     Layout = "_LayoutAdmin";
 }
 
@@ -77,7 +77,7 @@
     }
 </style>
 
-<h1 class="page-title"><i class="bi bi-plus-circle me-2"></i>Thêm Role mới</h1>
+<h1 class="page-title"><i class="bi bi-plus-circle me-2"></i>Thêm quyền hạn mới</h1>
 
 <div class="content-card">
     <div class="row">
@@ -86,8 +86,8 @@
             
             <form asp-action="Create">
                 <div class="form-group">
-                    <label asp-for="Name" class="control-label">Tên Role</label>
-                    <input asp-for="Name" class="form-control" placeholder="Nhập tên role..." />
+                    <label asp-for="Name" class="control-label">Tên quyền hạn</label>
+                    <input asp-for="Name" class="form-control" placeholder="Nhập tên quyền hạn..." />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
                 
