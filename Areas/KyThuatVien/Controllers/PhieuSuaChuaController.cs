@@ -350,5 +350,28 @@ namespace QuanLySuaChua_BaoHanh.Areas.KyThuatVien.Controllers
             TempData["Success"] = "Đơn sửa chữa đã hoàn thành.";
             return RedirectToAction(nameof(HoanThanh));
         }
+        // GET: KyThuatVien/PhieuSuaChua/Huy/5
+        public async Task<IActionResult> Huy(string id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account", new { area = "" });
+            }
+
+            var phieuSuaChua = await _context.PhieuSuaChuas.FirstOrDefaultAsync(p => p.PhieuSuaChuaId == id && p.KyThuatId == user.Id);
+            if (phieuSuaChua == null)
+            {
+                TempData["Error"] = "Không tìm thấy đơn sửa chữa";
+                return RedirectToAction(nameof(Index));
+            }
+            phieuSuaChua.TrangThai = TrangThaiPhieu.DaHuy.ToString();
+            _context.Update(phieuSuaChua);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Hủy thành công đơn sửa chữa ID "+phieuSuaChua.PhieuSuaChuaId;
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

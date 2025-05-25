@@ -58,7 +58,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.KhachHang.Services
                         ChiTietId = await _idGenerator.GenerateIdAsync_Date("CTSC"),
                         SanPhamId = sanPhamId,
                         PhieuSuaChuaId = phieuSuaChua.PhieuSuaChuaId,
-                        LoaiDon = sanPham.NgayHetHanBh > DateOnly.FromDateTime(DateTime.Now) ? "SuaChua" : "BaoHanh",
+                        LoaiDon = sanPham.NgayHetHanBh > DateOnly.FromDateTime(DateTime.Now) ? "BaoHanh" : "SuaChua",
                         SoLuongLinhKien = 0
                     };
 
