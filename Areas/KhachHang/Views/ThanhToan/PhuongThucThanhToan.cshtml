@@ -1,0 +1,121 @@
+﻿@{
+    ViewData["Title"] = "Chọn phương thức thanh toán";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Chọn phương thức thanh toán</h4>
+                </div>
+                <div class="card-body">
+                    <form action="/khach-hang/chon-phuong-thuc-thanh-toan" method="post">
+                        <input type="hidden" name="phieuSuaChuaId" value="@ViewBag.PhieuSuaChuaId" />
+
+                        <div class="payment-options">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="card payment-card mb-3">
+                                        <div class="card-body text-center payment-option" id="tienMatOption">
+                                            <input type="radio" name="phuongThuc" id="tienMat" value="TienMat" class="payment-radio" />
+                                            <label for="tienMat" class="d-block mt-2">
+                                                <i class="fas fa-money-bill-wave fa-3x mb-3 text-success"></i>
+                                                <h5>Tiền mặt</h5>
+                                                <p class="text-muted">Thanh toán bằng tiền mặt khi nhận hàng</p>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="card payment-card">
+                                        <div class="card-body text-center payment-option" id="chuyenKhoanOption">
+                                            <input type="radio" name="phuongThuc" id="vnpay" value="ChuyenKhoan" class="payment-radio" />
+                                            <label for="vnpay" class="d-block mt-2">
+                                                <i class="fas fa-credit-card fa-3x mb-3 text-primary"></i>
+                                                <h5>VNPay</h5>
+                                                <p class="text-muted">Thanh toán online qua VNPay</p>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg px-5">Xác nhận</button>
+                            <a href="/KhachHang/DonSuaChua" class="btn btn-outline-secondary btn-lg ms-2">Quay lại</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .payment-card {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid #e9ecef;
+        height: 100%;
+    }
+
+        .payment-card:hover {
+            border-color: #007bff;
+            transform: translateY(-5px);
+        }
+
+    .payment-option {
+        position: relative;
+    }
+
+    .payment-radio {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        transform: scale(1.5);
+    }
+
+    .selected {
+        border-color: #007bff;
+        background-color: #f8f9fa;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tienMatOption = document.getElementById('tienMatOption');
+        const chuyenKhoanOption = document.getElementById('chuyenKhoanOption');
+        const tienMatRadio = document.getElementById('tienMat');
+        const vnpayRadio = document.getElementById('vnpay');
+
+        // Add click event to the cards
+        tienMatOption.addEventListener('click', function() {
+            tienMatRadio.checked = true;
+            tienMatOption.closest('.payment-card').classList.add('selected');
+            chuyenKhoanOption.closest('.payment-card').classList.remove('selected');
+        });
+
+        chuyenKhoanOption.addEventListener('click', function() {
+            vnpayRadio.checked = true;
+            chuyenKhoanOption.closest('.payment-card').classList.add('selected');
+            tienMatOption.closest('.payment-card').classList.remove('selected');
+        });
+
+        // Also handle the radio buttons
+        tienMatRadio.addEventListener('change', function() {
+            if (this.checked) {
+                tienMatOption.closest('.payment-card').classList.add('selected');
+                chuyenKhoanOption.closest('.payment-card').classList.remove('selected');
+            }
+        });
+
+        vnpayRadio.addEventListener('change', function() {
+            if (this.checked) {
+                chuyenKhoanOption.closest('.payment-card').classList.add('selected');
+                tienMatOption.closest('.payment-card').classList.remove('selected');
+            }
+        });
+    });
+</script>

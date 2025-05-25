@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using QuanLySuaChua_BaoHanh.Models;
 using QuanLySuaChua_BaoHanh.Services;
 using QuanLySuaChua_BaoHanh.Areas.KhachHang.Services;
+using QuanLySuaChua_BaoHanh.Areas.KhachHang.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,8 @@ builder.Services.AddIdentity<NguoiDung,IdentityRole<string>>(options =>
     .AddEntityFrameworkStores<BHSC_DbContext>()
     .AddDefaultTokenProviders();
 
+// Cấu hình VnPay
+builder.Services.Configure<VnPayConfig>(builder.Configuration.GetSection("VnPay"));
 
 //cau hinh cookie
 builder.Services.ConfigureApplicationCookie(options => {

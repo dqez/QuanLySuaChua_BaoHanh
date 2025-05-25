@@ -28,7 +28,6 @@
     <Folder Include="Areas\TuVanVien\Models\" />
     <Folder Include="Areas\NhanVienKho\Controllers\" />
     <Folder Include="Areas\NhanVienKho\Models\" />
-    <Folder Include="Areas\KhachHang\Models\" />
   </ItemGroup>
 
 </Project>
