@@ -26,25 +26,25 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
             return View(await bHSC_DbContext.ToListAsync());
         }
 
-        // GET: NhanVienKho/ChiTietPxes/Details/5
-        public async Task<IActionResult> Details(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //// GET: NhanVienKho/ChiTietPxes/Details/5
+        //public async Task<IActionResult> Details(string id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var chiTietPx = await _context.ChiTietPxes
-                .Include(c => c.PhieuSuaChua)
-                .Include(c => c.PhieuXuat)
-                .FirstOrDefaultAsync(m => m.PhieuXuatId == id);
-            if (chiTietPx == null)
-            {
-                return NotFound();
-            }
+        //    var chiTietPx = await _context.ChiTietPxes
+        //        .Include(c => c.PhieuSuaChua)
+        //        .Include(c => c.PhieuXuat)
+        //        .FirstOrDefaultAsync(m => m.PhieuXuatId == id);
+        //    if (chiTietPx == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(chiTietPx);
-        }
+        //    return View(chiTietPx);
+        //}
 
         // GET: NhanVienKho/ChiTietPxes/Create
         public IActionResult Create()
