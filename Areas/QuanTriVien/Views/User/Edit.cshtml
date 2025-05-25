@@ -3,6 +3,11 @@
     ViewData["Title"] = "Sửa thông tin người dùng";
     Layout = "_LayoutAdmin";
 }
+@{
+    var thanhPhoId = ViewBag.SelectedThanhPhoId as string;
+    var quanId = ViewBag.SelectedQuanId as string;
+    var phuongId = ViewBag.SelectedPhuongId as string;
+}
 
 <style>
     /* Styles for User Create/Edit pages */
@@ -187,12 +192,32 @@
                             <span asp-validation-for="DiaChi" class="text-danger"></span>
                         </div>
 
-                        <div class="form-group">
-                            <label asp-for="PhuongId" class="form-label">Phường/Xã</label>
-                            <select asp-for="PhuongId" asp-items="ViewBag.PhuongId" class="form-control">
-                                <option value="">-- Chọn phường --</option>
-                            </select>
-                            <span asp-validation-for="PhuongId" class="text-danger"></span>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">Tỉnh/Thành phố:</label>
+                                    <select id="thanhPho" class="form-select" required>
+                                        <option value="">Chọn tỉnh/thành phố</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">Quận/Huyện:</label>
+                                    <select id="quan" class="form-select" required>
+                                        <option value="">Chọn quận/huyện</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">Phường/Xã:</label>
+                                    <select asp-for="PhuongId" id="phuong" class="form-select">
+                                        <option value="">Chọn phường/xã</option>
+                                    </select>
+                                    <span asp-validation-for="PhuongId" class="text-danger"></span>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -271,6 +296,81 @@
             if ($('#Password').val().length == 0) {
                 $('#ConfirmPassword').closest('.form-group').hide();
             }
+        });
+    </script>
+
+    <script>
+        $(function () {
+          const selectedThanhPhoId = '@thanhPhoId';
+          const selectedQuanId   = '@quanId';
+          const selectedPhuongId = '@phuongId';
+
+          // Flag để phân biệt init vs user action
+          let isInitializing = true;
+
+          // 1. Load thành phố, gán selected nhưng KHÔNG trigger change
+          $.get('/api/cities', data => {
+            $('#thanhPho').append(data.map(c =>
+              `<option value="${c.id}" ${c.id === selectedThanhPhoId ? 'selected' : ''}>${c.name}</option>`
+            ));
+          })
+          .always(() => {
+            // 2. Sau khi load xong thành phố, load tiếp quận cho selectedThanhPhoId
+            if (selectedThanhPhoId) {
+              $.get(`/api/districts/${selectedThanhPhoId}`, data => {
+                $('#quan').append(data.map(q =>
+                  `<option value="${q.id}" ${q.id === selectedQuanId ? 'selected' : ''}>${q.name}</option>`
+                ));
+              })
+              .always(() => {
+                // 3. Sau khi load quận, load tiếp phường cho selectedQuanId
+                if (selectedQuanId) {
+                  $.get(`/api/wards/${selectedQuanId}`, data => {
+                    $('#phuong').append(data.map(p =>
+                      `<option value="${p.id}" ${p.id === selectedPhuongId ? 'selected' : ''}>${p.name}</option>`
+                    ));
+                  })
+                  .always(() => {
+                    // Kết thúc init, bật lại sự kiện change
+                    isInitializing = false;
+                  });
+                } else {
+                  // Nếu không có selectedQuanId thì kết thúc init sớm
+                  isInitializing = false;
+                }
+              });
+            } else {
+              // Nếu không có selectedThanhPhoId
+              isInitializing = false;
+            }
+          });
+
+          // Handler TỈNH → QUẬN
+          $('#thanhPho').change(function () {
+            if (isInitializing) return;              // bỏ qua lúc init
+            const cityId = this.value;
+            $('#quan').empty().append('<option value="">Chọn quận/huyện</option>');
+            $('#phuong').empty().append('<option value="">Chọn phường/xã</option>');
+            if (!cityId) return;
+            $.get(`/api/districts/${cityId}`, function (quans) {
+              $('#quan').append(quans.map(q =>
+                `<option value="${q.id}">${q.name}</option>`
+              ));
+            });
+          });
+
+          // Handler QUẬN → PHƯỜNG
+          $('#quan').change(function () {
+            if (isInitializing) return;              // bỏ qua lúc init
+            const quanId = this.value;
+            $('#phuong').empty().append('<option value="">Chọn phường/xã</option>');
+            if (!quanId) return;
+            $.get(`/api/wards/${quanId}`, function (phuongs) {
+              $('#phuong').append(phuongs.map(p =>
+                `<option value="${p.id}">${p.name}</option>`
+              ));
+            });
+          });
         });
     </script>
 }
