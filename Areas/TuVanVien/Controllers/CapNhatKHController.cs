@@ -20,7 +20,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
         public IActionResult CapNhatKhachHang(string? searchId)
         {
             var khachHangs = _context.NguoiDungs
-                .AsNoTracking() // ✅ DÙNG cho danh sách
+                .AsNoTracking() 
                 .Where(nd => nd.VaiTro == "KhachHang");
 
             if (!string.IsNullOrEmpty(searchId))
@@ -31,7 +31,6 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
             return View(khachHangs.ToList());
         }
 
-        // ❗ KHÔNG dùng AsNoTracking ở đây
         public IActionResult Edit(string id)
         {
             var kh = _context.NguoiDungs

@@ -1,0 +1,115 @@
+﻿@model QuanLySuaChua_BaoHanh.Models.PhieuSuaChua
+
+@{
+    ViewData["Title"] = "Thêm đơn";
+    Layout = "~/Areas/TuVanVien/Views/Shared/_LayoutTuVanVien.cshtml";
+}
+
+<style>
+    .repair-form {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+        .repair-form h2 {
+            color: #007bff;
+            font-weight: 600;
+        }
+
+        .repair-form .form-label {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .repair-form .form-control, .repair-form .form-select {
+            border-radius: 8px;
+        }
+
+        .repair-form button.btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 10px 20px;
+            font-weight: 500;
+            border-radius: 8px;
+        }
+
+        .repair-form button.btn-secondary {
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+</style>
+
+<div class="d-flex justify-content-center align-items-center mt-4">
+    <div class="repair-form" style="width: 800px;">
+        <h2 class="text-center mb-4">Đăng Ký Phiếu Sửa Chữa</h2>
+
+        <form asp-action="ThemDon" method="post" onsubmit="return confirm('Bạn có chắc muốn thêm đơn này?');">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="PhieuSuaChuaId" class="form-label">Mã phiếu</label>
+                <input asp-for="PhieuSuaChuaId" class="form-control" placeholder="Nhập mã phiếu" />
+                <span asp-validation-for="PhieuSuaChuaId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="KhachHangId" class="form-label">ID khách hàng</label>
+                <input asp-for="KhachHangId" class="form-control" placeholder="Nhập ID khách hàng" />
+                <span asp-validation-for="KhachHangId" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="PhuongId" class="form-label">ID phường</label>
+                    <input asp-for="PhuongId" class="form-control" placeholder="Nhập ID phường" />
+                    <span asp-validation-for="PhuongId" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="KyThuatId" class="form-label">ID kỹ thuật viên</label>
+                    <input asp-for="KyThuatId" class="form-control" placeholder="Nhập ID kỹ thuật viên" />
+                    <span asp-validation-for="KyThuatId" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="TrangThai" class="form-label">Trạng thái</label>
+                    <select asp-for="TrangThai" class="form-select">
+                        <option value="ChuaDuyet">ChoXacNhan</option>
+                    </select>
+                    <span asp-validation-for="TrangThai" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="DiaChiNhanTraSanPham" class="form-label">Địa chỉ nhận/trả</label>
+                <input asp-for="DiaChiNhanTraSanPham" class="form-control" placeholder="Nhập số nhà, tên đường" />
+                <span asp-validation-for="DiaChiNhanTraSanPham" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="MoTaKhachHang" class="form-label">Mô tả</label>
+                <textarea asp-for="MoTaKhachHang" class="form-control" rows="3" placeholder="Mô tả lỗi sản phẩm"></textarea>
+                <span asp-validation-for="MoTaKhachHang" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="NgayGui" class="form-label">Ngày gửi</label>
+                <input asp-for="NgayGui" type="date" class="form-control" />
+                <span asp-validation-for="NgayGui" class="text-danger"></span>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary me-2">
+                    <i class="bi bi-plus-circle me-1"></i>Thêm đơn
+                </button>
+                <a asp-action="CapNhatDon" class="btn btn-secondary">
+                    <i class="bi bi-x-circle me-1"></i>Huỷ
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
