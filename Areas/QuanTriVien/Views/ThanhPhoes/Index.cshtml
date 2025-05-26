@@ -12,12 +12,36 @@
             <a asp-action="Index" asp-controller="Locations" class="btn btn-secondary">
                 <i class="bi bi-arrow-left me-1"></i> Quay lại
             </a>
-       
-        <a asp-action="Create" class="btn" style="background-color: var(--blue-primary); color: white;">
-            <i class="bi bi-plus-circle"></i> Thêm Mới
+            <a asp-action="Import" class="btn btn-success">
+                <i class="bi bi-file-earmark-excel"></i> Nhập từ Excel
+            </a>
+            <a asp-action="Create" class="btn" style="background-color: var(--blue-primary); color: white;">
+                <i class="bi bi-plus-circle"></i> Thêm Mới
             </a>
         </div>
     </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["WarningMessage"] != null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            @TempData["WarningMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @Html.Raw(TempData["ErrorMessage"])
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
     <div class="card shadow-sm">
         <div class="card-body">
