@@ -5,8 +5,6 @@ using QuanLySuaChua_BaoHanh.Services;
 using QuanLySuaChua_BaoHanh.Areas.KhachHang.Services;
 using DinkToPdf;
 using DinkToPdf.Contracts;
-using System.IO;
-using QuanLySuaChua_BaoHanh.Services;
 using QuanLySuaChua_BaoHanh.Areas.KhachHang.Models;
 
 
@@ -33,6 +31,11 @@ builder.Services.AddIdentity<NguoiDung,IdentityRole<string>>(options =>
 
 // Cấu hình VnPay
 builder.Services.Configure<VnPayConfig>(builder.Configuration.GetSection("VnPay"));
+
+builder.Services.AddHttpClient<MapService>();
+
+// Thêm memory cache nếu chưa có
+builder.Services.AddMemoryCache();
 
 //cau hinh cookie
 builder.Services.ConfigureApplicationCookie(options => {

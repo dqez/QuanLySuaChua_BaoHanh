@@ -201,6 +201,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.KhachHang.Controllers
                     {
                         // Cập nhật trạng thái thanh toán
                         phieuSuaChua.TrangThai = Enums.TrangThaiPhieu.DaThanhToan.ToString();
+                        phieuSuaChua.NgayThanhToan = DateTime.Now;
                         await _dbContext.SaveChangesAsync();
 
                     }
