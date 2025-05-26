@@ -4,18 +4,137 @@
     ViewData["Title"] = "Danh sách linh kiện";
     Layout = "~/Areas/NhanVienKho/Views/Shared/_LayoutStashEmployee.cshtml";
 }
+<style>
+    .simple-card {
+        background: #f8fafc;
+        border-radius: 1.2rem;
+        box-shadow: 0 2px 12px 0 #e0e7ef;
+        border: 1.5px solid #e3e8ee;
+        overflow: hidden;
+    }
 
+    .simple-header {
+        background: linear-gradient(90deg, #e0f2fe 0%, #bae6fd 100%);
+        color: #2563eb;
+        font-size: 1.25rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e3e8ee;
+    }
+
+    .simple-search .form-control {
+        border-radius: 2rem 0 0 2rem;
+        border: 1.5px solid #e0e7ef;
+        background: #fff;
+        color: #2563eb;
+        font-size: 1.08rem;
+    }
+
+        .simple-search .form-control:focus {
+            box-shadow: 0 0 0 2px #bae6fd;
+            border-color: #38bdf8;
+            color: #2563eb;
+        }
+
+    .simple-search .btn-primary {
+        border-radius: 0 2rem 2rem 0;
+        background: linear-gradient(90deg, #38bdf8 0%, #2563eb 100%);
+        border: none;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .simple-search .btn-outline-secondary {
+        border-radius: 2rem;
+        margin-left: 0.5rem;
+        border: 1.5px solid #38bdf8;
+        color: #38bdf8;
+        background: transparent;
+    }
+
+        .simple-search .btn-outline-secondary:hover {
+            background: #38bdf8;
+            color: #fff;
+        }
+
+    .simple-table thead th {
+        background: #e0f2fe;
+        color: #2563eb;
+        font-weight: 700;
+        border: none;
+        font-size: 1.08rem;
+    }
+
+    .simple-table tbody tr:hover {
+        background: #f1f5f9;
+    }
+
+    .simple-table td, .simple-table th {
+        border: none;
+        vertical-align: middle !important;
+    }
+
+    .simple-badge {
+        background: linear-gradient(90deg, #bae6fd 0%, #38bdf8 100%);
+        color: #2563eb;
+        font-weight: 600;
+        font-size: 1.02rem;
+        border-radius: 1.2em;
+        padding: 0.4em 1em;
+        letter-spacing: 0.5px;
+        border: 1px solid #e0e7ef;
+    }
+
+    .simple-add-btn {
+        border-radius: 2rem;
+        font-weight: 600;
+        font-size: 1.08rem;
+        background: linear-gradient(90deg, #38bdf8 0%, #2563eb 100%);
+        color: #fff;
+        border: none;
+        box-shadow: 0 2px 8px 0 #e0e7ef;
+        transition: background 0.2s, transform 0.15s;
+    }
+
+        .simple-add-btn:hover {
+            background: linear-gradient(90deg, #2563eb 0%, #38bdf8 100%);
+            transform: scale(1.04);
+        }
+
+    .simple-pagination .page-link {
+        border-radius: 2rem !important;
+        color: #2563eb;
+        border: none;
+        font-weight: 600;
+        background: #f1f5f9;
+        margin: 0 0.15rem;
+    }
+
+        .simple-pagination .page-link:focus, .simple-pagination .page-link:hover {
+            background: #bae6fd;
+            color: #2563eb;
+        }
+
+    .simple-pagination .page-item.disabled .page-link {
+        background: #f1f5f9;
+        color: #b0b6be;
+    }
+</style>
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="mb-0 text-primary">
-            <i class="bi bi-box-seam"></i> Danh sách linh kiện
+        <h2 class="mb-0" style="color:#2563eb; letter-spacing:1px;">
+            <i class="bi bi-cpu-fill"></i> Danh sách linh kiện
         </h2>
-        <a href="/NhanVienKho/LinhKiens/Create" class="btn btn-success shadow-sm">
+        <a href="/NhanVienKho/LinhKiens/Create" class="simple-add-btn px-4 py-2">
             <i class="bi bi-plus-circle"></i> Thêm linh kiện mới
         </a>
     </div>
 
-    <form asp-area="NhanVienKho" asp-controller="LinhKiens" asp-action="Index" method="get" class="mb-4">
+    <form asp-area="NhanVienKho" asp-controller="LinhKiens" asp-action="Index" method="get" class="mb-4 simple-search">
         <div class="input-group">
             <input type="text"
                    name="searchString"
@@ -29,89 +148,92 @@
         </div>
     </form>
 
-    <div class="card shadow-sm">
-        <div class="card-header bg-light d-flex align-items-center">
-            <i class="bi bi-table me-2"></i>
-            <span class="fw-semibold">Bảng linh kiện</span>
+    <div class="simple-card mb-4">
+        <div class="simple-header">
+            <i class="bi bi-table"></i>
+            Bảng linh kiện
         </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-primary">
+        <div class="table-responsive">
+            <table class="table simple-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Mã linh kiện</th>
+                        <th>Danh mục</th>
+                        <th>Tên linh kiện</th>
+                        <th class="text-center">Số lượng tồn</th>
+                        <th class="text-end">Đơn giá</th>
+                        <th>Phạm vi sử dụng</th>
+                        <th>Ghi chú</th>
+                        <th class="text-center">Tùy chọn</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
                         <tr>
-                            <th>Mã linh kiện</th>
-                            <th>Danh mục</th>
-                            <th>Tên linh kiện</th>
-                            <th class="text-center">Số lượng tồn</th>
-                            <th class="text-end">Đơn giá</th>
-                            <th>Phạm vi sử dụng</th>
-                            <th>Ghi chú</th>
-                            <th class="text-center">Tùy chọn</th>
+                            <td colspan="8" class="text-center text-muted py-4">
+                                <i class="bi bi-inbox fs-3"></i><br />
+                                Không có linh kiện nào.
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @if (!Model.Any())
+                    }
+                    else
+                    {
+                        @foreach (var lk in Model)
                         {
                             <tr>
-                                <td colspan="8" class="text-center text-muted py-4">
-                                    <i class="bi bi-inbox fs-3"></i><br />
-                                    Không có linh kiện nào.
+                                <td class="fw-semibold">@lk.LinhKienId</td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(lk.DanhMuc?.TenDanhMuc))
+                                    {
+                                        <span class="text-info fw-bold">@lk.DanhMuc.TenDanhMuc</span>
+                                    }
+                                    else if (!string.IsNullOrEmpty(lk.DanhMucId))
+                                    {
+                                        <span class="text-muted">(@lk.DanhMucId)</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Không có</span>
+                                    }
+                                </td>
+                                <td>@lk.TenLinhKien</td>
+                                <td class="text-center">
+                                    <span class="simple-badge">@lk.SoLuongTon</span>
+                                </td>
+                                <td class="text-end text-primary fw-bold">@lk.DonGia.ToString("N0") ₫</td>
+                                <td>@lk.PhamViSuDung</td>
+                                <td>@lk.GhiChu</td>
+                                <td class="text-center">
+                                    <a href="/NhanVienKho/LinhKiens/Details/@lk.LinhKienId" class="btn btn-info btn-sm me-1" title="Chi tiết">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="/NhanVienKho/LinhKiens/Edit/@lk.LinhKienId" class="btn btn-primary btn-sm me-1" title="Sửa">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="/NhanVienKho/LinhKiens/Delete/@lk.LinhKienId" class="btn btn-danger btn-sm" title="Xóa">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
                                 </td>
                             </tr>
                         }
-                        else
-                        {
-                            @foreach (var lk in Model)
-                            {
-                                <tr>
-                                    <td class="fw-semibold">@lk.LinhKienId</td>
-                                    <td>
-                                        @if (!string.IsNullOrEmpty(lk.DanhMuc?.TenDanhMuc))
-                                        {
-                                            @lk.DanhMuc.TenDanhMuc
-                                        }
-                                        else if (!string.IsNullOrEmpty(lk.DanhMucId))
-                                        {
-                                            <span class="text-muted">(@lk.DanhMucId)</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="text-muted">Không có</span>
-                                        }
-                                    </td>
-                                    <td>@lk.TenLinhKien</td>
-                                    <td class="text-center">
-                                        <span class="badge bg-info text-dark">@lk.SoLuongTon</span>
-                                    </td>
-                                    <td class="text-end text-primary fw-bold">@lk.DonGia.ToString("N0") ₫</td>
-                                    <td>@lk.PhamViSuDung</td>
-                                    <td>@lk.GhiChu</td>
-                                    <td class="text-center">
-                                        <a href="/NhanVienKho/LinhKiens/Details/@lk.LinhKienId" class="btn btn-info btn-sm me-1" title="Chi tiết">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a href="/NhanVienKho/LinhKiens/Edit/@lk.LinhKienId" class="btn btn-primary btn-sm me-1" title="Sửa">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <a href="/NhanVienKho/LinhKiens/Delete/@lk.LinhKienId" class="btn btn-danger btn-sm" title="Xóa">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            }
-                        }
-                    </tbody>
-                </table>
-            </div>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 
     <nav aria-label="Page navigation" class="mt-4">
-        <ul class="pagination justify-content-center">
+        <ul class="pagination justify-content-center simple-pagination">
             @if (Model.HasPreviousPage)
             {
                 <li class="page-item">
-                    <a class="page-link" asp-area="NhanVienKho" asp-controller="LinhKiens" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">
+                    <a class="page-link"
+                       asp-area="NhanVienKho"
+                       asp-controller="LinhKiens"
+                       asp-action="Index"
+                       asp-route-pageNumber="@(Model.PageIndex - 1)"
+                       asp-route-currentFilter="@(ViewData["CurrentFilter"])">
                         <i class="bi bi-chevron-left"></i> Trước
                     </a>
                 </li>
@@ -130,14 +252,19 @@
             @if (Model.HasNextPage)
             {
                 <li class="page-item">
-                    <a class="page-link" asp-area="NhanVienKho" asp-controller="LinhKiens" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">
+                    <a class="page-link"
+                       asp-area="NhanVienKho"
+                       asp-controller="LinhKiens"
+                       asp-action="Index"
+                       asp-route-pageNumber="@(Model.PageIndex + 1)"
+                       asp-route-currentFilter="@(ViewData["CurrentFilter"])">
                         Tiếp <i class="bi bi-chevron-right"></i>
                     </a>
                 </li>
             }
             else
             {
-                <li class="page-item disabled"><span class="page-lzink">Tiếp <i class="bi bi-chevron-right"></i></span></li>
+                <li class="page-item disabled"><span class="page-link">Tiếp <i class="bi bi-chevron-right"></i></span></li>
             }
         </ul>
     </nav>
