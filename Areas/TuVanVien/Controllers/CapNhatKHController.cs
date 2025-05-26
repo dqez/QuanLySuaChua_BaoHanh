@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using QuanLySuaChua_BaoHanh.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using QuanLySuaChua_BaoHanh.Models;
 
 namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
 {
@@ -16,10 +16,11 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
             _context = context;
         }
 
-        // Hiển thị danh sách KH
+        // Hiển thị danh sách khách hàng
         public IActionResult CapNhatKhachHang(string? searchId)
         {
             var khachHangs = _context.NguoiDungs
+                .AsNoTracking() // ✅ DÙNG cho danh sách
                 .Where(nd => nd.VaiTro == "KhachHang");
 
             if (!string.IsNullOrEmpty(searchId))
@@ -30,27 +31,32 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
             return View(khachHangs.ToList());
         }
 
-        // GET: Sửa thông tin
+        // ❗ KHÔNG dùng AsNoTracking ở đây
         public IActionResult Edit(string id)
         {
-            var kh = _context.NguoiDungs.FirstOrDefault(nd => nd.Id == id && nd.VaiTro == "KhachHang");
+            var kh = _context.NguoiDungs
+                .FirstOrDefault(nd => nd.Id == id && nd.VaiTro == "KhachHang");
+
             if (kh == null)
                 return NotFound();
 
             return View("Sua", kh);
         }
-
-        // POST: Cập nhật thông tin
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(NguoiDung model)
         {
-            if (!ModelState.IsValid)
-                return View("Sua", model);
+            var nguoiDungId = Request.Form["NguoiDungID"].ToString();
 
-            var kh = _context.NguoiDungs.FirstOrDefault(nd => nd.Id == model.Id && nd.VaiTro == "KhachHang");
+            Console.WriteLine("✅ Nhận ID từ form: " + nguoiDungId);
+
+            if (string.IsNullOrEmpty(nguoiDungId))
+                return BadRequest("ID không hợp lệ");
+
+            var kh = _context.NguoiDungs.FirstOrDefault(nd => nd.Id == nguoiDungId && nd.VaiTro == "KhachHang");
+
             if (kh == null)
-                return NotFound();
+                return NotFound("Không tìm thấy người dùng");
 
             kh.HoTen = model.HoTen;
             kh.Email = model.Email;
@@ -59,10 +65,11 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
             kh.PhuongId = model.PhuongId;
 
             _context.SaveChanges();
+
             return RedirectToAction("CapNhatKhachHang");
         }
 
-        // POST: Xóa 1 KH
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Xoa(string id)
@@ -76,7 +83,6 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
             return RedirectToAction("CapNhatKhachHang");
         }
 
-        // POST: Xoá nhiều
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult XoaNhieu(List<string> selectedIds)

@@ -1,50 +1,70 @@
 ﻿@model QuanLySuaChua_BaoHanh.Models.NguoiDung
+
 @{
     ViewData["Title"] = "Sửa thông tin khách hàng";
     Layout = "~/Areas/TuVanVien/Views/Shared/_LayoutTuVanVien.cshtml";
 }
 
-<h2>Sửa thông tin khách hàng</h2>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow border-start border-4 border-info">
+                <div class="card-body p-4 bg-light">
+                    <h3 class="text-info mb-4">
+                        <i class="bi bi-person-lines-fill me-2"></i> Sửa thông tin khách hàng
+                    </h3>
 
-<form asp-action="Edit" method="post">
-    <input type="hidden" asp-for="Id" />
+                    <form asp-action="Edit" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="NguoiDungID" value="@Model.Id" />
 
-    <div class="form-group">
-        <label>Tài khoản</label>
-        <input asp-for="UserName" class="form-control" />
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">👤 Tài khoản</label>
+                            <input asp-for="UserName" class="form-control form-control-lg bg-light text-muted" readonly />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">📝 Họ tên</label>
+                            <input asp-for="HoTen" class="form-control form-control-lg" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">📧 Email</label>
+                            <input asp-for="Email" class="form-control form-control-lg" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">📱 SĐT</label>
+                            <input asp-for="PhoneNumber" class="form-control form-control-lg" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">🏠 Địa chỉ</label>
+                            <input asp-for="DiaChi" class="form-control form-control-lg" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">🏘️ Phường ID</label>
+                            <input asp-for="PhuongId" class="form-control form-control-lg" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">🔐 Vai trò</label>
+                            <input asp-for="VaiTro" class="form-control form-control-lg bg-light text-muted" readonly />
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg px-4" onclick="return confirm('Bạn chắc chắn muốn cập nhật?')">
+                                <i class="bi bi-save-fill me-1"></i> Cập nhật
+                            </button>
+
+                            <a asp-action="Xoa" asp-route-id="@Model.Id" class="btn btn-danger btn-lg px-4" onclick="return confirm('Bạn có chắc chắn muốn xóa?')">
+                                <i class="bi bi-trash-fill me-1"></i> Xoá
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label>Họ tên</label>
-        <input asp-for="HoTen" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label>Email</label>
-        <input asp-for="Email" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label>SĐT</label>
-        <input asp-for="PhoneNumber" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label>Địa chỉ</label>
-        <input asp-for="DiaChi" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label>Phường ID</label>
-        <input asp-for="PhuongId" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label>Vai trò</label>
-        <input asp-for="VaiTro" class="form-control" readonly />
-    </div>
-
-    <button type="submit" class="btn btn-primary" onclick="return confirm('Bạn chắc chắn muốn cập nhật?')">Cập nhật</button>
-
-    <a asp-action="Xoa" asp-route-id="@Model.Id" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xoá</a>
-</form>
+</div>
