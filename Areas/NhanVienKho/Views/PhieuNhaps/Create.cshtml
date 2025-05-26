@@ -1,50 +1,197 @@
-﻿@model QuanLySuaChua_BaoHanh.Models.PhieuNhap
+﻿@model QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Models.PhieuNhapCreateViewModel
 
 @{
     ViewData["Title"] = "Tạo phiếu nhập";
     Layout = "~/Areas/NhanVienKho/Views/Shared/_LayoutStashEmployee.cshtml";
 }
+<style>
+    .glass-create-card {
+        background: rgba(255,255,255,0.97);
+        border-radius: 2rem;
+        box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255,255,255,0.22);
+        padding: 2.5rem 2rem 2rem 2rem;
+        position: relative;
+        overflow: hidden;
+        min-height: 540px;
+    }
 
+        .glass-create-card::before {
+            content: "";
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #4f8cff55 0%, #6dd5ed22 100%);
+            z-index: 0;
+            border-radius: 50%;
+            filter: blur(2px);
+        }
+
+        .glass-create-card::after {
+            content: "";
+            position: absolute;
+            bottom: -40px;
+            left: -40px;
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle, #6dd5ed33 0%, #4f8cff11 100%);
+            z-index: 0;
+            border-radius: 50%;
+            filter: blur(2px);
+        }
+
+    .create-bg-illu {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.08;
+        background: url('https://cdn.pixabay.com/photo/2017/01/31/13/14/icon-2027661_1280.png') center/cover no-repeat;
+    }
+
+    .create-icon {
+        font-size: 3.5rem;
+        color: #4f8cff;
+        background: linear-gradient(135deg, #4f8cff 0%, #6dd5ed 100%);
+        border-radius: 1.2rem;
+        padding: 0.7rem 1.2rem;
+        box-shadow: 0 4px 16px 0 #4f8cff33;
+        margin-bottom: 1.2rem;
+        z-index: 1;
+        position: relative;
+        display: inline-block;
+    }
+
+    .create-title-gradient {
+        background: linear-gradient(90deg, #4f8cff 0%, #6dd5ed 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .create-label {
+        color: #4f8cff;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        font-size: 1.08rem;
+    }
+
+    .create-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .create-actions {
+        margin-top: 2.5rem;
+    }
+
+    .table-glass {
+        background: rgba(255,255,255,0.92);
+        border-radius: 1.2rem;
+        overflow: hidden;
+        box-shadow: 0 2px 12px 0 #4f8cff11;
+    }
+
+        .table-glass th {
+            background: linear-gradient(90deg, #4f8cff 0%, #6dd5ed 100%);
+            color: #fff;
+            font-weight: 600;
+            border: none;
+        }
+
+        .table-glass td, .table-glass th {
+            vertical-align: middle !important;
+        }
+</style>
 <div class="container mt-4">
     <div class="row justify-content-center">
-        <div class="col-md-7 col-lg-6">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">
-                        <i class="bi bi-plus-circle"></i> Tạo phiếu nhập mới
-                    </h4>
+        <div class="col-xl-10 col-lg-10 position-relative">
+            <div class="glass-create-card shadow position-relative">
+                <div class="create-bg-illu"></div>
+                <div class="text-center position-relative z-1">
+                    <span class="create-icon">
+                        <i class="bi bi-plus-circle"></i>
+                    </span>
+                    <h2 class="mb-2 fw-bold create-title-gradient">Tạo phiếu nhập mới</h2>
                 </div>
-                <div class="card-body">
-                    <form asp-area="NhanVienKho" asp-controller="PhieuNhaps" asp-action="Create" autocomplete="off">
-                        <div class="mb-3">
-                            <label asp-for="KhoId" class="form-label">Mã kho</label>
-                            <select asp-for="KhoId" class="form-select" asp-items="ViewBag.KhoId"></select>
+                <form method="post" asp-action="Create" class="position-relative z-1">
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-6 create-section">
+                            <label asp-for="PhieuNhap.PhieuNhapId" class="form-label create-label">Mã phiếu nhập</label>
+                            <input asp-for="PhieuNhap.PhieuNhapId" class="form-control" />
+                            <span asp-validation-for="PhieuNhap.PhieuNhapId" class="text-danger"></span>
                         </div>
-                        <div class="mb-3">
-                            <label asp-for="TongTien" class="form-label">Tổng tiền</label>
-                            <input asp-for="TongTien" class="form-control" />
-                            <span asp-validation-for="TongTien" class="text-danger"></span>
+                        <div class="col-md-6 create-section">
+                            <label asp-for="PhieuNhap.TrangThai" class="form-label create-label">Trạng thái</label>
+                            <div>
+                                <input type="radio" asp-for="PhieuNhap.TrangThai" value="Done" id="trangthai-done" />
+                                <label for="trangthai-done" class="form-check-label me-3">Đã xong</label>
+                                <input type="radio" asp-for="PhieuNhap.TrangThai" value="!!!" id="trangthai-todo" />
+                                <label for="trangthai-todo" class="form-check-label">Chưa xong</label>
+                            </div>
+                            <span asp-validation-for="PhieuNhap.TrangThai" class="text-danger"></span>
                         </div>
-                        <div class="mb-3">
-                            <label asp-for="TrangThai" class="form-label">Trạng thái</label>
-                            <input asp-for="TrangThai" class="form-control" />
-                            <span asp-validation-for="TrangThai" class="text-danger"></span>
+                    </div>
+                    <input type="hidden" asp-for="PhieuNhap.KhoId" />
+                    <input type="hidden" asp-for="PhieuNhap.NgayNhap" />
+
+                    <div class="create-section">
+                        <label asp-for="PhieuNhap.GhiChu" class="form-label create-label">Ghi chú</label>
+                        <textarea asp-for="PhieuNhap.GhiChu" class="form-control" rows="2" placeholder="Nhập ghi chú (nếu có)"></textarea>
+                        <span asp-validation-for="PhieuNhap.GhiChu" class="text-danger"></span>
+                    </div>
+
+                    <hr />
+                    <h5 class="mb-3"><i class="bi bi-list-ul"></i> Danh sách linh kiện nhập</h5>
+                    <div class="table-glass mb-4">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th style="width:45%">Tên linh kiện</th>
+                                        <th style="width:20%" class="text-end">Đơn giá</th>
+                                        <th style="width:20%" class="text-center">Số lượng</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.LinhKienInputs.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Model.LinhKienInputs[i].TenLinhKien
+                                                <input type="hidden" asp-for="LinhKienInputs[@i].LinhKienId" />
+                                                <input type="hidden" asp-for="LinhKienInputs[@i].TenLinhKien" />
+                                                <input type="hidden" asp-for="LinhKienInputs[@i].DonGia" />
+                                            </td>
+                                            <td class="text-end">@Model.LinhKienInputs[i].DonGia ₫</td>
+                                            <td class="text-center">
+                                                <input type="number" class="form-control form-control-sm d-inline-block" style="width:90px"
+                                                       asp-for="LinhKienInputs[@i].SoLuong" min="0" max="1000" />
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="mb-3">
-                            <label asp-for="GhiChu" class="form-label">Ghi chú</label>
-                            <input asp-for="GhiChu" class="form-control" />
-                            <span asp-validation-for="GhiChu" class="text-danger"></span>
-                        </div>
-                        <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary me-2">
-                                <i class="bi bi-save"></i> Lưu
-                            </button>
-                            <a href="/NhanVienKho/PhieuNhaps/Index" class="btn btn-secondary">
-                                <i class="bi bi-arrow-left"></i> Quay lại
-                            </a>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 create-actions">
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="bi bi-save"></i> Lưu phiếu nhập
+                        </button>
+                        <a href="@Url.Action("Index")" class="btn btn-secondary px-4">
+                            <i class="bi bi-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

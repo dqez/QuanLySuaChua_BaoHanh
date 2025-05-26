@@ -5,57 +5,61 @@
 }
 
 <div class="container mt-4">
-    <h2 class="mb-4 text-danger">
-        <i class="bi bi-exclamation-triangle-fill"></i> Xóa linh kiện
-    </h2>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white d-flex align-items-center">
+                    <i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i>
+                    <h4 class="mb-0">Xóa linh kiện</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning d-flex align-items-center mb-4" role="alert">
+                        <i class="bi bi-exclamation-diamond-fill me-2 fs-5"></i>
+                        <div>
+                            <strong>Cảnh báo:</strong> Hành động này không thể hoàn tác.<br />
+                            Tất cả dữ liệu liên quan đến linh kiện này sẽ bị <span class="text-danger fw-bold">xóa vĩnh viễn</span>.
+                        </div>
+                    </div>
+                    <h5 class="mb-3 text-danger">
+                        Bạn có chắc chắn muốn xóa linh kiện này?
+                    </h5>
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Mã linh kiện:</dt>
+                        <dd class="col-sm-8 fw-semibold">@Model.LinhKienId</dd>
 
-    <div class="card shadow mb-4">
-        <div class="card-header bg-danger text-white">
-            <i class="bi bi-exclamation-circle"></i>
-            Xác nhận xóa linh kiện
-        </div>
-        <div class="card-body">
-            <h5 class="mb-3">Bạn có chắc chắn muốn xóa linh kiện này?</h5>
-            <div class="alert alert-warning d-flex align-items-center" role="alert">
-                <i class="bi bi-exclamation-diamond-fill me-2"></i>
-                <div>
-                    Cảnh báo: Hành động này không thể hoàn tác. Tất cả dữ liệu liên quan đến linh kiện này sẽ bị xóa.
+                        <dt class="col-sm-4">Tên linh kiện:</dt>
+                        <dd class="col-sm-8">@Model.TenLinhKien</dd>
+
+                        <dt class="col-sm-4">Số lượng tồn:</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-info text-dark fs-6">@Model.SoLuongTon</span>
+                        </dd>
+
+                        <dt class="col-sm-4">Đơn giá:</dt>
+                        <dd class="col-sm-8 text-primary fw-bold">@Model.DonGia.ToString("N0") ₫</dd>
+
+                        <dt class="col-sm-4">Phạm vi sử dụng:</dt>
+                        <dd class="col-sm-8">@Model.PhamViSuDung</dd>
+
+                        <dt class="col-sm-4">Ghi chú:</dt>
+                        <dd class="col-sm-8">@Model.GhiChu</dd>
+
+                        <dt class="col-sm-4">Danh mục:</dt>
+                        <dd class="col-sm-8">@Model.DanhMuc?.TenDanhMuc</dd>
+                    </dl>
+                    <hr />
+                    <form asp-area="NhanVienKho" asp-controller="LinhKiens" asp-action="Delete" method="post" class="d-flex justify-content-end gap-2 mt-4">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="LinhKienId" />
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Xác nhận xóa
+                        </button>
+                        <a href="/NhanVienKho/LinhKiens/Index" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Hủy
+                        </a>
+                    </form>
                 </div>
             </div>
-
-            <dl class="row mb-0">
-                <dt class="col-sm-4">Mã linh kiện:</dt>
-                <dd class="col-sm-8">@Model.LinhKienId</dd>
-
-                <dt class="col-sm-4">Tên linh kiện:</dt>
-                <dd class="col-sm-8">@Model.TenLinhKien</dd>
-
-                <dt class="col-sm-4">Số lượng tồn:</dt>
-                <dd class="col-sm-8">@Model.SoLuongTon</dd>
-
-                <dt class="col-sm-4">Đơn giá:</dt>
-                <dd class="col-sm-8">@Model.DonGia</dd>
-
-                <dt class="col-sm-4">Phạm vi sử dụng:</dt>
-                <dd class="col-sm-8">@Model.PhamViSuDung</dd>
-
-                <dt class="col-sm-4">Ghi chú:</dt>
-                <dd class="col-sm-8">@Model.GhiChu</dd>
-
-                <dt class="col-sm-4">Danh mục:</dt>
-                <dd class="col-sm-8">@Model.DanhMuc?.TenDanhMuc</dd>
-            </dl>
-
-            <form asp-area="NhanVienKho" asp-controller="LinhKiens" asp-action="Delete" method="post" class="mt-4">
-                @Html.AntiForgeryToken()
-                <input type="hidden" asp-for="LinhKienId" />
-                <button type="submit" class="btn btn-danger me-2">
-                    <i class="bi bi-trash"></i> Xác nhận xóa
-                </button>
-                <a href="/NhanVienKho/LinhKiens/Index" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Hủy
-                </a>
-            </form>
         </div>
     </div>
 </div>
