@@ -53,13 +53,13 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
 
             var phieuNhap = await _context.PhieuNhaps
                 .Include(pn => pn.ChiTietPns) 
-                    .ThenInclude(ct => ct.PhieuSuaChua)
-                .FirstOrDefaultAsync(pn => pn.PhieuXuatId == id);
+                    .ThenInclude(ct => ct.LinhKien)
+                .FirstOrDefaultAsync(pn => pn.PhieuNhapId == id);
 
-            if (phieuXuat == null)
+            if (phieuNhap == null)
                 return NotFound();
 
-            return View(phieuXuat);
+            return View(phieuNhap);
         }
 
 
@@ -75,165 +75,196 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
                 return View();
             }
 
-            // Lấy toàn bộ Phiếu Sửa Chữa
-            var phieuSuaChuaList = _context.PhieuSuaChuas
-                .Select(p => new SelectListItem
+            var linhKienList = _context.LinhKiens
+                .Select(p => new LinhKienInputModel
                 {
-                    Value = p.PhieuSuaChuaId.ToString(),
-                    Text = "Phiếu #" + p.PhieuSuaChuaId
-                })
-                .ToList();
+                    LinhKienId = p.LinhKienId,
+                    TenLinhKien = p.TenLinhKien,
+                    DonGia = p.DonGia,
+                    SoLuong = 0
+                }).ToList();
 
-            ViewBag.PhieuSuaChuaList = phieuSuaChuaList;
-
-            var model = new PhieuXuat
+            var model = new PhieuNhapCreateViewModel
             {
-                KhoId = nguoiDung.Id,
-                NgayXuat = DateTime.Now
+                PhieuNhap = new PhieuNhap
+                {
+                    KhoId = nguoiDung.Id,
+                    NgayNhap = DateTime.Now
+                },
+                LinhKienInputs = linhKienList
             };
 
             return View(model);
         }
 
-
-
-        // POST: NhanVienKho/PhieuNhaps/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string[] phieuSuaChuaIds, [Bind("PhieuXuatId,KhoId,NgayXuat,TongTien,TrangThai,GhiChu")] PhieuXuat phieuXuat)
+        public async Task<IActionResult> Create(PhieuNhapCreateViewModel viewModel)
         {
             var userName = User.Identity?.Name;
             var nguoiDung = _context.NguoiDungs.FirstOrDefault(x => x.UserName == userName);
 
-            // Sinh mã phiếu xuất nếu cần
-            if (string.IsNullOrEmpty(phieuXuat.PhieuXuatId))
-                phieuXuat.PhieuXuatId = await _idGenerator.GeneratePhieuXuatIdAsync();
+            if (nguoiDung == null)
+            {
+                ModelState.AddModelError("", "Không tìm thấy người dùng.");
+                return View(viewModel);
+            }
 
-            phieuXuat.KhoId = nguoiDung.Id;
-            phieuXuat.NgayXuat = DateTime.Now;
-            phieuXuat.TongTien = 0;
+            var phieuNhap = viewModel.PhieuNhap;
+
+            if (string.IsNullOrEmpty(phieuNhap.PhieuNhapId))
+                phieuNhap.PhieuNhapId = await _idGenerator.GeneratePhieuNhapIdAsync();
+
+            phieuNhap.KhoId = nguoiDung.Id;
+            phieuNhap.NgayNhap = DateTime.Now;
+            phieuNhap.TongTien = 0;
 
             if (ModelState.IsValid)
             {
-                // Thêm phiếu xuất trước để có PhieuXuatId
-                _context.Add(phieuXuat);
+                _context.PhieuNhaps.Add(phieuNhap);
                 await _context.SaveChangesAsync();
 
-                // Thêm các chi tiết phiếu xuất
-                foreach (var phieuSuaChuaId in phieuSuaChuaIds)
+                foreach (var input in viewModel.LinhKienInputs)
                 {
-                    var ctpx = new ChiTietPx
+                    if (input.SoLuong > 0)
                     {
-                        PhieuXuatId = phieuXuat.PhieuXuatId,
-                        PhieuSuaChuaId = phieuSuaChuaId,
-                        GhiChu = phieuXuat.GhiChu
-                    };
-                    _context.ChiTietPxes.Add(ctpx);
+                        var linhKien = await _context.LinhKiens.FindAsync(input.LinhKienId);
+                        if (linhKien != null)
+                        {
+                            var chiTiet = new ChiTietPn
+                            {
+                                PhieuNhapId = phieuNhap.PhieuNhapId,
+                                LinhKienId = input.LinhKienId,
+                                SoLuong = input.SoLuong
+                            };
 
-                    // Tính tổng tiền cho phiếu xuất
-                    var phieu = await _context.PhieuSuaChuas.FindAsync(phieuSuaChuaId);
-                    if (phieu != null && phieu.TongTien.HasValue)
-                    {
-                        phieuXuat.TongTien += phieu.TongTien.Value;
+                            _context.ChiTietPns.Add(chiTiet);
+                            phieuNhap.TongTien += input.SoLuong * linhKien.DonGia;
+                        }
                     }
                 }
 
-                // Cập nhật tổng tiền sau khi thêm chi tiết
-                _context.Update(phieuXuat);
+                _context.PhieuNhaps.Update(phieuNhap);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
 
-            // Nếu có lỗi, trả lại view với model
-            return View(phieuXuat);
+            return View(viewModel);
         }
+
+
 
 
         // GET: NhanVienKho/PhieuNhaps/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var phieuXuat = await _context.PhieuNhaps.FindAsync(id);
-            if (phieuXuat == null)
-            {
+            var phieuNhap = await _context.PhieuNhaps
+                .Include(pn => pn.ChiTietPns)
+                .FirstOrDefaultAsync(pn => pn.PhieuNhapId == id);
+
+            if (phieuNhap == null)
                 return NotFound();
-            }
 
-            // Populate ViewBag.PhieuSuaChuaList
-            var phieuSuaChuaList = _context.PhieuSuaChuas
-                .Select(p => new SelectListItem
+            // Get all LinhKien
+            var allLinhKien = await _context.LinhKiens.ToListAsync();
+
+            // Build LinhKienInputs with SoLuong from existing ChiTietPn if available
+            var linhKienInputs = allLinhKien.Select(lk =>
+            {
+                var chiTiet = phieuNhap.ChiTietPns.FirstOrDefault(ct => ct.LinhKienId == lk.LinhKienId);
+                return new LinhKienInputModel
                 {
-                    Value = p.PhieuSuaChuaId.ToString(),
-                    Text = "Phiếu #" + p.PhieuSuaChuaId
-                })
-                .ToList();
-            ViewBag.PhieuSuaChuaList = phieuSuaChuaList;
+                    LinhKienId = lk.LinhKienId,
+                    TenLinhKien = lk.TenLinhKien,
+                    DonGia = lk.DonGia,
+                    SoLuong = chiTiet?.SoLuong ?? 0
+                };
+            }).ToList();
 
-            ViewData["KhoId"] = new SelectList(_context.NguoiDungs, "Id", "Id", phieuXuat.KhoId);
-            return View(phieuXuat);
+            var viewModel = new PhieuNhapCreateViewModel
+            {
+                PhieuNhap = phieuNhap,
+                LinhKienInputs = linhKienInputs
+            };
+
+            return View(viewModel);
         }
+
 
 
         // POST: NhanVienKho/PhieuNhaps/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, string[] phieuSuaChuaIds, [Bind("PhieuXuatId,KhoId,NgayXuat,TongTien,TrangThai,GhiChu")] PhieuXuat phieuXuat)
+        public async Task<IActionResult> Edit(string id, PhieuNhapCreateViewModel viewModel)
         {
-            if (id != phieuXuat.PhieuXuatId) return NotFound();
+            if (id != viewModel.PhieuNhap.PhieuNhapId)
+                return NotFound();
+
+            var phieuNhap = await _context.PhieuNhaps
+                .Include(pn => pn.ChiTietPns)
+                .FirstOrDefaultAsync(pn => pn.PhieuNhapId == id);
+
+            if (phieuNhap == null)
+                return NotFound();
 
             if (ModelState.IsValid)
             {
-                try
+                // Update main fields
+                phieuNhap.TrangThai = viewModel.PhieuNhap.TrangThai;
+                phieuNhap.GhiChu = viewModel.PhieuNhap.GhiChu;
+                phieuNhap.NgayNhap = DateTime.Now;
+                phieuNhap.TongTien = 0;
+
+                // Remove old details
+                _context.ChiTietPns.RemoveRange(phieuNhap.ChiTietPns);
+
+                // Add new details
+                foreach (var input in viewModel.LinhKienInputs)
                 {
-                    // Xóa chi tiết cũ
-                    var chiTietCu = _context.ChiTietPxes.Where(c => c.PhieuXuatId == id);
-                    _context.ChiTietPxes.RemoveRange(chiTietCu);
-                    await _context.SaveChangesAsync();
-
-                    // Reset tổng tiền
-                    phieuXuat.TongTien = 0;
-
-                    // Thêm chi tiết mới
-                    foreach (var phieuSuaChuaId in phieuSuaChuaIds)
+                    if (input.SoLuong > 0)
                     {
-                        var ctpx = new ChiTietPx
+                        var linhKien = await _context.LinhKiens.FindAsync(input.LinhKienId);
+                        if (linhKien != null)
                         {
-                            PhieuXuatId = id,
-                            PhieuSuaChuaId = phieuSuaChuaId,
-                            GhiChu = phieuXuat.GhiChu
-                        };
-                        _context.ChiTietPxes.Add(ctpx);
-
-                        var psc = await _context.PhieuSuaChuas.FindAsync(phieuSuaChuaId);
-                        if (psc != null && psc.TongTien.HasValue)
-                        {
-                            phieuXuat.TongTien += psc.TongTien.Value;
+                            var chiTiet = new ChiTietPn
+                            {
+                                PhieuNhapId = phieuNhap.PhieuNhapId,
+                                LinhKienId = input.LinhKienId,
+                                SoLuong = input.SoLuong
+                            };
+                            _context.ChiTietPns.Add(chiTiet);
+                            phieuNhap.TongTien += input.SoLuong * linhKien.DonGia;
                         }
                     }
-
-                    // Cập nhật lại phiếu xuất
-                    _context.Update(phieuXuat);
-                    await _context.SaveChangesAsync();
-
-                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_context.PhieuNhaps.Any(e => e.PhieuXuatId == phieuXuat.PhieuXuatId))
-                        return NotFound();
-                    else
-                        throw;
-                }
+
+                _context.PhieuNhaps.Update(phieuNhap);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
             }
 
-            ViewData["KhoId"] = new SelectList(_context.NguoiDungs, "Id", "Id", phieuXuat.KhoId);
-            return View(phieuXuat);
+            // Reload LinhKienInputs if ModelState is invalid
+            var allLinhKien = await _context.LinhKiens.ToListAsync();
+            viewModel.LinhKienInputs = allLinhKien.Select(lk =>
+            {
+                var input = viewModel.LinhKienInputs.FirstOrDefault(x => x.LinhKienId == lk.LinhKienId);
+                return new LinhKienInputModel
+                {
+                    LinhKienId = lk.LinhKienId,
+                    TenLinhKien = lk.TenLinhKien,
+                    DonGia = lk.DonGia,
+                    SoLuong = input?.SoLuong ?? 0
+                };
+            }).ToList();
+
+            return View(viewModel);
         }
+
 
 
 
@@ -245,15 +276,15 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
                 return NotFound();
             }
 
-            var phieuXuat = await _context.PhieuNhaps
+            var phieuNhap = await _context.PhieuNhaps
                 .Include(p => p.Kho)
-                .FirstOrDefaultAsync(m => m.PhieuXuatId == id);
-            if (phieuXuat == null)
+                .FirstOrDefaultAsync(m => m.PhieuNhapId == id);
+            if (phieuNhap == null)
             {
                 return NotFound();
             }
 
-            return View(phieuXuat);
+            return View(phieuNhap);
         }
 
         // POST: NhanVienKho/PhieuNhaps/Delete/5
@@ -261,31 +292,25 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            // Xóa toàn bộ chi tiết phiếu xuất liên quan
-            var chiTietList = await _context.ChiTietPxes
-                .Where(x => x.PhieuXuatId == id)
+            // Xóa toàn bộ chi tiết phiếu nhập liên quan
+            var chiTietList = await _context.ChiTietPns
+                .Where(x => x.PhieuNhapId == id)
                 .ToListAsync();
 
             if (chiTietList.Any())
             {
-                _context.ChiTietPxes.RemoveRange(chiTietList);
+                _context.ChiTietPns.RemoveRange(chiTietList);
             }
 
             // Xóa phiếu xuất
-            var phieuXuat = await _context.PhieuNhaps.FindAsync(id);
-            if (phieuXuat != null)
+            var phieuNhap = await _context.PhieuNhaps.FindAsync(id);
+            if (phieuNhap != null)
             {
-                _context.PhieuNhaps.Remove(phieuXuat);
+                _context.PhieuNhaps.Remove(phieuNhap);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-
-        private bool PhieuXuatExists(string id)
-        {
-            return _context.PhieuNhaps.Any(e => e.PhieuXuatId == id);
         }
     }
 }

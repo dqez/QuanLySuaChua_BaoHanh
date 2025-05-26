@@ -1,4 +1,4 @@
-﻿@model QuanLySuaChua_BaoHanh.Models.PhieuNhap
+﻿@model QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Models.PhieuNhapCreateViewModel
 
 @{
     ViewData["Title"] = "Sửa phiếu nhập";
@@ -9,43 +9,66 @@
     <div class="row justify-content-center">
         <div class="col-md-7 col-lg-6">
             <div class="card shadow">
-                <div class="card-header bg-warning text-dark">
+                <div class="card-header bg-primary text-white">
                     <h4 class="mb-0">
                         <i class="bi bi-pencil-square"></i> Sửa phiếu nhập
                     </h4>
                 </div>
                 <div class="card-body">
-                    <form asp-area="NhanVienKho" asp-controller="PhieuNhaps" asp-action="Edit" autocomplete="off">
-                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
-                        <input type="hidden" asp-for="PhieuNhapId" />
+                    <form method="post" asp-area="NhanVienKho" asp-controller="PhieuNhaps" asp-action="Edit">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="PhieuNhap.PhieuNhapId" />
+                        <input type="hidden" asp-for="PhieuNhap.KhoId" />
+                        <input type="hidden" asp-for="PhieuNhap.NgayNhap" />
 
                         <div class="mb-3">
-                            <label asp-for="KhoId" class="form-label"></label>
-                            <select asp-for="KhoId" class="form-select" asp-items="ViewBag.KhoId"></select>
-                            <span asp-validation-for="KhoId" class="text-danger"></span>
+                            <label class="form-label">Chỉnh sửa linh kiện và số lượng</label>
+                            <table class="table table-bordered align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Tên linh kiện</th>
+                                        <th>Đơn giá</th>
+                                        <th>Số lượng</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.LinhKienInputs.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Model.LinhKienInputs[i].TenLinhKien
+                                                <input type="hidden" name="LinhKienInputs[@i].LinhKienId" value="@Model.LinhKienInputs[i].LinhKienId" />
+                                                <input type="hidden" name="LinhKienInputs[@i].TenLinhKien" value="@Model.LinhKienInputs[i].TenLinhKien" />
+                                                <input type="hidden" name="LinhKienInputs[@i].DonGia" value="@Model.LinhKienInputs[i].DonGia" />
+                                            </td>
+                                            <td>@Model.LinhKienInputs[i].DonGia</td>
+                                            <td>
+                                                <input type="number" name="LinhKienInputs[@i].SoLuong" class="form-control" min="0" value="@Model.LinhKienInputs[i].SoLuong" />
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="PhieuNhap.TrangThai" class="form-label">Trạng thái</label>
+                            <div>
+                                <input type="radio" asp-for="PhieuNhap.TrangThai" value="Done" id="trangthai-daxong" />
+                                <label for="trangthai-daxong" class="form-check-label">Done</label>
+                                &nbsp;&nbsp;
+                                <input type="radio" asp-for="PhieuNhap.TrangThai" value="!!!" id="trangthai-chuaxong" />
+                                <label for="trangthai-chuaxong" class="form-check-label">!!!</label>
+                            </div>
+                            <span asp-validation-for="PhieuNhap.TrangThai" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="NgayNhap" class="form-label"></label>
-                            <input asp-for="NgayNhap" class="form-control" type="date" />
-                            <span asp-validation-for="NgayNhap" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="TongTien" class="form-label"></label>
-                            <input asp-for="TongTien" class="form-control" />
-                            <span asp-validation-for="TongTien" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="TrangThai" class="form-label"></label>
-                            <input asp-for="TrangThai" class="form-control" />
-                            <span asp-validation-for="TrangThai" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="GhiChu" class="form-label"></label>
-                            <input asp-for="GhiChu" class="form-control" />
-                            <span asp-validation-for="GhiChu" class="text-danger"></span>
+                            <label asp-for="PhieuNhap.GhiChu" class="form-label">Ghi chú</label>
+                            <input asp-for="PhieuNhap.GhiChu" class="form-control" />
+                            <span asp-validation-for="PhieuNhap.GhiChu" class="text-danger"></span>
                         </div>
                         <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-warning me-2">
+                            <button type="submit" class="btn btn-primary me-2">
                                 <i class="bi bi-save"></i> Lưu thay đổi
                             </button>
                             <a href="/NhanVienKho/PhieuNhaps/Index" class="btn btn-secondary">

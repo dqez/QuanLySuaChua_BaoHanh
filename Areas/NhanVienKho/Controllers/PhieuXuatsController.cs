@@ -281,10 +281,5 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
-        private bool PhieuXuatExists(string id)
-        {
-            return _context.PhieuXuats.Any(e => e.PhieuXuatId == id);
-        }
     }
 }
