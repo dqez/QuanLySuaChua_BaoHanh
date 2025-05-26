@@ -1,0 +1,135 @@
+﻿@model QuanLySuaChua_BaoHanh.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Đăng nhập";
+    Layout = "_Layout";
+}
+
+<style>
+    body {
+        background-color: #FFFFFF;
+        font-family: 'Baloo 2', sans-serif;
+    }
+    
+    .login-container {
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 20px;
+    }
+    
+    .login-logo {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .login-logo img {
+        max-width: 150px;
+        border-radius: 52px;
+    }
+    
+    .login-form {
+        background-color: #FFFFFF;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
+    }
+    
+    .login-title {
+        font-family: 'Baloo 2', sans-serif;
+        font-size: 36px;
+        font-weight: 600;
+        text-align: center;
+        color: #319BC5;
+        margin-bottom: 30px;
+    }
+    
+    .form-control {
+        background-color: #D9D9D9;
+        border: none;
+        border-radius: 10px;
+        padding: 12px;
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+    
+    .form-label {
+        font-size: 24px;
+        margin-bottom: 8px;
+    }
+    
+    .btn-login {
+        background-color: #319BC5;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 20px;
+        font-family: 'Baloo 2', sans-serif;
+        font-size: 24px;
+        width: 100%;
+        margin-top: 20px;
+    }
+    
+    .login-links {
+        margin-top: 20px;
+        text-align: center;
+    }
+    
+    .login-links a {
+        color: #319BC5;
+        text-decoration: none;
+        font-size: 18px;
+    }
+</style>
+
+<div class="login-container">
+    @* <div class="login-logo"> *@
+    @*     <img src="/images/logo.png" alt="Logo" onerror="this.src='/images/default-logo.png'; this.onerror='';"> *@
+    @* </div> *@
+    
+    <div class="login-form">
+        <h2 class="login-title">Đăng nhập</h2>
+        
+        <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="UserName" class="form-label">Tên tài khoản</label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label">Mật khẩu</label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <div class="form-check">
+                    <input asp-for="RememberMe" class="form-check-input" />
+                    <label asp-for="RememberMe" class="form-check-label">@Html.DisplayNameFor(m => m.RememberMe)</label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-login">Đăng nhập</button>
+
+            <div class="login-links">
+                @* <p class="mb-2"> *@
+                @*     <a asp-action="ForgotPassword">Quên mật khẩu?</a> *@
+                @* </p> *@
+                <p>
+                    <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">
+                        Bạn chưa có tài khoản?   Đăng ký tại đây
+                    </a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Karma:wght@300;400;500&family=Lalezar&display=swap" rel="stylesheet">
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

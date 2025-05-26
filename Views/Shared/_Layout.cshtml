@@ -1,68 +1,141 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Panasonic Trung tâm bảo hành</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>@ViewData["Title"] - Panasonic Trung tâm bảo hành</title>    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/QuanLySuaChua_BaoHanh.styles.css" asp-append-version="true" />
-    <!-- Google Fonts for Baloo 2, Lalezar, Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;700&family=Inter&family=Lalezar&display=swap" rel="stylesheet">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Inter:wght@400;500&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --blue-primary: #319BC5;
+            --white: #FFFFFF;
+            --black: #000000;
+            --gray-light: #F8F8F8;
+            --gray-border: #DDDDDD;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F8F8;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header styles */
+        .header {
+            background-color: var(--white);
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            height: 70px;
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text {
+            font-family: 'Baloo 2', cursive;
+            font-weight: 700;
+            font-size: 32px;
+            color: var(--blue-primary);
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        .logo-subtext {
+            font-family: 'Baloo 2', cursive;
+            font-weight: 400;
+            font-size: 16px;
+            color: var(--black);
+            margin: -5px 0 0 0;
+        }
+
+        .search-container {
+            display: flex;
+            width: 30%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            flex-grow: 1;
+            border: 1px solid var(--gray-border);
+            border-right: none;
+            border-radius: 26px 0 0 27px;
+            padding: 10px 15px;
+            font-size: 14px;
+        }
+
+        .search-input:focus {
+            outline: none;
+        }
+
+        .search-button {
+            background-color: var(--blue-primary);
+            border: none;
+            border-radius: 0 19px 20px 0;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-button i {
+            color: white;
+            font-size: 18px;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .header-icons i {
+            font-size: 24px;
+            color: var(--blue-primary);
+            cursor: pointer;
+        }
+        
+        /* Adjust main content to account for fixed header */
+        .container {
+            margin-top: 90px;
+        }
+        /* .dropdown-item:hover {
+            background-color: #f8f9fa !important;
+            color: #319bc5 !important;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #0066cc !important;
+            border-color: #319bc5 !important;
+        } */
+    </style>
 </head>
 <body>
-    <header class="header box-shadow">
-        <div class="container-fluid">
-            <div class="header-wrapper">
-                <div class="brand">
-                    <div class="brand-name">Panasonic</div>
-                    <div class="brand-subtitle">Trung tâm bảo hành</div>
-                </div>
-                <div class="search-container">
-                    <div class="search-input">
-                        <input type="text" placeholder="Tìm kiếm" />
-                        <button class="search-button">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="header-icons">
-                    <a href="#" class="icon"><i class="fa-solid fa-bell"></i></a>
-                    <a href="#" class="icon"><i class="fas fa-map-marker-alt"></i></a>
-                    <a href="#" class="icon"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="icon"><i class="fas fa-user"></i></a>
-                </div>
-            </div>
-        </div>
-    </header>
-    
-    <div class="bar">
-        <div class="container-fluid">
-            <div class="bar-content">
-                <a href="#" class="bar-icon-left"><i class="fas fa-home"></i></a>
-                <a href="#" class="bar-item">Giới thiệu</a>
-                <a href="#" class="bar-item">Đăng kí dịch vụ</a>
-                <a href="#" class="bar-item active">Đơn sửa chữa</a>
-                <div class="bar-icons">
-                    <a href="#" class="icon"><i class="fas fa-user"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
+@await Html.PartialAsync("_HeaderPartial")
 
-    <div class="container">
+<div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - Panasonic Trung tâm bảo hành - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

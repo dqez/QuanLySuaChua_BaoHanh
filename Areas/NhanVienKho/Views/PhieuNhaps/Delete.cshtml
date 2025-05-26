@@ -1,0 +1,69 @@
+﻿@model QuanLySuaChua_BaoHanh.Models.PhieuNhap
+@{
+    ViewData["Title"] = "Xóa phiếu nhập";
+    Layout = "~/Areas/NhanVienKho/Views/Shared/_LayoutStashEmployee.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white d-flex align-items-center">
+                    <i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i>
+                    <h4 class="mb-0">Xóa phiếu nhập</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning d-flex align-items-center mb-4" role="alert">
+                        <i class="bi bi-exclamation-diamond-fill me-2 fs-5"></i>
+                        <div>
+                            <strong>Cảnh báo:</strong> Hành động này không thể hoàn tác.<br />
+                            Tất cả dữ liệu liên quan đến phiếu nhập này sẽ bị <span class="text-danger fw-bold">xóa vĩnh viễn</span>.
+                        </div>
+                    </div>
+                    <h5 class="mb-3 text-danger">
+                        Bạn có chắc chắn muốn xóa phiếu nhập này?
+                    </h5>
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Mã phiếu nhập:</dt>
+                        <dd class="col-sm-8 fw-semibold">@Model.PhieuNhapId</dd>
+
+                        <dt class="col-sm-4">Ngày nhập:</dt>
+                        <dd class="col-sm-8">@Model.NgayNhap.ToString("dd/MM/yyyy")</dd>
+
+                        <dt class="col-sm-4">Tổng tiền:</dt>
+                        <dd class="col-sm-8 text-danger fw-bold">@Model.TongTien?.ToString("N0") ₫</dd>
+
+                        <dt class="col-sm-4">Trạng thái:</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.TrangThai == "Done")
+                            {
+                                <span class="badge bg-success"><i class="bi bi-check-circle"></i> Đã xong</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split"></i> Chưa xong</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4">Ghi chú:</dt>
+                        <dd class="col-sm-8">@Model.GhiChu</dd>
+
+                        <dt class="col-sm-4">Mã kho:</dt>
+                        <dd class="col-sm-8">@Model.Kho?.Id</dd>
+                    </dl>
+                    <hr />
+                    <form asp-area="NhanVienKho" asp-controller="PhieuNhaps" asp-action="Delete" method="post" class="d-flex justify-content-end gap-2 mt-4">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="PhieuNhapId" />
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Xác nhận xóa
+                        </button>
+                        <a href="/NhanVienKho/PhieuNhaps/Index" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Hủy
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

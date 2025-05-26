@@ -1,0 +1,45 @@
+﻿@model QuanLySuaChua_BaoHanh.Models.ThanhPho
+
+@{
+    ViewData["Title"] = "Chỉnh Sửa Thành Phố";
+    Layout = "~/Areas/QuanTriVien/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid p-0">
+    <div class="mb-4">
+        <h1 style="font-family: 'Baloo 2', cursive; color: var(--blue-primary); font-weight: 600;">Chỉnh Sửa Thành Phố</h1>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="ThanhPhoId" />
+                
+                <div class="form-group mb-3">
+                    <label asp-for="ThanhPhoId" class="form-label fw-bold">Mã Thành Phố</label>
+                    <input asp-for="ThanhPhoId" class="form-control" readonly style="background-color: #e9ecef;" />
+                </div>
+                
+                <div class="form-group mb-4">
+                    <label asp-for="TenThanhPho" class="form-label fw-bold">Tên Thành Phố</label>
+                    <input asp-for="TenThanhPho" class="form-control" />
+                    <span asp-validation-for="TenThanhPho" class="text-danger"></span>
+                </div>
+                
+                <div class="form-group d-flex gap-2">
+                    <button type="submit" class="btn" style="background-color: var(--blue-primary); color: white;">
+                        <i class="bi bi-check-circle me-1"></i> Lưu Thay Đổi
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Quay Lại
+                    </a>
+                </div>            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

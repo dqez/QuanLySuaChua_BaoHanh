@@ -1,0 +1,92 @@
+﻿@model QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models.PhuongViewModel
+
+@{
+    ViewData["Title"] = "Chỉnh Sửa Phường/Xã";
+    Layout = "~/Areas/QuanTriVien/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid p-0">
+    <div class="mb-4">
+        <h1 style="font-family: 'Baloo 2', cursive; color: var(--blue-primary); font-weight: 600;">Chỉnh Sửa Phường/Xã</h1>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Phuong.PhuongId" />
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-bold">Thành Phố</label>
+                            <select id="ThanhPhoSelect" asp-for="Phuong.Quan.ThanhPhoId" class="form-control">
+                                @foreach (var tp in Model.ThanhPhos)
+                                {
+                                    <option value="@tp.Value">@tp.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="Phuong.QuanId" class="form-label fw-bold">Quận/Huyện</label>
+                            <select id="QuanSelect" asp-for="Phuong.QuanId" class="form-control">
+                                @foreach (var q in Model.Quans)
+                                {
+                                    <option value="@q.Value">@q.Text</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Phuong.QuanId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="Phuong.TenPhuong" class="form-label fw-bold">Tên Phường/Xã</label>
+                            <input asp-for="Phuong.TenPhuong" class="form-control" placeholder="Nhập tên phường/xã" />
+                            <span asp-validation-for="Phuong.TenPhuong" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group d-flex gap-2 mt-3">
+                    <button type="submit" class="btn" style="background-color: var(--blue-primary); color: white;">
+                        <i class="bi bi-save me-1"></i> Lưu Thay Đổi
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Quay Lại
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(document).ready(function () {
+        $('#ThanhPhoSelect').change(function () {
+            var selectedThanhPhoId = $(this).val();
+
+            $.ajax({
+                url: '/QuanTriVien/Phuongs/GetQuansByThanhPho',
+                type: 'GET',
+                data: { thanhPhoId: selectedThanhPhoId },
+                success: function (data) {
+                    var quanSelect = $('#QuanSelect');
+                    quanSelect.empty(); // Clear old options
+                    $.each(data, function (index, item) {
+                        quanSelect.append($('<option>', {
+                            value: item.quanId,
+                            text: item.quanId + " - " + item.tenQuan
+                        }));
+                    });
+                }
+            });
+        });
+    });
+</script>
+}

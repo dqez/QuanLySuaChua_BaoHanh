@@ -1,0 +1,342 @@
+@model IEnumerable<QuanLySuaChua_BaoHanh.Models.PhieuSuaChua>
+
+@{
+    ViewData["Title"] = "Danh sách đơn sửa chữa";
+}
+
+<style>
+    .search-container {
+        position: relative;
+        margin-bottom: 24px;
+    }
+    
+    .search-container input {
+        padding-left: 40px;
+        border-radius: 8px;
+        border: 1px solid var(--gray-border);
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    
+    .search-icon {
+        position: absolute;
+        left: 14px;
+        top: 10px;
+        color: #9CA3AF;
+    }
+    
+    .order-card {
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .order-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+    }
+    
+    .order-header {
+        padding: 16px 20px;
+        background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+        border-bottom: 1px solid #BFDBFE;
+    }
+    
+    .order-body {
+        padding: 20px;
+        flex: 1;
+    }
+    
+    .order-footer {
+        padding: 12px 20px;
+        background-color: #F9FAFB;
+        border-top: 1px solid var(--gray-border);
+    }
+    
+    .info-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px dashed var(--gray-border);
+    }
+    
+    .info-row:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    
+    .info-label {
+        width: 120px;
+        font-weight: 500;
+        color: #6B7280;
+        display: flex;
+        align-items: center;
+    }
+    
+    .info-label i {
+        margin-right: 8px;
+        font-size: 16px;
+        color: #4B5563;
+    }
+    
+    .info-value {
+        flex: 1;
+        font-weight: 500;
+    }
+    
+    .btn-sm {
+        padding: 6px 12px;
+        font-size: 0.875rem;
+    }
+    
+    .status-pending {
+        background-color: #FEF3C7;
+        color: #92400E;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+    
+    .note-truncate {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        line-height: 1.5;
+    }
+    
+    .tab-content {
+        padding-top: 1rem;
+    }
+    
+    .nav-tabs {
+        border-bottom: 2px solid #E5E7EB;
+    }
+    
+    .nav-tabs .nav-link {
+        border: none;
+        color: #4B5563;
+        font-weight: 500;
+        padding: 10px 16px;
+        border-bottom: 3px solid transparent;
+        margin-bottom: -2px;
+        transition: all 0.2s ease;
+    }
+    
+    .nav-tabs .nav-link:hover {
+        border-color: #93C5FD;
+    }
+    
+    .nav-tabs .nav-link.active {
+        color: var(--blue-primary);
+        border-bottom-color: var(--blue-primary);
+        background-color: transparent;
+    }
+    
+    .order-empty-state {
+        text-align: center;
+        padding: 40px 0;
+        background-color: #F9FAFB;
+        border-radius: 12px;
+        border: 1px dashed #CBD5E1;
+    }
+    
+    .empty-icon {
+        font-size: 48px;
+        color: #94A3B8;
+        margin-bottom: 16px;
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fs-1 fw-bold mb-0">Đơn sửa chữa đã được phân công</h2>
+</div>
+
+<div class="search-container">
+    <i class="bi bi-search search-icon"></i>
+    <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm đơn sửa chữa..." />
+</div>
+
+<ul class="nav nav-tabs" id="orderTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">
+            <i class="bi bi-grid me-1"></i> Tất cả
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="list-tab" data-bs-toggle="tab" data-bs-target="#list" type="button" role="tab" aria-controls="list" aria-selected="false">
+            <i class="bi bi-list-ul me-1"></i> Dạng danh sách
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="orderTabsContent">
+    <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+        @if (!Model.Any())
+        {
+            <div class="order-empty-state">
+                <i class="bi bi-clipboard-x empty-icon d-block"></i>
+                <h5 class="fw-semibold">Không có đơn sửa chữa</h5>
+                <p class="text-muted">Chưa có đơn sửa chữa nào được phân công cho bạn.</p>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card order-card shadow-sm">
+                            <div class="order-header">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0 fw-bold text-primary">@item.PhieuSuaChuaId</h5>
+                                    <span class="status-pending">Chờ xử lý</span>
+                                </div>
+                            </div>
+                            <div class="order-body">
+                                <div class="info-row">
+                                    <div class="info-label">
+                                        <i class="bi bi-person"></i> Khách hàng
+                                    </div>
+                                    <div class="info-value">
+                                        @item.KhachHang.HoTen
+                                    </div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-label">
+                                        <i class="bi bi-calendar"></i> Ngày gửi
+                                    </div>
+                                    <div class="info-value">
+                                        @item.NgayGui.ToString("dd/MM/yyyy HH:mm")
+                                    </div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-label">
+                                        <i class="bi bi-geo-alt"></i> Địa chỉ
+                                    </div>
+                                    <div class="info-value">
+                                        @(item.DiaChiNhanTraSanPham.Length > 30 ? item.DiaChiNhanTraSanPham.Substring(0, 30) + "..." : item.DiaChiNhanTraSanPham)
+                                    </div>
+                                </div>
+                                <div class="note-truncate text-muted mt-2">
+                                    <i class="bi bi-chat-left-text me-1"></i>
+                                    @item.MoTaKhachHang
+                                </div>
+                            </div>
+                            <div class="order-footer">
+                                <div class="d-flex justify-content-between gap-2">
+                                    <a asp-action="ChiTiet" asp-route-id="@item.PhieuSuaChuaId" class="btn btn-outline-primary btn-sm flex-grow-1">
+                                        <i class="bi bi-eye me-1"></i> Chi tiết
+                                    </a>
+                                    <a asp-action="BatDauXuLy" asp-route-id="@item.PhieuSuaChuaId" class="btn btn-primary btn-sm flex-grow-1">
+                                        <i class="bi bi-tools me-1"></i> Bắt đầu xử lý
+                                    </a>
+                                    <a asp-action="Huy" asp-route-id="@item.PhieuSuaChuaId"
+                                       class="btn btn-danger btn-sm flex-grow-1">
+                                        <i class="bi bi-x-circle me-1"></i> Hủy
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+    
+    <div class="tab-pane fade" id="list" role="tabpanel" aria-labelledby="list-tab">
+        @if (!Model.Any())
+        {
+            <div class="order-empty-state">
+                <i class="bi bi-clipboard-x empty-icon d-block"></i>
+                <h5 class="fw-semibold">Không có đơn sửa chữa</h5>
+                <p class="text-muted">Chưa có đơn sửa chữa nào được phân công cho bạn.</p>
+            </div>
+        }
+        else
+        {
+            <div class="card">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Mã phiếu</th>
+                                <th>Khách hàng</th>
+                                <th>Mô tả</th>
+                                <th>Ngày gửi</th>
+                                <th>Địa chỉ</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="fw-medium">@item.PhieuSuaChuaId</td>
+                                    <td>@item.KhachHang.HoTen</td>
+                                    <td>@item.MoTaKhachHang.Substring(0, Math.Min(50, item.MoTaKhachHang.Length))...</td>
+                                    <td>@item.NgayGui.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>@item.DiaChiNhanTraSanPham.Substring(0, Math.Min(30, item.DiaChiNhanTraSanPham.Length))...</td>
+                                    <td>
+                                        <div class="d-flex gap-2">
+                                            <a asp-action="ChiTiet" asp-route-id="@item.PhieuSuaChuaId" class="btn btn-outline-primary btn-sm">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a asp-action="BatDauXuLy" asp-route-id="@item.PhieuSuaChuaId" class="btn btn-primary btn-sm">
+                                                <i class="bi bi-tools"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                // Cards view search
+                const cards = document.querySelectorAll('.order-card');
+                cards.forEach(card => {
+                    const cardContent = card.textContent.toLowerCase();
+                    const cardParent = card.parentElement;
+                    
+                    if (cardContent.includes(searchTerm)) {
+                        cardParent.style.display = '';
+                    } else {
+                        cardParent.style.display = 'none';
+                    }
+                });
+                
+                // List view search
+                const rows = document.querySelectorAll('#list tbody tr');
+                rows.forEach(row => {
+                    const rowContent = row.textContent.toLowerCase();
+                    
+                    if (rowContent.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+}

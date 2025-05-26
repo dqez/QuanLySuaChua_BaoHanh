@@ -1,0 +1,227 @@
+@using Newtonsoft.Json
+
+@model QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models.KyThuatVienViewModel
+@{
+    ViewData["Title"] = "Báo cáo kỹ thuật viên";
+    Layout = "~/Areas/QuanTriVien/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">Báo cáo kỹ thuật viên</h2>
+        <a href="@Url.Action("Index", "ThongKe")" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left mr-2"></i>Quay lại tổng quan
+        </a>
+    </div>
+
+    <!-- Bộ lọc thời gian -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <form asp-action="KyThuatVien" method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Từ ngày:</label>
+                    <input type="date" name="tuNgay" class="form-control" value="@Model.TuNgay.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Đến ngày:</label>
+                    <input type="date" name="denNgay" class="form-control" value="@Model.DenNgay.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary">Áp dụng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Biểu đồ hiệu suất -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Hiệu suất kỹ thuật viên</h6>
+        </div>
+        <div class="card-body">
+            <div class="chart-bar">
+                <canvas id="techPerformanceChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bảng hiệu suất chi tiết -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Chi tiết hiệu suất kỹ thuật viên</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="techTable">
+                    <thead>
+                        <tr>
+                            <th>Kỹ thuật viên</th>
+                            <th>Tổng số đơn</th>
+                            <th>Đơn hoàn thành</th>
+                            <th>Đơn đang xử lý</th>
+                            <th>Tỉ lệ hoàn thành</th>
+                            <th>Thời gian trung bình (ngày)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.HieuSuatKyThuatVien)
+                        {
+                            <tr>
+                                <td>@item.TenKyThuat</td>
+                                <td>@item.TongSoDon</td>
+                                <td>@item.SoDonHoanThanh</td>
+                                <td>@item.SoDonDangXuLy</td>
+                                <td>@Math.Round(item.TyLeHoanThanh, 1)%</td>
+                                <td>@Math.Round(item.ThoiGianTrungBinh, 1)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thẻ hiệu suất -->
+    <div class="row">
+        @foreach (var item in Model.HieuSuatKyThuatVien.Take(4))
+        {
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card shadow border-left-primary h-100 py-2">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            @item.TenKyThuat
+                        </div>
+                        <div class="row no-gutters align-items-center mb-2">
+                            <div class="col mr-2">
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">@item.TongSoDon đơn</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-user-cog fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-auto mr-2">
+                                <div class="text-xs font-weight-bold text-success">Hoàn thành: @Math.Round(item.TyLeHoanThanh, 1)%</div>
+                            </div>
+                            <div class="col">
+                                <div class="progress progress-sm">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: @item.TyLeHoanThanh%" 
+                                         aria-valuenow="@item.TyLeHoanThanh" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <small>Thời gian xử lý: @Math.Round(item.ThoiGianTrungBinh, 1) ngày</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <!-- ChartJS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+    <script>
+        $(document).ready(function() {
+            $('#techTable').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/vi.json"
+                },
+                "pageLength": 10,
+                "order": [[1, "desc"]] // Sắp xếp theo tổng số đơn (giảm dần)
+            });
+        });
+
+        // Biểu đồ hiệu suất kỹ thuật viên
+        var techData = @Html.Raw(JsonConvert.SerializeObject(Model.HieuSuatKyThuatVien.Take(8).Select(x => new { 
+            x.TenKyThuat, 
+            x.TongSoDon, 
+            x.SoDonHoanThanh, 
+            x.SoDonDangXuLy,
+            ThoiGian = Math.Round(x.ThoiGianTrungBinh, 1)
+        })));
+        
+        var techLabels = techData.map(item => item.TenKyThuat);
+        var techTotal = techData.map(item => item.TongSoDon);
+        var techCompleted = techData.map(item => item.SoDonHoanThanh);
+        var techProcessing = techData.map(item => item.SoDonDangXuLy);
+        var avgTime = techData.map(item => item.ThoiGian);
+
+        var techPerformanceChart = new Chart(document.getElementById("techPerformanceChart"), {
+            type: 'bar',
+            data: {
+                labels: techLabels,
+                datasets: [
+                    {
+                        label: 'Đơn hoàn thành',
+                        backgroundColor: '#1cc88a',
+                        data: techCompleted,
+                    },
+                    {
+                        label: 'Đơn đang xử lý',
+                        backgroundColor: '#f6c23e',
+                        data: techProcessing,
+                    },
+                    {
+                        label: 'Thời gian trung bình (ngày)',
+                        backgroundColor: '#4e73df',
+                        type: 'line',
+                        data: avgTime,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        stacked: true,
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Số đơn'
+                        }
+                    },
+                    y1: {
+                        position: 'right',
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Thời gian (ngày)'
+                        },
+                        grid: {
+                            drawOnChartArea: false
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                let value = context.raw;
+                                
+                                if (label === 'Thời gian trung bình (ngày)') {
+                                    return label + ': ' + value + ' ngày';
+                                } else {
+                                    return label + ': ' + value + ' đơn';
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}

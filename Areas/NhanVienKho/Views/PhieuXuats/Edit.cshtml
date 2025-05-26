@@ -1,0 +1,175 @@
+﻿@model QuanLySuaChua_BaoHanh.Models.PhieuXuat
+
+@{
+    ViewData["Title"] = "Sửa phiếu xuất";
+    Layout = "~/Areas/NhanVienKho/Views/Shared/_LayoutStashEmployee.cshtml";
+}
+<style>
+    .glass-edit-card {
+        background: rgba(255,255,255,0.97);
+        border-radius: 2rem;
+        box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255,255,255,0.22);
+        padding: 2.5rem 2rem 2rem 2rem;
+        position: relative;
+        overflow: hidden;
+        min-height: 540px;
+    }
+
+        .glass-edit-card::before {
+            content: "";
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #ffd96655 0%, #ffe69922 100%);
+            z-index: 0;
+            border-radius: 50%;
+            filter: blur(2px);
+        }
+
+        .glass-edit-card::after {
+            content: "";
+            position: absolute;
+            bottom: -40px;
+            left: -40px;
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle, #ffe69933 0%, #ffd96611 100%);
+            z-index: 0;
+            border-radius: 50%;
+            filter: blur(2px);
+        }
+
+    .edit-bg-illu {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.08;
+        background: url('https://cdn.pixabay.com/photo/2017/01/31/13/14/icon-2027661_1280.png') center/cover no-repeat;
+    }
+
+    .edit-icon {
+        font-size: 3.5rem;
+        color: #ffb300;
+        background: linear-gradient(135deg, #ffd966 0%, #ffe699 100%);
+        border-radius: 1.2rem;
+        padding: 0.7rem 1.2rem;
+        box-shadow: 0 4px 16px 0 #ffd96633;
+        margin-bottom: 1.2rem;
+        z-index: 1;
+        position: relative;
+        display: inline-block;
+    }
+
+    .edit-title-gradient {
+        background: linear-gradient(90deg, #ffb300 0%, #ffe699 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .edit-label {
+        color: #ffb300;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        font-size: 1.08rem;
+    }
+
+    .edit-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .edit-actions {
+        margin-top: 2.5rem;
+    }
+
+    .edit-form-select {
+        background: rgba(255,255,255,0.85);
+        border-radius: 1rem;
+        border: 1.5px solid #ffe699;
+        box-shadow: 0 2px 8px 0 #ffd96622;
+    }
+
+    .edit-radio-label {
+        font-weight: 500;
+        margin-right: 1.5rem;
+        color: #ffb300;
+    }
+
+    .edit-radio input[type="radio"] {
+        accent-color: #ffb300;
+    }
+</style>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-xl-8 col-lg-10 position-relative">
+            <div class="glass-edit-card shadow position-relative">
+                <div class="edit-bg-illu"></div>
+                <div class="text-center position-relative z-1">
+                    <span class="edit-icon">
+                        <i class="bi bi-pencil-square"></i>
+                    </span>
+                    <h2 class="mb-2 fw-bold edit-title-gradient">Sửa phiếu xuất</h2>
+                    <div class="mb-4">
+                        <span class="badge bg-warning text-dark fs-6 px-3 py-2">
+                            Mã phiếu: @Model.PhieuXuatId
+                        </span>
+                    </div>
+                </div>
+                <form asp-area="NhanVienKho" asp-controller="PhieuXuats" asp-action="Edit" autocomplete="off" class="position-relative z-1">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="PhieuXuatId" />
+                    <input type="hidden" asp-for="KhoId" />
+                    <input type="hidden" asp-for="NgayXuat" />
+                    <input type="hidden" asp-for="TongTien" />
+
+                    <div class="edit-section">
+                        <label class="form-label edit-label"><i class="bi bi-list-check"></i> Chọn phiếu sửa chữa</label>
+                        <select name="phieuSuaChuaIds" class="form-select edit-form-select" multiple style="min-height:120px;">
+                            @foreach (var item in ViewBag.PhieuSuaChuaList as List<SelectListItem>)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                        <span class="text-danger">@ViewData.ModelState["phieuSuaChuaIds"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 edit-section">
+                            <label class="form-label edit-label"><i class="bi bi-info-circle"></i> Trạng thái</label>
+                            <div class="edit-radio">
+                                <input type="radio" asp-for="TrangThai" value="Done" id="trangthai-done" />
+                                <label for="trangthai-done" class="form-check-label edit-radio-label">Đã xong</label>
+                                <input type="radio" asp-for="TrangThai" value="!!!" id="trangthai-todo" />
+                                <label for="trangthai-todo" class="form-check-label edit-radio-label">Chưa xong</label>
+                            </div>
+                            <span asp-validation-for="TrangThai" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 edit-section">
+                            <label asp-for="GhiChu" class="form-label edit-label"><i class="bi bi-card-text"></i> Ghi chú</label>
+                            <textarea asp-for="GhiChu" class="form-control" rows="2" placeholder="Nhập ghi chú (nếu có)"></textarea>
+                            <span asp-validation-for="GhiChu" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 edit-actions">
+                        <button type="submit" class="btn btn-warning text-white px-4">
+                            <i class="bi bi-save"></i> Lưu thay đổi
+                        </button>
+                        <a href="/NhanVienKho/PhieuXuats/Index" class="btn btn-secondary px-4">
+                            <i class="bi bi-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

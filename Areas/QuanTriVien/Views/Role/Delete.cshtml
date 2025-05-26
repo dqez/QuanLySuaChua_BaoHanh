@@ -1,0 +1,118 @@
+﻿@model Microsoft.AspNetCore.Identity.IdentityRole<string>
+@{
+    ViewData["Title"] = "Xóa vai trò";
+    Layout = "_LayoutAdmin";
+}
+
+<style>
+    .page-title {
+        font-family: 'Baloo 2', cursive;
+        font-weight: 700;
+        color: var(--blue-primary);
+        margin-bottom: 25px;
+    }
+    
+    .content-card {
+        background-color: var(--white);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        margin-bottom: 30px;
+        width: 100%;
+    }
+    
+    .warning-header {
+        background-color: #fff8f8;
+        border-left: 4px solid #dc3545;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .delete-info {
+        background-color: #f8f9fa;
+        border-radius: 6px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .info-label {
+        font-weight: 600;
+        color: #495057;
+    }
+    
+    .info-value {
+        font-weight: 400;
+        color: #212529;
+    }
+    
+    .btn-danger-custom {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 16px;
+        text-decoration: none;
+        font-size: 14px;
+        transition: background-color 0.2s;
+    }
+    
+    .btn-danger-custom:hover {
+        background-color: #c82333;
+        color: white;
+    }
+    
+    .btn-secondary-custom {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 16px;
+        text-decoration: none;
+        font-size: 14px;
+        transition: background-color 0.2s;
+    }
+    
+    .btn-secondary-custom:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+</style>
+
+<h1 class="page-title"><i class="bi bi-trash me-2"></i>Xóa quyền hạn</h1>
+
+<div class="content-card">
+    <div class="warning-header">
+        <h5 class="text-danger mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Cảnh báo xóa</h5>
+    </div>
+    
+    <h4 class="mb-4">Bạn có chắc chắn muốn xóa quyền hạn này?</h4>
+    
+    <div class="delete-info">
+        <div class="row mb-3">
+            <div class="col-sm-3 col-md-2">
+                <span class="info-label">Mã quyền hạn:</span>
+            </div>
+            <div class="col-sm-9 col-md-10">
+                <span class="info-value">@Model.Id</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3 col-md-2">
+                <span class="info-label">Tên quyền hạn:</span>
+            </div>
+            <div class="col-sm-9 col-md-10">
+                <span class="info-value">@Model.Name</span>
+            </div>
+        </div>
+    </div>
+    
+    <form asp-action="Delete" class="mt-4">
+        <input type="hidden" name="id" value="@Model.Id" />
+        <button type="submit" class="btn-danger-custom me-2">
+            <i class="bi bi-trash me-1"></i>Xác nhận xóa
+        </button>
+        <a asp-action="Index" class="btn-secondary-custom">
+            <i class="bi bi-arrow-left me-1"></i>Quay lại
+        </a>
+    </form>
+</div>

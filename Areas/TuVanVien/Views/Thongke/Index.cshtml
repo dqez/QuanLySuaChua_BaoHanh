@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewData["Title"] = "Thống kê và báo cáo";
+    var tuNgay = ((DateTime)ViewBag.TuNgay).ToString("yyyy-MM-dd");
+    var denNgay = ((DateTime)ViewBag.DenNgay).ToString("yyyy-MM-dd");
+    Layout = "~/Areas/TuVanVien/Views/Shared/_LayoutTuVanVien.cshtml";
+
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary mb-4">Thống kê và báo cáo</h2>
+
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <label for="tuNgay" class="form-label">Từ ngày:</label>
+            <input type="date" id="tuNgay" name="tuNgay" class="form-control" value="@tuNgay" />
+        </div>
+        <div class="col-md-3">
+            <label for="denNgay" class="form-label">Đến ngày:</label>
+            <input type="date" id="denNgay" name="denNgay" class="form-control" value="@denNgay" />
+        </div>
+        <div class="col-md-3 align-self-end">
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-funnel-fill"></i> Áp dụng
+            </button>
+        </div>
+    </form>
+
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3 text-center">
+                <h6 class="text-uppercase text-primary">Tổng số đơn sửa chữa</h6>
+                <h4>@ViewBag.TongSoDonSuaChua</h4>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3 text-center">
+                <h6 class="text-uppercase text-success">Tổng doanh thu</h6>
+                <h4>@string.Format("{0:N0} VNĐ", ViewBag.TongDoanhThu)</h4>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3 text-center">
+                <h6 class="text-uppercase text-info">Đơn chờ xác nhận</h6>
+                <h4>@ViewBag.SoDonChoXacNhan</h4>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3 text-center">
+                <h6 class="text-uppercase text-warning">Đơn đang xử lý</h6>
+                <h4>@ViewBag.SoDonDangXuLy</h4>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3 text-center">
+                <h6 class="text-uppercase text-primary">Đơn đã hoàn thành</h6>
+                <h4>@ViewBag.SoDonHoanThanh</h4>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3 text-center">
+                <h6 class="text-uppercase text-danger">Đơn đã hủy</h6>
+                <h4>@ViewBag.SoDonHuy</h4>
+            </div>
+        </div>
+    </div> <!
+    <div class="card mt-4">
+        <div class="card-header">
+            <strong class="text-primary">Báo cáo chi tiết</strong>
+        </div>
+        <div class="card-body d-flex flex-wrap justify-content-start">
+            <a asp-controller="ThongKe" asp-action="DoanhThu" class="btn btn-info font-weight-bold m-2">
+                Báo cáo doanh thu
+            </a>
+            <a asp-controller="ThongKe" asp-action="DonSuaChua" class="btn btn-success font-weight-bold m-2">
+                Báo cáo đơn sửa chữa
+            </a>
+        </div>
+    </div>
+
+
+    </div>
+</div>

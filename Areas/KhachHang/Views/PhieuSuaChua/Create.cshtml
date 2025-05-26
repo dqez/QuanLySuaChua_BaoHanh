@@ -1,0 +1,135 @@
+﻿@model QuanLySuaChua_BaoHanh.Areas.KhachHang.Models.PhieuSuaChuaVM
+@{
+    ViewData["Title"] = "Đăng ký phiếu sửa chữa";
+}
+
+<link rel="stylesheet" href="~/css/repair-form.css" asp-append-version="true" />
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="repair-form">
+                <h2 class="text-center mb-4">Đăng Ký Phiếu Sửa Chữa</h2>
+
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group">
+                        <label asp-for="SanPhamIds" class="form-label"></label>
+                        <select asp-for="SanPhamIds" class="form-control select2" multiple="multiple">
+                            @if (ViewBag.Products != null)
+                            {
+                                foreach (var item in ViewBag.Products)
+                                {
+                                    var conBaoHanh = item.NgayHetHanBh > DateOnly.FromDateTime(DateTime.Now);
+                                    var trangThai = conBaoHanh ? "Còn BH" : "Hết BH";
+                                    <option value="@item.SanPhamId">@item.SanPhamId - @item.TenSanPham - @trangThai</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="SanPhamIds" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label">Tỉnh/Thành phố:</label>
+                                <select id="thanhPho" class="form-select" required>
+                                    <option value="">Chọn tỉnh/thành phố</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label">Quận/Huyện:</label>
+                                <select id="quan" class="form-select" required>
+                                    <option value="">Chọn quận/huyện</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label">Phường/Xã:</label>
+                                <select asp-for="PhuongId" id="phuong" class="form-select">
+                                    <option value="">Chọn phường/xã</option>
+                                </select>
+                                <span asp-validation-for="PhuongId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="DiaChiNhanTraSanPham" class="form-label"></label>
+                        <input asp-for="DiaChiNhanTraSanPham" class="form-control" placeholder="Nhập số nhà, tên đường" />
+                        <span asp-validation-for="DiaChiNhanTraSanPham" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="MoTaKhachHang" class="form-label"></label>
+                        <textarea asp-for="MoTaKhachHang" class="form-control" placeholder="Mô tả lỗi" rows="4"></textarea>
+                        <span asp-validation-for="MoTaKhachHang" class="text-danger"></span>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="submit-btn">Xác nhận</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.select2').select2({
+                placeholder: "Chọn sản phẩm cần sửa",
+                width: '100%'
+            });
+        });
+    </script>
+
+    <script>
+        $(function () {
+            $.get('/api/cities', function (cities) {
+                $('#thanhPho').append(cities.map(city =>
+                    `<option value="${city.id}">${city.name}</option>`
+                ));
+            });
+
+            $('#thanhPho').change(function () {
+                const cityId = $(this).val();
+                if (cityId) {
+                    $.get(`/api/districts/${cityId}`, function (districts) {
+                        $('#quan')
+                            .empty()
+                            .append('<option value="">Chọn quận/huyện</option>')
+                            .append(districts.map(d =>
+                                `<option value="${d.id}">${d.name}</option>`
+                            ));
+                    });
+                }
+            });
+
+            $('#quan').change(function () {
+                const districtId = $(this).val();
+                if (districtId) {
+                    $.get(`/api/wards/${districtId}`, function (wards) {
+                        $('#phuong')
+                            .empty()
+                            .append('<option value="">Chọn phường/xã</option>')
+                            .append(wards.map(w =>
+                                `<option value="${w.id}">${w.name}</option>`
+                            ));
+                    });
+                }
+            });
+        });
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

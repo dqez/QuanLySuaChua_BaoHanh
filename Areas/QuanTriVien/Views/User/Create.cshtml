@@ -1,0 +1,317 @@
+﻿@model QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models.CreateUserViewModel
+@{
+    ViewData["Title"] = "Thêm người dùng mới";
+    Layout = "_LayoutAdmin";
+}
+
+<style>
+    /* Styles for User Create/Edit pages */
+    :root {
+        --blue-primary: #319BC5;
+        --white: #FFFFFF;
+        --black: #000000;
+        --gray-light: #F8F8F8;
+        --gray-border: #DDDDDD;
+    }
+
+    .page-title {
+        font-family: 'Baloo 2', cursive;
+        font-weight: 700;
+        color: var(--blue-primary);
+        margin-bottom: 1.5rem;
+        font-size: 2rem;
+    }
+
+    .content-card {
+        background-color: var(--white);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        width: 100%;
+    }
+
+    .card-header-custom {
+        background-color: var(--blue-primary);
+        color: var(--white);
+        font-family: 'Baloo 2', cursive;
+        font-weight: 600;
+        padding: 1rem 1.5rem;
+        border-radius: 8px 8px 0 0;
+        display: flex;
+        align-items: center;
+    }
+
+        .card-header-custom i {
+            margin-right: 0.5rem;
+            font-size: 1.25rem;
+        }
+
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-control {
+        border-radius: 6px;
+        border: 1px solid var(--gray-border);
+        padding: 0.5rem 0.75rem;
+        transition: all 0.2s;
+    }
+
+        .form-control:focus {
+            border-color: var(--blue-primary);
+            box-shadow: 0 0 0 0.2rem rgba(49, 155, 197, 0.25);
+        }
+
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: #212529;
+    }
+
+    .btn {
+        border-radius: 6px;
+        padding: 0.5rem 1.25rem;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+
+    .btn-primary {
+        background-color: var(--blue-primary);
+        border-color: var(--blue-primary);
+    }
+
+        .btn-primary:hover {
+            background-color: #2689b0;
+            border-color: #2689b0;
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+    .form-check-input:checked {
+        background-color: var(--blue-primary);
+        border-color: var(--blue-primary);
+    }
+
+    .required-indicator {
+        color: #dc3545;
+        font-weight: normal;
+        font-size: 0.875rem;
+        margin-left: 0.25rem;
+    }
+
+    @@media (max-width: 768px) {
+        .row [class*="col-"] {
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+
+<div class="container-fluid p-4">
+    <h1 class="page-title">
+        <i class="bi bi-person-plus me-2"></i>Thêm người dùng mới
+    </h1>
+
+    <div class="content-card">
+        <div class="card-header-custom">
+            <i class="bi bi-pencil-square"></i>
+            Nhập thông tin người dùng
+        </div>
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>            <form asp-action="Create">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="UserName" class="form-label">Tên đăng nhập <span class="required-indicator">*</span></label>
+                            <input asp-for="UserName" class="form-control" />
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Email" class="form-label">Email <span class="required-indicator">*</span></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Password" class="form-label">Mật khẩu <span class="required-indicator">*</span></label>
+                            <input asp-for="Password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="ConfirmPassword" class="form-label">Xác nhận mật khẩu <span class="required-indicator">*</span></label>
+                            <input asp-for="ConfirmPassword" class="form-control" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="HoTen" class="form-label">Họ tên <span class="required-indicator">*</span></label>
+                            <input asp-for="HoTen" class="form-control" />
+                            <span asp-validation-for="HoTen" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="PhoneNumber" class="form-label">Số điện thoại <span class="required-indicator">*</span></label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="DiaChi" class="form-label">Địa chỉ</label>
+                            <input asp-for="DiaChi" class="form-control" />
+                            <span asp-validation-for="DiaChi" class="text-danger"></span>
+                        </div>
+
+                        @* <div class="form-group"> *@
+                        @*     <label asp-for="PhuongId" class="form-label">Phường/Xã</label> *@
+                        @*     <select asp-for="PhuongId" asp-items="ViewBag.PhuongId" class="form-control"> *@
+                        @*         <option value="">-- Chọn Phường --</option> *@
+                        @*     </select> *@
+                        @*     <span asp-validation-for="PhuongId" class="text-danger"></span> *@
+                        @* </div> *@
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">Tỉnh/Thành phố:</label>
+                                    <select id="thanhPho" class="form-select" required>
+                                        <option value="">Chọn tỉnh/thành phố</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">Quận/Huyện:</label>
+                                    <select id="quan" class="form-select" required>
+                                        <option value="">Chọn quận/huyện</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">Phường/Xã:</label>
+                                    <select asp-for="PhuongId" id="phuong" class="form-select">
+                                        <option value="">Chọn phường/xã</option>
+                                    </select>
+                                    <span asp-validation-for="PhuongId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="form-label">Vai trò <span class="required-indicator">*</span></label>
+                            <div class="mt-2">
+                                @foreach (var role in ViewBag.Roles)
+                                {
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" name="SelectedRoles" value="@role.Name" id="role_@role.Id" class="form-check-input" required />
+                                        <label class="form-check-label" for="role_@role.Id">@role.Name</label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mt-4 d-flex">
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i class="bi bi-save me-1"></i> Lưu
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Quay lại
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function() {
+            // Highlight form fields on focus
+            $('input, select').on('focus', function() {
+                $(this).closest('.form-group').addClass('focused');
+            }).on('blur', function() {
+                $(this).closest('.form-group').removeClass('focused');
+            });
+
+            // Custom form validation styling
+            $('.form-control').on('invalid', function() {
+                $(this).addClass('is-invalid');
+            });
+
+            // Auto-capitalize the first letter of HoTen field
+            $('#HoTen').on('blur', function() {
+                var input = $(this);
+                var start = input[0].selectionStart;
+                var val = input.val();
+
+                if (val) {
+                    input.val(val.replace(/(?:^|\s)\S/g, function(a) {
+                        return a.toUpperCase();
+                    }));
+                    input[0].selectionStart = start;
+                    input[0].selectionEnd = start;
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(function () {
+            $.get('/api/cities', function (cities) {
+                $('#thanhPho').append(cities.map(city =>
+                    `<option value="${city.id}">${city.name}</option>`
+                ));
+            });
+
+            $('#thanhPho').change(function () {
+                const cityId = $(this).val();
+                $('#quan').empty().append('<option value="">Chọn quận/huyện</option>');
+                $('#phuong').empty().append('<option value="">Chọn phường/xã</option>');
+                if (cityId) {
+                    $.get(`/api/districts/${cityId}`, function (districts) {
+                        $('#quan')
+                            .empty()
+                            .append('<option value="">Chọn quận/huyện</option>')
+                            .append(districts.map(d =>
+                                `<option value="${d.id}">${d.name}</option>`
+                            ));
+                    });
+                }
+            });
+
+            $('#quan').change(function () {
+                const districtId = $(this).val();
+                $('#phuong').empty().append('<option value="">Chọn phường/xã</option>');
+                if (districtId) {
+                    $.get(`/api/wards/${districtId}`, function (wards) {
+                        $('#phuong')
+                            .empty()
+                            .append('<option value="">Chọn phường/xã</option>')
+                            .append(wards.map(w =>
+                                `<option value="${w.id}">${w.name}</option>`
+                            ));
+                    });
+                }
+            });
+        });
+    </script>
+}

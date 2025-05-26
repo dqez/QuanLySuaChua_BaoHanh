@@ -1,0 +1,177 @@
+﻿@model List<Microsoft.AspNetCore.Identity.IdentityRole<string>>
+@{
+    ViewData["Title"] = "Quản lý roles";
+    Layout = "_LayoutAdmin";
+}
+
+<style>
+    .page-title {
+        font-family: 'Baloo 2', cursive;
+        font-weight: 700;
+        color: var(--blue-primary);
+        margin-bottom: 25px;
+    }
+    
+    .content-card {
+        background-color: var(--white);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        margin-bottom: 30px;
+        width: 100%;
+        overflow-x: auto;
+    }
+    
+    .custom-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    
+    .custom-table th {
+        background-color: #f8f9fa;
+        color: #495057;
+        font-weight: 600;
+        padding: 12px 15px;
+        border-bottom: 2px solid #dee2e6;
+    }
+    
+    .custom-table td {
+        padding: 10px 15px;
+        border-bottom: 1px solid #dee2e6;
+        vertical-align: middle;
+    }
+    
+    .custom-table tr:hover {
+        background-color: rgba(49, 155, 197, 0.05);
+    }
+    
+    .btn-primary-custom {
+        background-color: var(--blue-primary);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 16px;
+        text-decoration: none;
+        font-size: 14px;
+        transition: background-color 0.2s;
+    }
+    
+    .btn-primary-custom:hover {
+        background-color: #2580a3;
+        color: white;
+    }
+    
+    .btn-success-custom {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 16px;
+        text-decoration: none;
+        font-size: 14px;
+        transition: background-color 0.2s;
+    }
+    
+    .btn-success-custom:hover {
+        background-color: #218838;
+        color: white;
+    }
+    
+    .btn-action {
+        padding: 6px 12px;
+        margin-right: 5px;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 13px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-edit {
+        background-color: var(--blue-primary);
+    }
+    
+    .btn-edit:hover {
+        background-color: #2580a3;
+        color: white;
+    }
+    
+    .btn-delete {
+        background-color: #dc3545;
+    }
+    
+    .btn-delete:hover {
+        background-color: #c82333;
+        color: white;
+    }
+    
+    .alert-custom {
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+</style>
+
+<h1 class="page-title"><i class="bi bi-shield-check me-2"></i>Quản lý quyền hạn</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-custom alert-success">
+        <i class="bi bi-check-circle me-2"></i> @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-custom alert-danger">
+        <i class="bi bi-exclamation-triangle me-2"></i> @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="content-card">
+    <div class="mb-4 d-flex gap-2">
+        <a asp-action="Index" asp-controller="ManageAccounts" class="btn btn-secondary h-100 d-flex align-items-center">
+            <i class="bi bi-arrow-left me-1"></i> Quay lại
+        </a>
+        <a asp-area="QuanTriVien" asp-controller="Role" asp-action="Create" class="btn btn-primary btn-primary-custom h-100 d-flex align-items-center">
+            <i class="bi bi-plus-circle me-2"></i> Thêm quyền hạn mới
+        </a>
+        <a asp-area="QuanTriVien" asp-controller="Role" asp-action="AssignRoles" class="btn btn-success btn-success-custom h-100 d-flex align-items-center">
+            <i class="bi bi-person-check me-2"></i> Phân quyền hạn
+        </a>
+    </div>
+
+
+    <div class="table-responsive">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Mã quyền hạn</th>
+                    <th>Tên quyền hạn</th>
+                    <th>Tùy chọn</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var role in Model)
+                {
+                    <tr>
+                        <td>@role.Id</td>
+                        <td>@role.Name</td>
+                        <td>
+                            <a asp-area="QuanTriVien" asp-controller="Role" asp-action="Edit" asp-route-id="@role.Id" class="btn-action btn-edit">
+                                <i class="bi bi-pencil me-1"></i>Sửa
+                            </a>
+                            <a asp-area="QuanTriVien" asp-controller="Role" asp-action="Delete" asp-route-id="@role.Id" class="btn-action btn-delete">
+                                <i class="bi bi-trash me-1"></i>Xóa
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

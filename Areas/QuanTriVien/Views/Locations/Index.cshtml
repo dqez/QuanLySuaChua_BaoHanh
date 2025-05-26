@@ -1,0 +1,352 @@
+@model QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers.LocationsOverviewViewModel
+@{
+    ViewData["Title"] = "Quản lý địa giới hành chính";
+    Layout = "_LayoutAdmin";
+}
+
+<style>
+    .page-title {
+        font-family: 'Baloo 2', cursive;
+        font-weight: 700;
+        color: var(--blue-primary);
+        margin-bottom: 25px;
+    }
+
+    .content-card {
+        background-color: var(--white);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        margin-bottom: 30px;
+        width: 100%;
+        height: 100%;
+    }
+
+    .card-header-custom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .header-title {
+        font-family: 'Baloo 2', cursive;
+        font-weight: 600;
+        font-size: 1.25rem;
+        color: var(--blue-primary);
+        margin: 0;
+    }
+
+    .custom-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .custom-table th {
+            background-color: #f8f9fa;
+            color: #495057;
+            font-weight: 600;
+            padding: 12px 15px;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .custom-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #dee2e6;
+            vertical-align: middle;
+        }
+
+        .custom-table tr:hover {
+            background-color: rgba(49, 155, 197, 0.05);
+        }
+
+    .btn-primary-custom {
+        background-color: var(--blue-primary);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 16px;
+        text-decoration: none;
+        font-size: 14px;
+        transition: background-color 0.2s;
+    }
+
+        .btn-primary-custom:hover {
+            background-color: #2580a3;
+            color: white;
+        }
+
+    .btn-action {
+        padding: 6px 10px;
+        margin-right: 3px;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 13px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+    }
+
+    .btn-info {
+        background-color: #17a2b8;
+    }
+
+        .btn-info:hover {
+            background-color: #138496;
+            color: white;
+        }
+
+    .btn-edit {
+        background-color: var(--blue-primary);
+    }
+
+        .btn-edit:hover {
+            background-color: #2580a3;
+            color: white;
+        }
+
+    .btn-delete {
+        background-color: #dc3545;
+    }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+            color: white;
+        }
+
+    .view-all-btn {
+        background-color: transparent;
+        border: 1px solid var(--blue-primary);
+        color: var(--blue-primary);
+        border-radius: 5px;
+        padding: 8px 20px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 14px;
+        transition: all 0.2s;
+    }
+
+        .view-all-btn:hover {
+            background-color: var(--blue-primary);
+            color: white;
+        }
+
+    .alert-custom {
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .badge-id {
+        background-color: var(--blue-primary);
+        color: white;
+        font-size: 12px;
+        padding: 5px 8px;
+        border-radius: 4px;
+    }
+</style>
+<div class="row">
+    <!-- Thành phố Card -->
+    <div class="col-md-10">
+        <h1 class="page-title"><i class="bi bi-geo-alt me-2"></i>Quản lý địa chỉ</h1>
+    </div>
+    <div class="col-md-2">
+        <div class="d-flex justify-content-between align-items-center m-2">
+            <div class="d-flex gap-2">
+                <a asp-action="ImportAll" class="btn btn-success">
+                    <i class="bi bi-file-earmark-excel me-1"></i>Import từ Excel/CSV
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-custom alert-success">
+        <i class="bi bi-check-circle me-2"></i> @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["WarningMessage"] != null)
+{
+    <div class="alert alert-custom alert-warning">
+        <i class="bi bi-exclamation-triangle me-2"></i> @TempData["WarningMessage"]
+    </div>
+}
+
+@if (TempData["WarningDetails"] != null)
+{
+    <div class="alert alert-custom alert-info">
+        <i class="bi bi-info-circle me-2"></i>
+        <strong>Chi tiết:</strong><br />
+        @Html.Raw(TempData["WarningDetails"])
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-custom alert-danger">
+        <i class="bi bi-exclamation-triangle me-2"></i> @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="row">
+    <!-- Thành phố Card -->
+    <div class="col-md-6 mb-4">
+        <div class="content-card">
+            <div class="card-header-custom">
+                <h5 class="header-title"><i class="bi bi-building me-2"></i>Quản lý thành phố</h5>
+                <a asp-area="QuanTriVien" asp-controller="ThanhPhoes" asp-action="Create" class="btn-primary-custom btn-sm">
+                    <i class="bi bi-plus-circle me-1"></i>Thêm thành phố
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Mã thành phố</th>
+                            <th>Tên thành phố</th>
+                            <th>Tùy chọn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var thanhPho in Model.ThanhPhoes)
+                        {
+                            <tr>
+                                <td><span class="badge-id">@thanhPho.ThanhPhoId</span></td>
+                                <td>@thanhPho.TenThanhPho</td>
+                                <td>
+                                    <a asp-area="QuanTriVien" asp-controller="ThanhPhoes" asp-action="Details" asp-route-id="@thanhPho.ThanhPhoId" class="btn-action btn-info">
+                                        <i class="bi bi-info-circle"></i>
+                                    </a>
+                                    <a asp-area="QuanTriVien" asp-controller="ThanhPhoes" asp-action="Edit" asp-route-id="@thanhPho.ThanhPhoId" class="btn-action btn-edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-area="QuanTriVien" asp-controller="ThanhPhoes" asp-action="Delete" asp-route-id="@thanhPho.ThanhPhoId" class="btn-action btn-delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-center mt-4">
+                <a asp-area="QuanTriVien" asp-controller="ThanhPhoes" asp-action="Index" class="view-all-btn">
+                    <i class="bi bi-list-ul me-1"></i> Xem tất cả thành phố
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quận/huyện Card -->
+    <div class="col-md-6 mb-4">
+        <div class="content-card">
+            <div class="card-header-custom">
+                <h5 class="header-title"><i class="bi bi-geo me-2"></i>Quản lý quận/huyện</h5>
+                <a asp-area="QuanTriVien" asp-controller="Quans" asp-action="Create" class="btn-primary-custom btn-sm">
+                    <i class="bi bi-plus-circle me-1"></i>Thêm quận/huyện
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Mã quận</th>
+                            <th>Tên quận</th>
+                            <th>Thành phố</th>
+                            <th>Tùy chọn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var quan in Model.Quans)
+                        {
+                            <tr>
+                                <td><span class="badge-id">@quan.QuanId</span></td>
+                                <td>@quan.TenQuan</td>
+                                <td>@quan.ThanhPho.TenThanhPho</td>
+                                <td>
+                                    <a asp-area="QuanTriVien" asp-controller="Quans" asp-action="Details" asp-route-id="@quan.QuanId" class="btn-action btn-info">
+                                        <i class="bi bi-info-circle"></i>
+                                    </a>
+                                    <a asp-area="QuanTriVien" asp-controller="Quans" asp-action="Edit" asp-route-id="@quan.QuanId" class="btn-action btn-edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-area="QuanTriVien" asp-controller="Quans" asp-action="Delete" asp-route-id="@quan.QuanId" class="btn-action btn-delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-center mt-4">
+                <a asp-area="QuanTriVien" asp-controller="Quans" asp-action="Index" class="view-all-btn">
+                    <i class="bi bi-list-ul me-1"></i> Xem tất cả quận/huyện
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="content-card">
+            <!-- Phường/xã Card -->
+
+            <div class="card-header-custom">
+                <h5 class="header-title"><i class="bi bi-pin-map me-2"></i>Quản lý phường/xã</h5>
+                <a asp-area="QuanTriVien" asp-controller="Phuongs" asp-action="Create" class="btn-primary-custom btn-sm">
+                    <i class="bi bi-plus-circle me-1"></i>Thêm phường/xã
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Mã phường</th>
+                            <th>Tên phường</th>
+                            <th>Quận</th>
+                            <th>Thành Phố</th>
+                            <th>Tùy chọn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var phuong in Model.Phuongs)
+                        {
+                            <tr>
+                                <td><span class="badge-id">@phuong.PhuongId</span></td>
+                                <td>@phuong.TenPhuong</td>
+                                <td>@phuong.Quan.TenQuan</td>
+                                <td>@phuong.Quan.ThanhPho.TenThanhPho</td>
+                                <td>
+                                    <a asp-area="QuanTriVien" asp-controller="Phuongs" asp-action="Details" asp-route-id="@phuong.PhuongId" class="btn-action btn-info">
+                                        <i class="bi bi-info-circle"></i>
+                                    </a>
+                                    <a asp-area="QuanTriVien" asp-controller="Phuongs" asp-action="Edit" asp-route-id="@phuong.PhuongId" class="btn-action btn-edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-area="QuanTriVien" asp-controller="Phuongs" asp-action="Delete" asp-route-id="@phuong.PhuongId" class="btn-action btn-delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-center mt-4">
+                <a asp-area="QuanTriVien" asp-controller="Phuongs" asp-action="Index" class="view-all-btn">
+                    <i class="bi bi-list-ul me-1"></i> Xem tất cả phường/xã
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,356 @@
+﻿@model QuanLySuaChua_BaoHanh.Models.PhieuSuaChua
+
+@{
+    ViewData["Title"] = "Chi tiết đơn";
+    Layout = "~/Areas/TuVanVien/Views/Shared/_LayoutTuVanVien.cshtml";
+}
+
+<div class="container-fluid py-3">
+    <h2 class="text-center text-primary mb-4">Chi tiết đơn sửa chữa</h2>
+    <div class="row">
+        <!-- Cột bên trái: Thông tin khách hàng và phiếu -->
+        <div class="col-md-4">
+            <!-- Thông tin khách hàng -->
+            <div class="card shadow-sm mb-4">               
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-person-circle mr-2"></i>Thông tin khách hàng</h5>
+                </div>
+                <div class="card-body">                
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-person-badge text-primary" style="font-size: 2rem; margin-right: 1rem;"></i>
+                        <div>
+                            <h5>@Model.KhachHang?.HoTen</h5>
+                            <p class="text-muted mb-0">Khách hàng</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-1 text-center">
+                            <i class="bi bi-telephone text-muted"></i>
+                        </div>
+                        <div class="col-11">
+                            <p class="mb-2">@Model.KhachHang?.PhoneNumber</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-1 text-center">
+                            <i class="bi bi-envelope text-muted"></i>
+                        </div>
+                        <div class="col-11">
+                            <p class="mb-2">@Model.KhachHang?.Email</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-1 text-center">
+                            <i class="bi bi-geo-alt text-muted"></i>
+                        </div>
+                        <div class="col-11">
+                            <p class="mb-0">@Model.KhachHang?.DiaChi</p>
+                        </div>
+                    </div>
+                </div>                <div class="card-footer">
+                    <div class="d-flex justify-content-center">
+                        <a href="tel:@Model.KhachHang?.PhoneNumber" class="btn btn-outline-primary btn-sm mx-1">
+                            <i class="bi bi-telephone"></i> Gọi điện
+                        </a>
+                        <a href="mailto:@Model.KhachHang?.Email" class="btn btn-outline-info btn-sm mx-1">
+                            <i class="bi bi-envelope"></i> Email
+                        </a>
+                        <a href="sms:@Model.KhachHang?.PhoneNumber" class="btn btn-outline-secondary btn-sm mx-1">
+                            <i class="bi bi-chat"></i> Tin nhắn
+                        </a>
+                    </div>
+                </div>
+            </div>            <!-- Thông tin phiếu sửa chữa -->
+            <div class="card shadow-sm mb-4">               
+                <div class="card-header bg-info text-dark d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-tools mr-2"></i>Thông tin phiếu</h5>
+                    <span class="badge @(Model.TrangThai == QuanLySuaChua_BaoHanh.Enums.TrangThaiPhieu.ChoXacNhan.ToString() ? "badge-warning" : 
+                               Model.TrangThai == QuanLySuaChua_BaoHanh.Enums.TrangThaiPhieu.DaXacNhan.ToString() ? "badge-success" : 
+                               Model.TrangThai == QuanLySuaChua_BaoHanh.Enums.TrangThaiPhieu.DaHuy.ToString() ? "badge-danger" : "badge-info")">
+                        @Model.TrangThai
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-5"><strong>Mã phiếu:</strong></div>
+                        <div class="col-7 text-primary fw-bold">@Model.PhieuSuaChuaId</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-5"><strong>Ngày đăng ký:</strong></div>
+                        <div class="col-7">@Model.NgayGui.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-5"><strong>Ngày hẹn:</strong></div>
+                        <div class="col-7">@(Model.NgayHen?.ToString("dd/MM/yyyy") ?? "Chưa xác định")</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-5"><strong>Phí vận chuyển:</strong></div>
+                        <div class="col-7">@(Model.PhiVanChuyen?.ToString("N0") ?? "0") đ</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-5"><strong>Tổng tiền:</strong></div>
+                        <div class="col-7 fw-bold fs-5 text-success">@Model.ChiTietSuaChuas.Sum(c => c.LinhKien?.DonGia * c.SoLuongLinhKien ?? 0).ToString("N0") đ</div>
+                    </div>
+                    <div class="mt-3">
+                        <p class="mb-1"><strong>Mô tả lỗi:</strong></p>
+                        <p class="p-2 bg-light rounded">@Model.MoTaKhachHang</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ghi chú -->
+            @if (!string.IsNullOrEmpty(Model.GhiChu))
+            {
+                <div class="card shadow-sm mb-4">                    
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="bi bi-sticky mr-2"></i>Ghi chú</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0">@Model.GhiChu</p>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Cột bên phải: Danh sách sản phẩm và chi tiết -->
+        <div class="col-md-8">
+            <!-- Danh sách sản phẩm -->
+            <div class="card shadow-sm mb-4">                
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-laptop mr-2"></i>Danh sách sản phẩm</h5>
+                    <span class="badge badge-light text-dark">@Model.ChiTietSuaChuas.Count sản phẩm</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Sản phẩm</th>
+                                    <th scope="col">Mã bảo hành</th>
+                                    <th scope="col">Tình trạng</th>
+                                    <th scope="col">Chi phí</th>
+                                    <th scope="col">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.ChiTietSuaChuas.Any())
+                                {
+                                    @for (int i = 0; i < Model.ChiTietSuaChuas.Count; i++)
+                                    {
+                                        var ct = Model.ChiTietSuaChuas.ElementAt(i);
+                                        var sanPham = ct.SanPham;
+                                        decimal thanhTien = ct.LinhKien?.DonGia * ct.SoLuongLinhKien ?? 0;
+                                        var tinhTrang = string.IsNullOrEmpty(ct.DanhGiaKyThuat) ? "Chưa có đánh giá" : ct.DanhGiaKyThuat;
+                                        
+                                        <tr>
+                                            <td class="align-middle">@(i + 1)</td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    @{
+                                                        var urlHinhAnh = !string.IsNullOrEmpty(sanPham?.UrlHinhAnh) ? sanPham.UrlHinhAnh : "https://via.placeholder.com/50x50?text=No+Image";
+                                                    }                                                    
+                                                    <img src="@urlHinhAnh" alt="@(sanPham?.TenSanPham ?? "Sản phẩm")" 
+                                                         class="rounded mr-2" style="width: 50px; height: 50px; object-fit: cover;" />
+                                                    <div>
+                                                        <h6 class="mb-0">@(sanPham?.TenSanPham ?? "Không có tên")</h6>
+                                                        <small class="text-muted">Mã: @(sanPham?.SanPhamId ?? "N/A")</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle">@(sanPham?.MaBh ?? "Không có")</td>                                           
+                                            <td class="align-middle">
+                                                <span class="badge badge-secondary">@tinhTrang</span>
+                                            </td>
+                                            <td class="align-middle fw-medium">@thanhTien.ToString("N0") đ</td>                                            
+                                            <td class="align-middle">
+                                                <a href="javascript:void(0);" class="btn btn-sm btn-info show-product-modal" 
+                                                   onclick="openProductModal('productModal@(i)')">
+                                                    <i class="bi bi-eye"></i> Chi tiết
+                                                </a>
+                                            </td></tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="6" class="text-center py-3">Không có thông tin sản phẩm cần sửa chữa.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-light">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span><strong>Tổng sản phẩm:</strong> @Model.ChiTietSuaChuas.Count</span>
+                        <span><strong>Tổng chi phí:</strong> 
+                            <span class="text-success fw-bold">@Model.ChiTietSuaChuas.Sum(c => c.LinhKien?.DonGia * c.SoLuongLinhKien ?? 0).ToString("N0") đ</span>
+                        </span>
+                    </div>
+                </div>
+            </div>            <!-- Thao tác -->
+            <div class="card shadow-sm">                
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-gear mr-2"></i>Thao tác</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="DanhSachDon" class="btn btn-outline-secondary" title="Quay lại">
+                            <i class="bi bi-arrow-left"></i> Quay lại danh sách
+                        </a>
+                        @if (Model.TrangThai == QuanLySuaChua_BaoHanh.Enums.TrangThaiPhieu.ChoXacNhan.ToString())
+                        {
+                            <form method="post" asp-action="Duyet" asp-route-id="@Model.PhieuSuaChuaId">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-check-circle"></i> Duyệt đơn
+                                </button>
+                            </form>
+                        }
+                    </div>                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Phần modals -->
+@if (Model.ChiTietSuaChuas.Any())
+{
+    @for (int i = 0; i < Model.ChiTietSuaChuas.Count; i++)
+    {
+        var ct = Model.ChiTietSuaChuas.ElementAt(i);
+        var sanPham = ct.SanPham;
+        decimal thanhTien = ct.LinhKien?.DonGia * ct.SoLuongLinhKien ?? 0;
+        var tinhTrang = string.IsNullOrEmpty(ct.DanhGiaKyThuat) ? "Chưa có đánh giá" : ct.DanhGiaKyThuat;
+        var urlHinhAnh = !string.IsNullOrEmpty(sanPham?.UrlHinhAnh) ? sanPham.UrlHinhAnh : "https://via.placeholder.com/50x50?text=No+Image";
+        
+        <!-- Modal chi tiết sản phẩm -->
+        <div class="modal fade" id="productModal@(i)" tabindex="-1" role="dialog" aria-labelledby="productModalLabel@(i)" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="productModalLabel@(i)">Chi tiết sản phẩm: @(sanPham?.TenSanPham ?? "Không có tên")</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                <img src="@urlHinhAnh" alt="@(sanPham?.TenSanPham ?? "Sản phẩm")" 
+                                     class="img-fluid rounded border mb-3" style="max-height: 200px;" />
+                            </div>
+                            <div class="col-md-8">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th class="table-light" style="width: 40%">Tên sản phẩm</th>
+                                        <td>@(sanPham?.TenSanPham ?? "Không có thông tin")</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="table-light">Mã sản phẩm</th>
+                                        <td>@(sanPham?.SanPhamId ?? "N/A")</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="table-light">Mã bảo hành</th>
+                                        <td>@(sanPham?.MaBh ?? "Không có")</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="table-light">Ngày mua</th>
+                                        <td>@(sanPham != null ? sanPham.NgayMua.ToString("dd/MM/yyyy") : "N/A")</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="table-light">Hạn bảo hành</th>
+                                        <td>@(sanPham != null ? sanPham.NgayHetHanBh.ToString("dd/MM/yyyy") : "N/A")</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="table-light">Tình trạng</th>
+                                        <td>@tinhTrang</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        @if (sanPham != null && !string.IsNullOrEmpty(sanPham.MoTa))
+                        {
+                            <div class="mt-3">
+                                <h6>Mô tả sản phẩm:</h6>
+                                <p class="bg-light p-2 rounded">@sanPham.MoTa</p>
+                            </div>
+                        }
+                        
+                        @if (ct.LinhKien != null)
+                        {
+                            <div class="mt-4">
+                                <h6 class="border-bottom pb-2">Thông tin linh kiện cần thay thế</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="table-info">
+                                            <tr class="text-center">
+                                                <th>Tên linh kiện</th>
+                                                <th>Số lượng</th>
+                                                <th>Đơn giá</th>
+                                                <th>Thành tiền</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>@ct.LinhKien.TenLinhKien</td>
+                                                <td class="text-center">@ct.SoLuongLinhKien</td>
+                                                <td class="text-right">@ct.LinhKien.DonGia.ToString("N0") đ</td>
+                                                <td class="text-right font-weight-bold">@thanhTien.ToString("N0") đ</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@section Scripts {
+    <script>
+        // Hàm global để mở modal
+        function openProductModal(modalId) {
+            console.log('Opening modal via global function:', modalId);
+            $('#' + modalId).modal('show');
+            return false;
+        }
+        
+        $(document).ready(function() {
+            console.log('Document ready in ChiTietDon');
+            
+            // Khởi tạo tất cả các modals với tùy chọn cơ bản
+            $('.modal').modal({
+                show: false, 
+                keyboard: true,
+                backdrop: true
+            });
+            
+            // Đặt z-index cao để đảm bảo modal hiển thị trên các phần tử khác
+            $('.modal').css('z-index', '1050');
+            
+            // Backup handler cho nút show-product-modal (phòng trường hợp onclick không hoạt động)
+            $('.show-product-modal').on('click', function(e) {
+                var modalId = $(this).attr('onclick').split("'")[1];
+                console.log('Backup handler for modal:', modalId);
+                openProductModal(modalId);
+            });
+            
+            // Log thông tin về các modal đã tải
+            console.log('Total modals found:', $('.modal').length);
+            
+            // Fix lỗi modal backdrop
+            $(document).on('hidden.bs.modal', '.modal', function () {
+                $('.modal:visible').length && $(document.body).addClass('modal-open');
+            });
+        });
+    </script>
+}

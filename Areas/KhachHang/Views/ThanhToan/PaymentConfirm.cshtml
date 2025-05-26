@@ -1,0 +1,336 @@
+@{
+    ViewData["Title"] = "Kết quả thanh toán";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-receipt me-2"></i>Kết quả thanh toán</h4>
+                </div>
+                <div class="card-body p-4">
+                    @if (ViewBag.Message == "Thanh toán thành công")
+                    {
+                        <div class="text-center mb-4">
+                            <div class="success-animation">
+                                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                                    <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+                                    <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                                </svg>
+                            </div>
+                            <h3 class="text-success mt-3">@ViewBag.Message</h3>
+                            <p class="text-muted mb-4">Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi!</p>
+                        </div>
+                          <div class="payment-receipt bg-white p-4 rounded-3 mb-4 border" id="invoice-section">
+                            <!-- Phần header hóa đơn -->
+                            <div class="text-center mb-4 border-bottom pb-3">
+                                <h4 class="text-uppercase fw-bold mb-1">Biên lai thanh toán</h4>
+                                <p class="text-muted">
+                                    Mã giao dịch: @ViewData["vnp_TransactionNo"]
+                                </p>
+                            </div>
+                            
+                            <!-- Chi tiết giao dịch -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <p class="mb-1 text-muted">Mã phiếu sửa chữa</p>
+                                    <p class="fw-bold">@ViewBag.PhieuId</p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <p class="mb-1 text-muted">Thời gian thanh toán</p>
+                                    <p class="fw-bold">@(ViewBag.FormattedPayDate ?? DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"))</p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <p class="mb-1 text-muted">Phương thức thanh toán</p>
+                                    <div class="d-flex align-items-center">
+                                        @if (!string.IsNullOrEmpty(ViewBag.vnp_CardType))
+                                        {
+                                            <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Icon-VNPAY-QR.png" alt="VNPAY" style="height: 24px; margin-right: 8px;" />
+                                            <p class="fw-bold mb-0">VNPay (@ViewBag.vnp_CardType)</p>
+                                        }
+                                        else 
+                                        {
+                                            <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Icon-VNPAY-QR.png" alt="VNPAY" style="height: 24px; margin-right: 8px;" />
+                                            <p class="fw-bold mb-0">VNPay</p>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <p class="mb-1 text-muted">Trạng thái</p>
+                                    <p class="fw-bold text-success">Thành công</p>
+                                </div>                            </div>
+                                                     
+                            
+                            <!-- Thông tin ngân hàng -->
+                            <div class="row border-top pt-3 mt-2 mb-3">
+                                <h5 class="mb-3">Thông tin thanh toán</h5>
+                                @if (!string.IsNullOrEmpty(ViewBag.vnp_BankCode))
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <p class="mb-1 text-muted">Ngân hàng</p>
+                                        <p class="fw-bold">@ViewBag.vnp_BankCode</p>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(ViewBag.vnp_BankTranNo))
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <p class="mb-1 text-muted">Mã giao dịch ngân hàng</p>
+                                        <p class="fw-bold">@ViewBag.vnp_BankTranNo</p>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(ViewBag.vnp_OrderInfo))
+                                {
+                                    <div class="col-md-12 mb-3">
+                                        <p class="mb-1 text-muted">Nội dung thanh toán</p>
+                                        <p class="fw-bold">@ViewBag.vnp_OrderInfo</p>
+                                    </div>
+                                }
+                            </div>
+                            
+                            <!-- Phần thông tin thanh toán -->
+                            <div class="bg-light p-3 rounded-3 mt-2 mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <h5>Tổng tiền thanh toán:</h5>
+                                    <h4 class="text-danger fw-bold">@string.Format("{0:N0}", ViewBag.Amount) VNĐ</h4>
+                                </div>
+                            </div>
+                            
+                            <!-- Phần chữ ký -->
+                            <div class="text-end border-top pt-3 mt-4">
+                                <p class="mb-0"><small class="text-muted">Mã đơn hàng: @ViewBag.vnp_TxnRef</small></p>
+                                <p class="mb-0"><small class="text-muted">Ngày xác nhận: @(ViewBag.FormattedPayDate ?? DateTime.Now.ToString("dd/MM/yyyy"))</small></p>
+                            </div>
+                        </div>
+                        
+                        <!-- Các nút chức năng -->
+                        <div class="d-flex justify-content-end mb-4">
+                            <button type="button" class="btn btn-outline-primary me-2" onclick="printInvoice()">
+                                <i class="fas fa-print me-1"></i> In biên lai
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary">
+                                <i class="fas fa-envelope me-1"></i> Gửi biên lai qua email
+                            </button>
+                        </div>
+                        
+                        <div class="alert alert-info mb-4">
+                            <div class="d-flex">
+                                <i class="fas fa-info-circle fa-2x me-3"></i>
+                                <div>
+                                    <h5 class="alert-heading">Thông tin quan trọng</h5>
+                                    <p class="mb-0">Biên lai thanh toán đã được gửi đến email của quý khách. Quý khách cũng có thể xem lịch sử thanh toán trong mục "Lịch sử đơn hàng".</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center mb-4">                        <div class="failed-animation">
+                            <svg class="cross" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                                <circle class="cross__circle" cx="26" cy="26" r="25" fill="none" />
+                                <path class="cross__path cross__path--right" d="M16,16 l20,20" />
+                                <path class="cross__path cross__path--left" d="M16,36 l20,-20" />
+                            </svg>
+                        </div>
+                        <h3 class="text-danger mt-3">@ViewBag.Message</h3>
+                        <p class="text-muted mb-4">
+                            @if (ViewBag.ErrorDetails != null)
+                            {
+                                <span>Chi tiết lỗi: @ViewBag.ErrorDetails</span><br />
+                            }
+                            Vui lòng thử lại hoặc liên hệ với chúng tôi để được hỗ trợ!
+                        </p>
+                        </div>
+                        
+                        <div class="alert alert-warning mb-4">
+                            <div class="d-flex">
+                                <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
+                                <div>
+                                    <h5 class="alert-heading">Lý do có thể xảy ra</h5>
+                                    <ul class="mb-0">
+                                        <li>Tài khoản không đủ số dư</li>
+                                        <li>Thẻ/tài khoản của bạn chưa được kích hoạt thanh toán trực tuyến</li>
+                                        <li>Bạn đã hủy giao dịch</li>
+                                        <li>Lỗi kết nối từ cổng thanh toán VNPay</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    }                    <div class="text-center mt-4">
+                        @if (ViewBag.Message != "Thanh toán thành công")
+                        {
+                            <a href="/KhachHang/ThanhToan/ThanhToanVNPay/@ViewBag.PhieuId" class="btn btn-primary btn-lg me-2">
+                                <i class="fas fa-money-bill-wave me-2"></i>Thanh toán lại
+                            </a>
+                        }
+                        else 
+                        {
+                            <a href="/KhachHang/DonSuaChua/Index" class="btn btn-primary btn-lg me-2">
+                                <i class="fas fa-clipboard-list me-2"></i>Xem đơn sửa chữa
+                            </a>
+                        }
+                        <a href="/KhachHang" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-home me-2"></i>Quay lại trang chủ
+                        </a>
+                    </div>
+                    
+                    <!-- Include debug panel (only visible to administrators) -->
+                    @await Html.PartialAsync("_PaymentDebug")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Animations for Checkmark and Cross */
+    .success-animation {
+        margin: 0 auto;
+        width: 80px;
+        height: 80px;
+    }
+    
+    .checkmark {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: block;
+        stroke-width: 2;
+        stroke: #4bb71b;
+        stroke-miterlimit: 10;
+        box-shadow: inset 0px 0px 0px #4bb71b;
+        animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+    }
+    
+    .checkmark__circle {
+        stroke-dasharray: 166;
+        stroke-dashoffset: 166;
+        stroke-width: 2;
+        stroke-miterlimit: 10;
+        stroke: #4bb71b;
+        fill: none;
+        animation: stroke .6s cubic-bezier(0.650, 0.000, 0.450, 1.000) forwards;
+    }
+    
+    .checkmark__check {
+        transform-origin: 50% 50%;
+        stroke-dasharray: 48;
+        stroke-dashoffset: 48;
+        animation: stroke .3s cubic-bezier(0.650, 0.000, 0.450, 1.000) .8s forwards;
+    }
+    
+    .failed-animation {
+        margin: 0 auto;
+        width: 80px;
+        height: 80px;
+    }
+    
+    .cross {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: block;
+        stroke-width: 2;
+        stroke: #FF3C3C;
+        stroke-miterlimit: 10;
+        box-shadow: inset 0px 0px 0px #FF3C3C;
+        animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+    }
+    
+    .cross__circle {
+        stroke-dasharray: 166;
+        stroke-dashoffset: 166;
+        stroke-width: 2;
+        stroke-miterlimit: 10;
+        stroke: #FF3C3C;
+        fill: none;
+        animation: stroke .6s cubic-bezier(0.650, 0.000, 0.450, 1.000) forwards;
+    }
+    
+    .cross__path {
+        transform-origin: 50% 50%;
+        stroke-dasharray: 48;
+        stroke-dashoffset: 48;
+        animation: stroke .3s cubic-bezier(0.650, 0.000, 0.450, 1.000) .8s forwards;
+    }
+    
+    @@keyframes stroke {
+        100% {
+            stroke-dashoffset: 0;
+        }
+    }
+    
+    @@keyframes fill {
+        100% {
+            box-shadow: inset 0px 0px 0px 30px transparent;
+        }
+    }
+    
+    @@keyframes scale {
+        0%, 100% {
+            transform: none;
+        }
+        50% {
+            transform: scale3d(1.1, 1.1, 1);
+        }
+    }
+</style>
+
+@section Scripts {    <script>
+        // Hàm in biên lai
+        function printInvoice() {
+            const printContents = document.getElementById('invoice-section').innerHTML;
+            const originalContents = document.body.innerHTML;
+            
+            // Tạo trang in với CSS tối thiểu
+            const printPage = `
+                <html>
+                <head>
+                    <title>Biên lai thanh toán - @(ViewBag.vnp_TransactionNo ?? "Không có")</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; }
+                        .payment-receipt { max-width: 800px; margin: 20px auto; padding: 20px; }
+                        .text-center { text-align: center; }
+                        .text-end { text-align: right; }
+                        .mb-1 { margin-bottom: 5px; }
+                        .mb-3 { margin-bottom: 15px; }
+                        .mb-4 { margin-bottom: 20px; }
+                        .mt-2 { margin-top: 10px; }
+                        .mt-4 { margin-top: 20px; }
+                        .pb-3 { padding-bottom: 15px; }
+                        .pt-3 { padding-top: 15px; }
+                        .p-3 { padding: 15px; }
+                        .border-bottom { border-bottom: 1px solid #dee2e6; }
+                        .border-top { border-top: 1px solid #dee2e6; }
+                        .border { border: 1px solid #dee2e6; }
+                        .rounded-3 { border-radius: 5px; }
+                        .row { display: flex; flex-wrap: wrap; }
+                        .col-md-6 { width: 50%; float: left; }
+                        .fw-bold { font-weight: bold; }
+                        .text-muted { color: #6c757d; }
+                        .text-danger { color: #dc3545; }
+                        .text-success { color: #198754; }
+                        .bg-light { background-color: #f8f9fa; }
+                        .d-flex { display: flex; }
+                        .justify-content-between { justify-content: space-between; }
+                        .align-items-center { align-items: center; }
+                        h4 { font-size: 20px; margin-bottom: 10px; }
+                        h5 { font-size: 16px; margin-bottom: 10px; }
+                        p { margin-top: 0; }
+                        small { font-size: 85%; }
+                    </style>
+                </head>
+                <body>
+                    <div class="payment-receipt border">
+                        ${printContents}
+                    </div>
+                </body>
+                </html>
+            `;
+            
+            document.body.innerHTML = printPage;
+            window.print();
+            document.body.innerHTML = originalContents;
+        }
+    </script>
+}

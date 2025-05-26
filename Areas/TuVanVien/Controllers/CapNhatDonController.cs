@@ -1,0 +1,104 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using QuanLySuaChua_BaoHanh.Models;
+
+namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
+{
+    [Area("TuVanVien")]
+    [Authorize(Roles = "TuVanVien")]
+    public class CapNhatDonController : Controller
+    {
+        private readonly BHSC_DbContext _context;
+
+        public CapNhatDonController(BHSC_DbContext context)
+        {
+            _context = context;
+        }
+
+        public IActionResult CapNhatDon()
+        {
+            var donHangs = _context.PhieuSuaChuas
+                .Include(p => p.KhachHang)
+                .Where(p => p.TrangThai.ToLower().Trim() == "dasuaxong")
+                .ToList();
+
+            return View("CapNhatDon", donHangs);
+        }
+
+        public IActionResult CapNhatTrangThaiDon(string id)
+        {
+            var phieu = _context.PhieuSuaChuas
+                .Include(p => p.KhachHang)
+                .FirstOrDefault(p => p.PhieuSuaChuaId == id);
+
+            if (phieu == null)
+                return NotFound();
+          
+
+            return View("CapNhatTrangThaiDon", phieu);
+        }
+
+        public IActionResult CapNhatTrangThai(string id, string trangThaiMoi)
+        {
+            var phieu = _context.PhieuSuaChuas.FirstOrDefault(p => p.PhieuSuaChuaId == id);
+            if (phieu == null)
+                return NotFound();
+
+            phieu.TrangThai = trangThaiMoi;
+
+            // Nếu trạng thái mới là DaThanhToan thì cập nhật ngày
+            if (trangThaiMoi.ToLower() == "dathanhtoan")
+            {
+                phieu.NgayThanhToan = DateTime.Now;
+                phieu.NgayTra = DateTime.Now;
+            }
+
+            _context.SaveChanges();
+
+            return RedirectToAction("CapNhatDon");
+        }
+
+
+        [HttpGet]
+        public IActionResult ThemDon()
+        {
+            return View("ThemDon"); 
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ThemDon(PhieuSuaChua model)
+        {
+            if (!ModelState.IsValid)
+            {
+                foreach (var item in ModelState)
+                {
+                    foreach (var error in item.Value.Errors)
+                    {
+                        Console.WriteLine($"❌ {item.Key}: {error.ErrorMessage}");
+                    }
+                }
+
+                return View("ThemDon", model);
+            }
+
+            if (_context.PhieuSuaChuas.Any(p => p.PhieuSuaChuaId == model.PhieuSuaChuaId))
+            {
+                ModelState.AddModelError("PhieuSuaChuaId", "Mã phiếu này đã tồn tại.");
+                return View("ThemDon", model);
+            }
+
+            if (string.IsNullOrEmpty(model.PhieuSuaChuaId))
+            {
+                model.PhieuSuaChuaId = Guid.NewGuid().ToString();
+            }
+
+            _context.PhieuSuaChuas.Add(model);
+            _context.SaveChanges();
+
+            return RedirectToAction("CapNhatDon");
+        }
+
+    }
+}
