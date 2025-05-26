@@ -245,7 +245,6 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
             return _context.Phuongs.Any(e => e.PhuongId == id);
         }
 
-
         [HttpGet]
         public JsonResult GetQuansByThanhPho(string thanhPhoId)
         {

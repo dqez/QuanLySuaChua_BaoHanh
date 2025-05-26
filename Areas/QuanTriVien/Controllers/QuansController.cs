@@ -197,6 +197,28 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
             return _context.Quans.Any(e => e.QuanId == id);
         }
 
+        // Method to check if Quan exists by name and ThanhPho
+        public async Task<Quan> FindQuanByNameAsync(string tenQuan, string thanhPhoId)
+        {
+            return await _context.Quans
+                .FirstOrDefaultAsync(q => q.TenQuan.ToLower() == tenQuan.ToLower() && 
+                                         q.ThanhPhoId == thanhPhoId);
+        }
+
+        // Method to create new Quan
+        public async Task<Quan> CreateQuanAsync(string tenQuan, string thanhPhoId)
+        {
+            var quan = new Quan
+            {
+                QuanId = await _idGenerator.GenerateQuanIdAsync(),
+                TenQuan = tenQuan,
+                ThanhPhoId = thanhPhoId
+            };
+            _context.Quans.Add(quan);
+            await _context.SaveChangesAsync();
+            return quan;
+        }
+
         // GET: QuanTriVien/Quans/Import
         public IActionResult Import()
         {

@@ -58,6 +58,12 @@ builder.Services.AddScoped<IExportService, ExportService>();
 // Đăng ký service Excel Import
 builder.Services.AddScoped<ExcelImportService>();
 
+// Đăng ký service Locations Import
+builder.Services.AddScoped<LocationsImportService>();
+
+// Đăng ký service SanPham Import
+builder.Services.AddScoped<SanPhamImportService>();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

@@ -7,19 +7,21 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuanLySuaChua_BaoHanh.Models;
 using QuanLySuaChua_BaoHanh.Services;
+using QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models;
 
 namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
 {
-    [Area("QuanTriVien")]
-    public class SanPhamsController : Controller
+    [Area("QuanTriVien")]    public class SanPhamsController : Controller
     {
         private readonly BHSC_DbContext _context;
         private readonly IDGenerator _idGenerator;
+        private readonly SanPhamImportService _sanPhamImportService;
 
-        public SanPhamsController(BHSC_DbContext context, IDGenerator idGenerator)
+        public SanPhamsController(BHSC_DbContext context, IDGenerator idGenerator, SanPhamImportService sanPhamImportService)
         {
             _context = context;
             _idGenerator = idGenerator;
+            _sanPhamImportService = sanPhamImportService;
         }
 
         // GET: QuanTriVien/SanPhams
@@ -213,6 +215,79 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         private bool SanPhamExists(string id)
         {
             return _context.SanPhams.Any(e => e.SanPhamId == id);
+        }
+
+        // GET: QuanTriVien/SanPhams/ImportAll
+        public IActionResult ImportAll()
+        {
+            return View(new ImportViewModel { ImportType = "SanPham" });
+        }
+
+        // POST: QuanTriVien/SanPhams/ImportAll
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ImportAll(ImportViewModel model)
+        {
+            // Ensure ImportType is set
+            if (string.IsNullOrEmpty(model.ImportType))
+            {
+                model.ImportType = "SanPham";
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (model.File == null || model.File.Length == 0)
+            {
+                ModelState.AddModelError("File", "Vui lòng chọn file");
+                return View(model);
+            }
+
+            // Check file extension
+            var fileExtension = Path.GetExtension(model.File.FileName).ToLowerInvariant();
+            if (fileExtension != ".xlsx" && fileExtension != ".xls" && fileExtension != ".csv")
+            {
+                ModelState.AddModelError("File", "Chỉ chấp nhận file Excel (.xlsx, .xls) hoặc CSV (.csv)");
+                return View(model);
+            }
+
+            try
+            {
+                using (var stream = model.File.OpenReadStream())
+                {
+                    var result = await _sanPhamImportService.ImportSanPhamAsync(stream, model.File.FileName);
+                    
+                    // Add messages to TempData
+                    if (result.SuccessCount > 0)
+                    {
+                        TempData["SuccessMessage"] = $"Đã nhập thành công {result.SuccessCount} sản phẩm.";
+                    }
+                    
+                    if (result.SkippedCount > 0)
+                    {
+                        TempData["WarningMessage"] = $"Đã bỏ qua {result.SkippedCount} sản phẩm (đã tồn tại hoặc lỗi).";
+                    }
+                    
+                    if (result.Warnings.Any())
+                    {
+                        TempData["WarningDetails"] = string.Join("<br/>", result.Warnings);
+                    }
+                    
+                    if (result.Errors.Any())
+                    {
+                        TempData["ErrorMessage"] = string.Join("<br/>", result.Errors);
+                    }
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Lỗi khi nhập dữ liệu: {ex.Message}");
+                return View(model);
+            }
         }
     }
 }

@@ -1,0 +1,106 @@
+@model QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models.ImportViewModel
+
+@{
+    ViewData["Title"] = "Nhập Dữ Liệu Sản Phẩm";
+    Layout = "~/Areas/QuanTriVien/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid p-4">
+    <!-- Header Section -->
+    <div class="text-center mb-5">
+        <h1 style="font-family: 'Baloo 2', cursive; color: var(--blue-primary); font-weight: 600;" class="display-5">Nhập Dữ Liệu Sản Phẩm</h1>
+        <p class="lead text-muted">Import dữ liệu sản phẩm từ file Excel hoặc CSV một cách dễ dàng.</p>
+        <hr class="w-50 mx-auto">
+    </div>
+
+    <div class="row justify-content-center">
+        <!-- Upload Form Column -->
+        <div class="col-lg-7 col-md-10 mb-4 mb-lg-0">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h5 class="mb-0"><i class="bi bi-cloud-arrow-up-fill me-2"></i>Tải Lên File Dữ Liệu</h5>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="ImportAll" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        
+                        @Html.HiddenFor(m => m.ImportType)
+                        
+                        <div class="mb-4">
+                            <label asp-for="File" class="form-label fs-5 fw-semibold mb-2">Chọn file Excel hoặc CSV</label>
+                            <div class="input-group input-group-lg">
+                                <input asp-for="File" type="file" class="form-control" accept=".xlsx,.xls,.csv" id="fileUpload" />
+                                <label class="input-group-text" for="fileUpload"><i class="bi bi-paperclip"></i></label>
+                            </div>
+                            <span asp-validation-for="File" class="text-danger mt-1 d-block"></span>
+                            <div class="form-text mt-2">Chấp nhận file .xlsx, .xls, .csv (tối đa 10MB). Đảm bảo file tuân thủ đúng định dạng.</div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-4 pt-2">
+                            <button type="submit" class="btn btn-primary btn-lg px-4">
+                                <i class="bi bi-upload me-2"></i> Bắt Đầu Nhập
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary btn-lg px-4">
+                                <i class="bi bi-arrow-left-circle me-2"></i> Quay Lại
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instructions and Notes Column -->
+        <div class="col-lg-5 col-md-10">
+            <!-- Instructions Card -->
+            <div class="card shadow-sm border-light-subtle mb-4 rounded-3">
+                <div class="card-header bg-info-subtle text-info-emphasis py-3">
+                    <h5 class="mb-0"><i class="bi bi-lightbulb-fill me-2"></i>Hướng Dẫn Định Dạng File</h5>
+                </div>
+                <div class="card-body p-4">
+                    <p class="mb-3">File Excel hoặc CSV của bạn cần có <strong>9 cột</strong> với thứ tự và nội dung như sau:</p>
+                    <ol class="list-group list-group-numbered list-group-flush small">
+                        <li class="list-group-item px-0 py-2"><strong>Mã sản phẩm:</strong> (Tùy chọn) Để trống nếu muốn hệ thống tự tạo.</li>
+                        <li class="list-group-item px-0 py-2"><strong>Khách hàng:</strong> (Bắt buộc) Nhập Mã ID hoặc Tên khách hàng đã tồn tại.</li>
+                        <li class="list-group-item px-0 py-2"><strong>Danh mục:</strong> (Bắt buộc) Nhập Mã ID hoặc Tên danh mục đã tồn tại.</li>
+                        <li class="list-group-item px-0 py-2"><strong>Mã bảo hành:</strong> (Tùy chọn)</li>
+                        <li class="list-group-item px-0 py-2"><strong>Tên sản phẩm:</strong> (Bắt buộc)</li>
+                        <li class="list-group-item px-0 py-2"><strong>Ngày mua:</strong> (Bắt buộc) Định dạng <code>dd/mm/yyyy</code> hoặc <code>yyyy-mm-dd</code>.</li>
+                        <li class="list-group-item px-0 py-2"><strong>Thời gian bảo hành:</strong> (Bắt buộc) Nhập số tháng.</li>
+                        <li class="list-group-item px-0 py-2"><strong>Ngày hết hạn:</strong> (Tùy chọn) Định dạng <code>dd/mm/yyyy</code>. Sẽ tự tính nếu có Ngày mua và Thời gian bảo hành.</li>
+                        <li class="list-group-item px-0 py-2"><strong>Mô tả:</strong> (Tùy chọn)</li>
+                    </ol>
+                    <hr class="my-3">
+                    <h6 class="fw-bold mt-3">Ví dụ dữ liệu CSV:</h6>
+                    <pre class="small bg-light p-3 rounded-3 text-wrap"><code>Mã sản phẩm,Khách hàng,Danh mục,Mã bảo hành,Tên sản phẩm,Ngày mua,Thời gian bảo hành,Ngày hết hạn,Mô tả
+SP001,KH001,DM001,BH001,iPhone 14,2024-01-15,12,2025-01-15,Điện thoại thông minh
+,Nguyễn Văn A,Điện thoại,BH002,Samsung Galaxy,15/01/2024,24,,Điện thoại Android</code></pre>
+                    <div class="text-center mt-3">
+                        <a href="/sample_products.csv" class="btn btn-info btn-sm" download>
+                            <i class="bi bi-file-earmark-arrow-down-fill me-1"></i> Tải File Mẫu (.csv)
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes Card -->
+            <div class="card shadow-sm border-light-subtle rounded-3">
+                <div class="card-header bg-warning-subtle text-warning-emphasis py-3">
+                    <h5 class="mb-0"><i class="bi bi-exclamation-diamond-fill me-2"></i>Lưu Ý Quan Trọng</h5>
+                </div>
+                <div class="card-body p-4">
+                    <ul class="list-group list-group-flush small">
+                        <li class="list-group-item px-0 py-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Khách hàng và danh mục phải tồn tại trong hệ thống.</li>
+                        <li class="list-group-item px-0 py-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Nếu để trống mã sản phẩm, hệ thống sẽ tự động tạo mã mới.</li>
+                        <li class="list-group-item px-0 py-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Ngày hết hạn sẽ được tự động tính nếu có ngày mua và thời gian bảo hành.</li>
+                        <li class="list-group-item px-0 py-2"><i class="bi bi-dash-circle-fill text-danger me-2"></i>Sản phẩm trùng mã sẽ bị bỏ qua (không cập nhật).</li>
+                        <li class="list-group-item px-0 py-2"><i class="bi bi-info-circle-fill text-primary me-2"></i>Kích thước file không được vượt quá 10MB.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

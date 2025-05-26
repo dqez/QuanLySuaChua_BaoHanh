@@ -70,6 +70,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(thanhPho);
         }
 
@@ -86,6 +87,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
             {
                 return NotFound();
             }
+
             return View(thanhPho);
         }
 
@@ -119,8 +121,10 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(thanhPho);
         }
 
@@ -162,6 +166,8 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
             return _context.ThanhPhos.Any(e => e.ThanhPhoId == id);
         }
 
+
+
         // GET: QuanTriVien/ThanhPhoes/Import
         public IActionResult Import()
         {
@@ -173,6 +179,10 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Import(ImportViewModel model)
         {
+            if (string.IsNullOrEmpty(model.ImportType))
+            {
+                model.ImportType = "ThanhPho";
+            }
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -197,18 +207,18 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
                 using (var stream = model.File.OpenReadStream())
                 {
                     var result = await _importService.ImportThanhPhoAsync(stream);
-                    
+
                     // Add messages to TempData
                     if (result.SuccessCount > 0)
                     {
                         TempData["SuccessMessage"] = $"Đã nhập thành công {result.SuccessCount} thành phố.";
                     }
-                    
+
                     if (result.SkippedCount > 0)
                     {
                         TempData["WarningMessage"] = $"Đã bỏ qua {result.SkippedCount} thành phố (đã tồn tại).";
                     }
-                    
+
                     if (result.Errors.Any())
                     {
                         TempData["ErrorMessage"] = string.Join("<br/>", result.Errors);
