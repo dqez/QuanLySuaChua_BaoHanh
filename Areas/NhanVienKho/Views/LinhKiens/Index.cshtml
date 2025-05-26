@@ -7,47 +7,56 @@
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="mb-0">Danh sách linh kiện</h2>
-        <a href="/NhanVienKho/LinhKiens/Create" class="btn btn-success">
+        <h2 class="mb-0 text-primary">
+            <i class="bi bi-box-seam"></i> Danh sách linh kiện
+        </h2>
+        <a href="/NhanVienKho/LinhKiens/Create" class="btn btn-success shadow-sm">
             <i class="bi bi-plus-circle"></i> Thêm linh kiện mới
         </a>
     </div>
 
-    <form asp-area="NhanVienKho" asp-controller="PhieuNhaps" asp-action="Index" method="get" class="mb-4">
+    <form asp-area="NhanVienKho" asp-controller="LinhKiens" asp-action="Index" method="get" class="mb-4">
         <div class="input-group">
             <input type="text"
                    name="searchString"
                    class="form-control"
-                   placeholder="Tìm kiếm linh kiện..."
+                   placeholder="Tìm kiếm tên, mã linh kiện, danh mục..."
                    value="@(ViewData["CurrentFilter"] ?? "")" />
             <button class="btn btn-primary" type="submit">
-                <i class="bi bi-search"></i> Tìm kiếm
+                <i class="bi bi-search"></i>
             </button>
             <a href="/NhanVienKho/LinhKiens/Index" class="btn btn-outline-secondary">Đặt lại</a>
         </div>
     </form>
 
     <div class="card shadow-sm">
+        <div class="card-header bg-light d-flex align-items-center">
+            <i class="bi bi-table me-2"></i>
+            <span class="fw-semibold">Bảng linh kiện</span>
+        </div>
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                    <thead class="table-primary">
                         <tr>
                             <th>Mã linh kiện</th>
-                            <th>Mã danh mục</th>
+                            <th>Danh mục</th>
                             <th>Tên linh kiện</th>
-                            <th>Số lượng tồn</th>
-                            <th>Đơn giá</th>
+                            <th class="text-center">Số lượng tồn</th>
+                            <th class="text-end">Đơn giá</th>
                             <th>Phạm vi sử dụng</th>
                             <th>Ghi chú</th>
-                            <th>Tùy chọn</th>
+                            <th class="text-center">Tùy chọn</th>
                         </tr>
                     </thead>
                     <tbody>
                         @if (!Model.Any())
                         {
                             <tr>
-                                <td colspan="6" class="text-center text-muted">Không có linh kiện nào.</td>
+                                <td colspan="8" class="text-center text-muted py-4">
+                                    <i class="bi bi-inbox fs-3"></i><br />
+                                    Không có linh kiện nào.
+                                </td>
                             </tr>
                         }
                         else
@@ -55,17 +64,38 @@
                             @foreach (var lk in Model)
                             {
                                 <tr>
-                                    <td>@lk.LinhKienId</td>
-                                    <td>@lk.DanhMucId</td>
+                                    <td class="fw-semibold">@lk.LinhKienId</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(lk.DanhMuc?.TenDanhMuc))
+                                        {
+                                            @lk.DanhMuc.TenDanhMuc
+                                        }
+                                        else if (!string.IsNullOrEmpty(lk.DanhMucId))
+                                        {
+                                            <span class="text-muted">(@lk.DanhMucId)</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Không có</span>
+                                        }
+                                    </td>
                                     <td>@lk.TenLinhKien</td>
-                                    <td>@lk.SoLuongTon</td>
-                                    <td>@lk.DonGia</td>
+                                    <td class="text-center">
+                                        <span class="badge bg-info text-dark">@lk.SoLuongTon</span>
+                                    </td>
+                                    <td class="text-end text-primary fw-bold">@lk.DonGia.ToString("N0") ₫</td>
                                     <td>@lk.PhamViSuDung</td>
                                     <td>@lk.GhiChu</td>
-                                    <td>
-                                        <a href="/NhanVienKho/LinhKiens/Details/@lk.LinhKienId" class="btn btn-info btn-sm">Chi tiết</a>
-                                        <a href="/NhanVienKho/LinhKiens/Edit/@lk.LinhKienId" class="btn btn-primary btn-sm">Sửa</a>
-                                        <a href="/NhanVienKho/LinhKiens/Delete/@lk.LinhKienId" class="btn btn-danger btn-sm">Xóa</a>
+                                    <td class="text-center">
+                                        <a href="/NhanVienKho/LinhKiens/Details/@lk.LinhKienId" class="btn btn-info btn-sm me-1" title="Chi tiết">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="/NhanVienKho/LinhKiens/Edit/@lk.LinhKienId" class="btn btn-primary btn-sm me-1" title="Sửa">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="/NhanVienKho/LinhKiens/Delete/@lk.LinhKienId" class="btn btn-danger btn-sm" title="Xóa">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             }
@@ -81,12 +111,14 @@
             @if (Model.HasPreviousPage)
             {
                 <li class="page-item">
-                    <a class="page-link" asp-area="NhanVienKho" asp-controller="LinhKiens" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">« Trước</a>
+                    <a class="page-link" asp-area="NhanVienKho" asp-controller="LinhKiens" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">
+                        <i class="bi bi-chevron-left"></i> Trước
+                    </a>
                 </li>
             }
             else
             {
-                <li class="page-item disabled"><span class="page-link">« Trước</span></li>
+                <li class="page-item disabled"><span class="page-link"><i class="bi bi-chevron-left"></i> Trước</span></li>
             }
 
             <li class="page-item disabled">
@@ -98,16 +130,15 @@
             @if (Model.HasNextPage)
             {
                 <li class="page-item">
-                    <a class="page-link" asp-area="NhanVienKho" asp-controller="LinhKiens" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">Tiếp »</a>
+                    <a class="page-link" asp-area="NhanVienKho" asp-controller="LinhKiens" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">
+                        Tiếp <i class="bi bi-chevron-right"></i>
+                    </a>
                 </li>
             }
             else
             {
-                <li class="page-item disabled"><span class="page-link">Tiếp »</span></li>
+                <li class="page-item disabled"><span class="page-link">Tiếp <i class="bi bi-chevron-right"></i></span></li>
             }
         </ul>
     </nav>
 </div>
-
-
-

@@ -7,8 +7,10 @@
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="mb-0">Danh sách phiếu xuất</h2>
-        <a href="/NhanVienKho/PhieuXuats/Create" class="btn btn-success">
+        <h2 class="mb-0 text-primary">
+            <i class="bi bi-journal-arrow-up"></i> Danh sách phiếu xuất
+        </h2>
+        <a href="/NhanVienKho/PhieuXuats/Create" class="btn btn-success shadow-sm">
             <i class="bi bi-plus-circle"></i> Thêm phiếu xuất mới
         </a>
     </div>
@@ -18,23 +20,28 @@
             <input type="text"
                    name="searchString"
                    class="form-control"
-                   placeholder="Tìm kiếm phiếu xuất..."
+                   placeholder="Tìm kiếm mã phiếu, mã kho, ghi chú..."
                    value="@(ViewData["CurrentFilter"] ?? "")" />
             <button class="btn btn-primary" type="submit">
-                <i class="bi bi-search"></i> Tìm kiếm
+                <i class="bi bi-search"></i>
             </button>
             <a href="/NhanVienKho/PhieuXuats/Index" class="btn btn-outline-secondary">Đặt lại</a>
         </div>
     </form>
 
     <div class="card shadow-sm">
+        <div class="card-header bg-light d-flex align-items-center">
+            <i class="bi bi-table me-2"></i>
+            <span class="fw-semibold">Bảng phiếu xuất</span>
+        </div>
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                    <thead class="table-primary">
                         <tr>
+                            <th>Mã phiếu xuất</th>
                             <th>Ngày xuất</th>
-                            <th>Tổng tiền</th>
+                            <th class="text-end">Tổng tiền</th>
                             <th>Trạng thái</th>
                             <th>Ghi chú</th>
                             <th>Mã kho</th>
@@ -45,7 +52,10 @@
                         @if (!Model.Any())
                         {
                             <tr>
-                                <td colspan="6" class="text-center text-muted">Không có phiếu xuất nào.</td>
+                                <td colspan="7" class="text-center text-muted py-4">
+                                    <i class="bi bi-inbox fs-3"></i><br />
+                                    Không có phiếu xuất nào.
+                                </td>
                             </tr>
                         }
                         else
@@ -53,20 +63,31 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
+                                    <td class="fw-semibold">@item.PhieuXuatId</td>
                                     <td>@item.NgayXuat.ToString("dd/MM/yyyy")</td>
-                                    <td>@item.TongTien</td>
+                                    <td class="text-end text-primary fw-bold">@item.TongTien?.ToString("N0") ₫</td>
                                     <td>
-                                        <span class="badge @(item.TrangThai == "Đã duyệt" ? "bg-success" : "bg-warning text-dark")">
-                                            @item.TrangThai
-                                        </span>
+                                        @if (item.TrangThai == "Done")
+                                        {
+                                            <span class="badge bg-success"><i class="bi bi-check-circle"></i> Đã xong</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split"></i> Chưa xong</span>
+                                        }
                                     </td>
                                     <td>@item.GhiChu</td>
-                                    <td>@item.Kho?.Id</td>
+                                    <td>@item.KhoId</td>
                                     <td class="text-center">
-                                        <a href="/NhanVienKho/PhieuXuats/Edit/@item.PhieuXuatId" class="btn btn-primary btn-sm me-1">
-                                            <i class="bi bi-pencil"></i> Sửa
+                                        <a href="/NhanVienKho/PhieuXuats/Details/@item.PhieuXuatId" class="btn btn-info btn-sm me-1" title="Chi tiết">
+                                            <i class="bi bi-eye"></i>
                                         </a>
-                                        <a href="/NhanVienKho/PhieuXuats/Delete/@item.PhieuXuatId"  class="btn btn-danger btn-sm">Xóa</a>
+                                        <a href="/NhanVienKho/PhieuXuats/Edit/@item.PhieuXuatId" class="btn btn-primary btn-sm me-1" title="Sửa">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="/NhanVienKho/PhieuXuats/Delete/@item.PhieuXuatId" class="btn btn-danger btn-sm" title="Xóa">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             }
@@ -82,12 +103,19 @@
             @if (Model.HasPreviousPage)
             {
                 <li class="page-item">
-                    <a class="page-link" href="/NhanVienKho/PhieuXuats/Index" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">« Trước</a>
+                    <a class="page-link"
+                       asp-area="NhanVienKho"
+                       asp-controller="PhieuXuats"
+                       asp-action="Index"
+                       asp-route-pageNumber="@(Model.PageIndex - 1)"
+                       asp-route-currentFilter="@(ViewData["CurrentFilter"])">
+                        <i class="bi bi-chevron-left"></i> Trước
+                    </a>
                 </li>
             }
             else
             {
-                <li class="page-item disabled"><span class="page-link">« Trước</span></li>
+                <li class="page-item disabled"><span class="page-link"><i class="bi bi-chevron-left"></i> Trước</span></li>
             }
 
             <li class="page-item disabled">
@@ -99,12 +127,19 @@
             @if (Model.HasNextPage)
             {
                 <li class="page-item">
-                    <a class="page-link" asphref="/NhanVienKho/PhieuXuats/Index" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-currentFilter="@(ViewData["CurrentFilter"])">Tiếp »</a>
+                    <a class="page-link"
+                       asp-area="NhanVienKho"
+                       asp-controller="PhieuXuats"
+                       asp-action="Index"
+                       asp-route-pageNumber="@(Model.PageIndex + 1)"
+                       asp-route-currentFilter="@(ViewData["CurrentFilter"])">
+                        Tiếp <i class="bi bi-chevron-right"></i>
+                    </a>
                 </li>
             }
             else
             {
-                <li class="page-item disabled"><span class="page-link">Tiếp »</span></li>
+                <li class="page-item disabled"><span class="page-link">Tiếp <i class="bi bi-chevron-right"></i></span></li>
             }
         </ul>
     </nav>

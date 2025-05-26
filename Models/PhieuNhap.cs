@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.EntityFrameworkCore;
 
 namespace QuanLySuaChua_BaoHanh.Models;
@@ -38,5 +39,6 @@ public partial class PhieuNhap
 
     [ForeignKey("KhoId")]
     [InverseProperty("PhieuNhaps")]
+    [ValidateNever]
     public virtual NguoiDung Kho { get; set; } = null!;
 }
