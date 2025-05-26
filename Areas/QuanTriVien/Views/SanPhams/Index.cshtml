@@ -25,10 +25,13 @@
                     <thead style="background-color: var(--blue-primary); color: white;">
                         <tr>
                             <th>
-                                @Html.DisplayNameFor(model => model.MaBh)
+                                @Html.DisplayNameFor(model => model.SanPhamId)
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.TenSanPham)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.MaBh)
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.NgayMua)
@@ -51,10 +54,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.MaBh)
+                @Html.DisplayFor(modelItem => item.SanPhamId)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.TenSanPham)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaBh)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.NgayMua)

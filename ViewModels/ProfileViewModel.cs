@@ -7,7 +7,7 @@ namespace QuanLySuaChua_BaoHanh.ViewModels
         public string Id { get; set; }
 
         [Display(Name = "Tên đăng nhập")]
-        public string UserName { get; set; }
+        public string? UserName { get; set; }
 
         [Required(ErrorMessage = "Email là bắt buộc")]
         [EmailAddress(ErrorMessage = "Email không hợp lệ")]
@@ -25,11 +25,12 @@ namespace QuanLySuaChua_BaoHanh.ViewModels
 
         [Required(ErrorMessage = "Địa chỉ là bắt buộc")]
         [Display(Name = "Địa chỉ")]
-        public string DiaChi { get; set; }        [Display(Name = "Thành phố/Tỉnh")]
-        public string ThanhPhoId { get; set; }
+        public string DiaChi { get; set; }
+        [Display(Name = "Thành phố/Tỉnh")]
+        public string? ThanhPhoId { get; set; }
 
         [Display(Name = "Quận/Huyện")]
-        public string QuanId { get; set; }
+        public string? QuanId { get; set; }
 
         [Required(ErrorMessage = "Phường/Xã là bắt buộc")]
         [Display(Name = "Phường/Xã")]
@@ -40,12 +41,12 @@ namespace QuanLySuaChua_BaoHanh.ViewModels
 
         // Thông tin hiển thị
         [Display(Name = "Phường/Xã")]
-        public string TenPhuong { get; set; }
+        public string? TenPhuong { get; set; }
 
         [Display(Name = "Quận/Huyện")]
-        public string TenQuan { get; set; }
+        public string? TenQuan { get; set; }
 
         [Display(Name = "Thành phố/Tỉnh")]
-        public string TenThanhPho { get; set; }
+        public string? TenThanhPho { get; set; }
     }
 }
