@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.EntityFrameworkCore;
 
 namespace QuanLySuaChua_BaoHanh.Models;
@@ -26,9 +27,11 @@ public partial class ChiTietPn
 
     [ForeignKey("LinhKienId")]
     [InverseProperty("ChiTietPns")]
+    [ValidateNever]
     public virtual LinhKien LinhKien { get; set; } = null!;
 
     [ForeignKey("PhieuNhapId")]
     [InverseProperty("ChiTietPns")]
+    [ValidateNever]
     public virtual PhieuNhap PhieuNhap { get; set; } = null!;
 }

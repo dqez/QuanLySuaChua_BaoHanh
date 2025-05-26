@@ -3,47 +3,66 @@
 @{
     ViewData["Title"] = "Cập nhật trạng thái đơn";
     Layout = "~/Areas/TuVanVien/Views/Shared/_LayoutTuVanVien.cshtml";
-    string trangThaiHienTai = Model.TrangThai?.ToLower();
 }
 
 <div class="container mt-4">
-    <h2 class="text-primary">Cập nhật trạng thái đơn</h2>
-    <div class="card p-3 mb-4 shadow-sm">
-        <p><strong>Mã phiếu:</strong> @Model.PhieuSuaChuaId</p>
-        <p><strong>Khách hàng:</strong> @Model.KhachHang?.HoTen</p>
-        <p><strong>SĐT:</strong> @Model.KhachHang?.PhoneNumber</p>
-        <p><strong>Thiết bị:</strong> @Model.MoTaKhachHang</p>
-        <p><strong>Trạng thái hiện tại:</strong> <span class="badge bg-info text-dark">@Model.TrangThai</span></p>
-        <div class="d-flex justify-content-between align-items-center">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <div>
-                        <p>
-                            <strong>Phương thức thanh toán:</strong>
-                            @((Model.PhuongThucThanhToan?.Trim().ToLower() == "tienmat" ||
-                                Model.PhuongThucThanhToan?.Trim().ToLower() == "tien mat")
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-lg p-4 border-start border-4 border-primary bg-light">
+                <h3 class="text-primary mb-4">
+                    <i class="bi bi-pencil-square me-2"></i> Cập nhật trạng thái đơn
+                </h3>
+
+                <dl class="row fs-5">
+                    <dt class="col-sm-4 text-secondary">📄 Mã phiếu:</dt>
+                    <dd class="col-sm-8 fw-semibold text-dark">@Model.PhieuSuaChuaId</dd>
+
+                    <dt class="col-sm-4 text-secondary">👤 Khách hàng:</dt>
+                    <dd class="col-sm-8">@Model.KhachHang?.HoTen</dd>
+
+                    <dt class="col-sm-4 text-secondary">📞 SĐT:</dt>
+                    <dd class="col-sm-8">@Model.KhachHang?.PhoneNumber</dd>
+
+                    <dt class="col-sm-4 text-secondary">🔧 Thiết bị:</dt>
+                    <dd class="col-sm-8">@Model.MoTaKhachHang</dd>
+
+                    <dt class="col-sm-4 text-secondary">📌 Trạng thái:</dt>
+                    <dd class="col-sm-8">
+                        <span class="badge bg-success fs-6 px-3 py-2">@Model.TrangThai</span>
+                    </dd>
+
+                    <dt class="col-sm-4 text-secondary">💳 Thanh toán:</dt>
+                    <dd class="col-sm-8 text-dark">
+                        <span class="text-primary fw-semibold">
+                            @((Model.PhuongThucThanhToan?.Trim().ToLower() == "tienmat" || Model.PhuongThucThanhToan?.Trim().ToLower() == "tien mat")
                                 ? "Tiền mặt"
                                 : Model.PhuongThucThanhToan)
+                        </span>
+                    </dd>
 
-                            <span class="text-danger ms-3">
-                                <strong>Tổng tiền:</strong> @(Model.TongTien?.ToString("N0") ?? "0") đ
-                            </span>
-                        </p>
+                    <dt class="col-sm-4 text-secondary">💰 Tổng tiền:</dt>
+                    <dd class="col-sm-8 fw-bold text-danger">
+                        @(Model.TongTien?.ToString("N0") ?? "0") đ
+                    </dd>
+                </dl>
 
-                        <div class="mt-3 d-flex gap-2">
-                            @if ((Model.PhuongThucThanhToan?.ToLower().Contains("tienmat") ?? false)
-                            && Model.TrangThai?.ToLower() != "hoan thanh")
-                            {
-                                <form method="post" asp-action="CapNhatTrangThai" asp-route-id="@Model.PhieuSuaChuaId" class="mb-0">
-                                    <input type="hidden" name="trangThaiMoi" value="HoanThanh" />
-                                    <button type="submit" class="btn btn-success">
-                                        <i class="bi bi-cash-coin"></i> Xác nhận thanh toán
-                                    </button>
-                                </form>
-                            }
+                <div class="d-flex justify-content-between mt-4">
+                    @if ((Model.PhuongThucThanhToan?.ToLower().Contains("tienmat") ?? false)
+                    && Model.TrangThai?.ToLower() != "hoan thanh")
+                    {
+                        <form method="post" asp-action="CapNhatTrangThai" asp-route-id="@Model.PhieuSuaChuaId">
+                            <input type="hidden" name="trangThaiMoi" value="HoanThanh" />
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-check-circle-fill me-1"></i> Xác nhận thanh toán
+                            </button>
+                        </form>
+                    }
 
-                            <a asp-action="CapNhatDon" class="btn btn-secondary">
-                                <i class="bi bi-arrow-left"></i> Quay lại danh sách
-                            </a>
-                        </div>
-
+                    <a asp-action="CapNhatDon" class="btn btn-outline-dark btn-lg">
+                        <i class="bi bi-arrow-left-circle me-1"></i> Quay lại danh sách
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

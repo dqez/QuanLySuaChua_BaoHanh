@@ -7,18 +7,16 @@
 
 <h2 class="text-center text-primary">Danh sách khách hàng</h2>
 
-<!-- 🔍 Tìm kiếm theo Mã KH -->
+<!-- Tìm kiếm -->
 <div class="mb-3">
     <input type="text" id="searchInput" class="form-control d-inline-block" placeholder="Tìm theo mã khách hàng" style="width: 300px;" />
     <button type="button" onclick="searchKhachHang()" class="btn btn-primary">🔍</button>
 </div>
 
-<!-- 🗑️ Form xóa nhiều -->
+<!-- Form xóa nhiều -->
 <form id="formXoaNhieu" method="post" asp-action="XoaNhieu">
     <div class="mb-2 d-flex justify-content-end">
-        <button type="button" class="btn btn-danger btn-sm" onclick="xoaNhieuConfirm()">
-            🗑️ Xóa đã chọn
-        </button>
+        <button type="button" class="btn btn-danger btn-sm" onclick="xoaNhieuConfirm()">🗑️ Xóa đã chọn</button>
     </div>
 
     <table class="table table-bordered table-hover">
@@ -41,7 +39,7 @@
                 <tr>
                     <td><input type="checkbox" class="selectBox" name="selectedIds" value="@nd.Id" /></td>
                     <td>@(i + 1)</td>
-                    <td>@nd.HoTen</td>
+                    <td>@nd.HoTen</td> <!-- ✅ HIỂN THỊ ĐÚNG HỌ TÊN -->
                     <td class="ma-kh">@nd.Id</td>
                     <td>@nd.PhoneNumber</td>
                     <td>@nd.Email</td>
