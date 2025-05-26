@@ -140,6 +140,10 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
 
                             _context.ChiTietPns.Add(chiTiet);
                             phieuNhap.TongTien += input.SoLuong * linhKien.DonGia;
+
+                            // Cộng thêm số lượng tồn cho linh kiện
+                            linhKien.SoLuongTon += input.SoLuong;
+                            _context.LinhKiens.Update(linhKien);
                         }
                     }
                 }
@@ -213,16 +217,27 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
 
             if (ModelState.IsValid)
             {
-                // Update main fields
+                // 1. Cộng lại số lượng tồn cho các linh kiện từ chi tiết phiếu nhập cũ
+                foreach (var oldDetail in phieuNhap.ChiTietPns)
+                {
+                    var linhKien = await _context.LinhKiens.FindAsync(oldDetail.LinhKienId);
+                    if (linhKien != null)
+                    {
+                        linhKien.SoLuongTon -= oldDetail.SoLuong;
+                        if (linhKien.SoLuongTon < 0) linhKien.SoLuongTon = 0;
+                        _context.LinhKiens.Update(linhKien);
+                    }
+                }
+
+                // 2. Xóa chi tiết phiếu nhập cũ
+                _context.ChiTietPns.RemoveRange(phieuNhap.ChiTietPns);
+
+                // 3. Thêm chi tiết phiếu nhập mới và cộng lại số lượng tồn
+                phieuNhap.TongTien = 0;
                 phieuNhap.TrangThai = viewModel.PhieuNhap.TrangThai;
                 phieuNhap.GhiChu = viewModel.PhieuNhap.GhiChu;
                 phieuNhap.NgayNhap = DateTime.Now;
-                phieuNhap.TongTien = 0;
 
-                // Remove old details
-                _context.ChiTietPns.RemoveRange(phieuNhap.ChiTietPns);
-
-                // Add new details
                 foreach (var input in viewModel.LinhKienInputs)
                 {
                     if (input.SoLuong > 0)
@@ -238,6 +253,10 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
                             };
                             _context.ChiTietPns.Add(chiTiet);
                             phieuNhap.TongTien += input.SoLuong * linhKien.DonGia;
+
+                            // Cộng lại số lượng tồn mới
+                            linhKien.SoLuongTon += input.SoLuong;
+                            _context.LinhKiens.Update(linhKien);
                         }
                     }
                 }
@@ -264,6 +283,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
 
             return View(viewModel);
         }
+
 
 
 

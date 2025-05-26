@@ -62,7 +62,7 @@
     @section Scripts {
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
-            const data = @Html.Raw(Json.Serialize(ViewBag.BieuDoDoanhThu));
+            const data = @Html.Raw(ViewBag.BieuDoDoanhThu);
 
             const ctx = document.getElementById('bieuDoDoanhThu').getContext('2d');
             const chart = new Chart(ctx, {
