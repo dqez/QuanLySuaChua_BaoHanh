@@ -23,6 +23,8 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="System.Net.Http.Json" Version="9.0.5" />
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="Areas\KhachHang\Services\" />
@@ -30,6 +32,7 @@
 		<Folder Include="Areas\TuVanVien\Controllers\" />
 		<Folder Include="Areas\TuVanVien\Models\" />
 		<Folder Include="Areas\KhachHang\Models\" />
+		<Folder Include="Views\Distance\" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="NativeLibrary\libwkhtmltox.dll">

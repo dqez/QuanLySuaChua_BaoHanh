@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Models;
+using QuanLySuaChua_BaoHanh.Enums;
 using QuanLySuaChua_BaoHanh.Models;
 using QuanLySuaChua_BaoHanh.Services;
 
@@ -76,6 +77,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
 
             // Lấy toàn bộ Phiếu Sửa Chữa
             var phieuSuaChuaList = _context.PhieuSuaChuas
+                .Where(p => p.TrangThai == TrangThaiPhieu.DangSuaChua.ToString() && p.TongTien != null)
                 .Select(p => new SelectListItem
                 {
                     Value = p.PhieuSuaChuaId.ToString(),

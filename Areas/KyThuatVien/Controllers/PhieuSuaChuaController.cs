@@ -182,7 +182,6 @@ namespace QuanLySuaChua_BaoHanh.Areas.KyThuatVien.Controllers
            {
                 chiTietSuaChuaOlds.LinhKienId = linhKienId;
                 chiTietSuaChuaOlds.SoLuongLinhKien += soLuongLinhKien;
-                chiTietSuaChuaOlds.LoaiDon = sanPham.NgayHetHanBh > DateOnly.FromDateTime(DateTime.Now) ? "SuaChua" : "BaoHanh";
                 _context.ChiTietSuaChuas.Update(chiTietSuaChuaOlds);
             }
             else
@@ -194,15 +193,23 @@ namespace QuanLySuaChua_BaoHanh.Areas.KyThuatVien.Controllers
                     SanPhamId = sanPhamId,
                     LinhKienId = linhKienId,
                     SoLuongLinhKien = soLuongLinhKien,
-                    LoaiDon = sanPham.NgayHetHanBh > DateOnly.FromDateTime(DateTime.Now) ? "SuaChua" : "BaoHanh"
+
                 };
 
                 _context.ChiTietSuaChuas.Add(chiTietSuaChuaOlds);
-            }               
+            }      
+           
+            PhieuSuaChua phieuSuaChua = await _context.PhieuSuaChuas.FindAsync(phieuSuaChuaId);
+            if (phieuSuaChua.TongTien == null)
+            {
+                phieuSuaChua.TongTien = 0;
+            }
+            phieuSuaChua.TongTien += linhKien.DonGia * soLuongLinhKien;
 
             // Cập nhật số lượng tồn của linh kiện
-            linhKien.SoLuongTon -= soLuongLinhKien;            
+            linhKien.SoLuongTon -= soLuongLinhKien;
 
+            _context.Update(phieuSuaChua);
             _context.Update(linhKien);
             await _context.SaveChangesAsync();
 
@@ -330,7 +337,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.KyThuatVien.Controllers
             foreach (var chiTiet in chiTietSuaChuas)
             {
                 var linhKien = await _context.LinhKiens.FindAsync(chiTiet.LinhKienId);
-                if (linhKien != null)
+                if (linhKien != null && chiTiet.LoaiDon == "SuaChua" && linhKien.PhamViSuDung == "SuaChua")
                 {
                     tongTien += linhKien.DonGia * chiTiet.SoLuongLinhKien;
                 }
@@ -339,7 +346,11 @@ namespace QuanLySuaChua_BaoHanh.Areas.KyThuatVien.Controllers
             // Thêm phí vận chuyển (nếu có)
             if (phieuSuaChua.PhiVanChuyen.HasValue && phieuSuaChua.KhoangCach.HasValue)
             {
-                tongTien += phieuSuaChua.PhiVanChuyen.Value * (decimal)phieuSuaChua.KhoangCach.Value;
+                // Nếu tồn tại ít nhất 1 chi tiết là bảo hành thì KHÔNG tính phí vận chuyển
+                if (!phieuSuaChua.ChiTietSuaChuas.Any(c => c.LoaiDon == "BaoHanh"))
+                {
+                    tongTien += phieuSuaChua.PhiVanChuyen.Value * (decimal)phieuSuaChua.KhoangCach.Value;
+                }
             }
 
             phieuSuaChua.TongTien = tongTien;
