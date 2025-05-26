@@ -7,36 +7,37 @@
 
 <div class="container mt-4">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-lg-8">
             <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">
-                        <i class="bi bi-info-circle"></i> Thông tin linh kiện
-                    </h4>
+                <div class="card-header bg-primary text-white d-flex align-items-center">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <h4 class="mb-0">Chi tiết linh kiện</h4>
                 </div>
                 <div class="card-body">
                     <dl class="row mb-0">
-                        <dt class="col-sm-4">Tên linh kiện</dt>
-                        <dd class="col-sm-8">@Model.TenLinhKien</dd>
+                        <dt class="col-sm-4">Tên linh kiện:</dt>
+                        <dd class="col-sm-8 fw-semibold">@Model.TenLinhKien</dd>
 
-                        <dt class="col-sm-4">Số lượng tồn</dt>
-                        <dd class="col-sm-8">@Model.SoLuongTon</dd>
+                        <dt class="col-sm-4">Số lượng tồn:</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-info text-dark fs-6">@Model.SoLuongTon</span>
+                        </dd>
 
-                        <dt class="col-sm-4">Đơn giá</dt>
-                        <dd class="col-sm-8">@Model.DonGia</dd>
+                        <dt class="col-sm-4">Đơn giá:</dt>
+                        <dd class="col-sm-8 text-primary fw-bold">@Model.DonGia.ToString("N0") ₫</dd>
 
-                        <dt class="col-sm-4">Phạm vi sử dụng</dt>
+                        <dt class="col-sm-4">Phạm vi sử dụng:</dt>
                         <dd class="col-sm-8">@Model.PhamViSuDung</dd>
 
-                        <dt class="col-sm-4">Ghi chú</dt>
+                        <dt class="col-sm-4">Ghi chú:</dt>
                         <dd class="col-sm-8">@Model.GhiChu</dd>
 
-                        <dt class="col-sm-4">Danh mục</dt>
-                        <dd class="col-sm-8">@Model.DanhMuc?.DanhMucId</dd>
+                        <dt class="col-sm-4">Danh mục:</dt>
+                        <dd class="col-sm-8">@Model.DanhMuc?.TenDanhMuc</dd>
                     </dl>
                 </div>
-                <div class="card-footer text-end">
-                    <a asphref="/NhanVienKho/LinhKiens/Edit" asp-route-id="@Model?.LinhKienId" class="btn btn-warning me-2">
+                <div class="card-footer d-flex justify-content-end gap-2">
+                    <a href="/NhanVienKho/LinhKiens/Edit/@Model.LinhKienId" class="btn btn-warning me-2">
                         <i class="bi bi-pencil"></i> Sửa
                     </a>
                     <a href="/NhanVienKho/LinhKiens/Index" class="btn btn-secondary">

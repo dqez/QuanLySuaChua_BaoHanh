@@ -7,75 +7,77 @@
 
 <div class="container mt-4">
     <div class="row justify-content-center">
-        <div class="col-md-9">
+        <div class="col-lg-10 col-xl-9">
             <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">
-                        <i class="bi bi-plus-circle"></i> Tạo phiếu nhập mới
-                    </h4>
+                <div class="card-header bg-primary text-white d-flex align-items-center">
+                    <i class="bi bi-plus-circle me-2"></i>
+                    <h4 class="mb-0">Tạo phiếu nhập mới</h4>
                 </div>
                 <div class="card-body">
                     <form method="post" asp-action="Create">
                         @Html.ValidationSummary(false, "", new { @class = "text-danger" })
                         @Html.AntiForgeryToken()
-                        <div class="mb-3">
-                            <label asp-for="PhieuNhap.PhieuNhapId" class="form-label">Mã phiếu nhập</label>
-                            <input asp-for="PhieuNhap.PhieuNhapId" class="form-control" />
-                            <span asp-validation-for="PhieuNhap.PhieuNhapId" class="text-danger"></span>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="PhieuNhap.PhieuNhapId" class="form-label">Mã phiếu nhập</label>
+                                <input asp-for="PhieuNhap.PhieuNhapId" class="form-control" />
+                                <span asp-validation-for="PhieuNhap.PhieuNhapId" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="PhieuNhap.TrangThai" class="form-label">Trạng thái</label>
+                                <div>
+                                    <input type="radio" asp-for="PhieuNhap.TrangThai" value="Done" id="trangthai-done" />
+                                    <label for="trangthai-done" class="form-check-label me-3">Đã xong</label>
+                                    <input type="radio" asp-for="PhieuNhap.TrangThai" value="!!!" id="trangthai-todo" />
+                                    <label for="trangthai-todo" class="form-check-label">Chưa xong</label>
+                                </div>
+                                <span asp-validation-for="PhieuNhap.TrangThai" class="text-danger"></span>
+                            </div>
                         </div>
                         <input type="hidden" asp-for="PhieuNhap.KhoId" />
                         <input type="hidden" asp-for="PhieuNhap.NgayNhap" />
 
                         <div class="mb-3">
-                            <label asp-for="PhieuNhap.TrangThai" class="form-label">Trạng thái</label>
-                            <div>
-                                <input type="radio" asp-for="PhieuNhap.TrangThai" value="Done" id="trangthai-done" />
-                                <label for="trangthai-done" class="form-check-label">Done</label>
-                                &nbsp;&nbsp;
-                                <input type="radio" asp-for="PhieuNhap.TrangThai" value="!!!" id="trangthai-todo" />
-                                <label for="trangthai-todo" class="form-check-label">!!!</label>
-                            </div>
-                            <span asp-validation-for="PhieuNhap.TrangThai" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
                             <label asp-for="PhieuNhap.GhiChu" class="form-label">Ghi chú</label>
-                            <textarea asp-for="PhieuNhap.GhiChu" class="form-control"></textarea>
+                            <textarea asp-for="PhieuNhap.GhiChu" class="form-control" rows="2" placeholder="Nhập ghi chú (nếu có)"></textarea>
                             <span asp-validation-for="PhieuNhap.GhiChu" class="text-danger"></span>
                         </div>
 
                         <hr />
-                        <h5>Danh sách linh kiện</h5>
-                        <table class="table table-bordered mt-3">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Tên linh kiện</th>
-                                    <th>Đơn giá</th>
-                                    <th>Số lượng</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @for (int i = 0; i < Model.LinhKienInputs.Count; i++)
-                                {
+                        <h5 class="mb-3"><i class="bi bi-list-ul"></i> Danh sách linh kiện nhập</h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover align-middle mb-0">
+                                <thead class="table-light">
                                     <tr>
-                                        <td>
-                                            @Model.LinhKienInputs[i].TenLinhKien
-                                            <input type="hidden" asp-for="LinhKienInputs[@i].LinhKienId" />
-                                            <input type="hidden" asp-for="LinhKienInputs[@i].TenLinhKien" />
-                                            <input type="hidden" asp-for="LinhKienInputs[@i].DonGia" />
-                                        </td>
-                                        <td>@Model.LinhKienInputs[i].DonGia</td>
-                                        <td>
-                                            <input type="number" class="form-control" asp-for="LinhKienInputs[@i].SoLuong" min="0" />
-                                        </td>
+                                        <th style="width:45%">Tên linh kiện</th>
+                                        <th style="width:20%" class="text-end">Đơn giá</th>
+                                        <th style="width:20%" class="text-center">Số lượng</th>
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.LinhKienInputs.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Model.LinhKienInputs[i].TenLinhKien
+                                                <input type="hidden" asp-for="LinhKienInputs[@i].LinhKienId" />
+                                                <input type="hidden" asp-for="LinhKienInputs[@i].TenLinhKien" />
+                                                <input type="hidden" asp-for="LinhKienInputs[@i].DonGia" />
+                                            </td>
+                                            <td class="text-end">@Model.LinhKienInputs[i].DonGia ₫</td>
+                                            <td class="text-center">
+                                                <input type="number" class="form-control form-control-sm d-inline-block" style="width:90px"
+                                                       asp-for="LinhKienInputs[@i].SoLuong" min="0" max="1000" />
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
 
-                        <div class="d-flex justify-content-end">
+                        <div class="d-flex justify-content-end mt-4">
                             <button type="submit" class="btn btn-primary me-2">
-                                <i class="bi bi-save"></i> Lưu
+                                <i class="bi bi-save"></i> Lưu phiếu nhập
                             </button>
                             <a href="@Url.Action("Index")" class="btn btn-secondary">
                                 <i class="bi bi-arrow-left"></i> Quay lại
