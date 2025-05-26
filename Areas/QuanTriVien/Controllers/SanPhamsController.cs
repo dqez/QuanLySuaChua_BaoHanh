@@ -80,9 +80,12 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("KhachHangId,DanhMucId,MaBh,TenSanPham,NgayMua,ThoiGianBaoHanh,NgayHetHanBh,MoTa")] SanPham sanPham)
+        public async Task<IActionResult> Create([Bind("SanPhamId,KhachHangId,DanhMucId,MaBh,TenSanPham,NgayMua,ThoiGianBaoHanh,NgayHetHanBh,MoTa")] SanPham sanPham)
         {
-            sanPham.SanPhamId = await _idGenerator.GenerateSanPhamIdAsync();
+            if (sanPham.SanPhamId == null)
+            {
+                sanPham.SanPhamId = await _idGenerator.GenerateSanPhamIdAsync();
+            }
 
             ModelState.Remove(nameof(sanPham.SanPhamId));
 

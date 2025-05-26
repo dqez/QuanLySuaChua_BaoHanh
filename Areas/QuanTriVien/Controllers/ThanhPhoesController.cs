@@ -1,4 +1,4 @@
-﻿   using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuanLySuaChua_BaoHanh.Models;
 using QuanLySuaChua_BaoHanh.Services;
+using QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Models;
 
 namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
 {
@@ -15,11 +16,13 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
     {
         private readonly BHSC_DbContext _context;
         private readonly IDGenerator _idGenerator;
+        private readonly ExcelImportService _importService;
 
-        public ThanhPhoesController(BHSC_DbContext context, IDGenerator generator)
+        public ThanhPhoesController(BHSC_DbContext context, IDGenerator generator, ExcelImportService importService)
         {
             _context = context;
             _idGenerator = generator;
+            _importService = importService;
         }
 
         // GET: QuanTriVien/ThanhPhoes
@@ -157,6 +160,68 @@ namespace QuanLySuaChua_BaoHanh.Areas.QuanTriVien.Controllers
         private bool ThanhPhoExists(string id)
         {
             return _context.ThanhPhos.Any(e => e.ThanhPhoId == id);
+        }
+
+        // GET: QuanTriVien/ThanhPhoes/Import
+        public IActionResult Import()
+        {
+            return View(new ImportViewModel { ImportType = "ThanhPho" });
+        }
+
+        // POST: QuanTriVien/ThanhPhoes/Import
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Import(ImportViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (model.File == null || model.File.Length == 0)
+            {
+                ModelState.AddModelError("File", "Vui lòng chọn file");
+                return View(model);
+            }
+
+            // Check file extension
+            var fileExtension = Path.GetExtension(model.File.FileName).ToLowerInvariant();
+            if (fileExtension != ".xlsx" && fileExtension != ".xls" && fileExtension != ".csv")
+            {
+                ModelState.AddModelError("File", "Chỉ chấp nhận file Excel (.xlsx, .xls) hoặc CSV (.csv)");
+                return View(model);
+            }
+
+            try
+            {
+                using (var stream = model.File.OpenReadStream())
+                {
+                    var result = await _importService.ImportThanhPhoAsync(stream);
+                    
+                    // Add messages to TempData
+                    if (result.SuccessCount > 0)
+                    {
+                        TempData["SuccessMessage"] = $"Đã nhập thành công {result.SuccessCount} thành phố.";
+                    }
+                    
+                    if (result.SkippedCount > 0)
+                    {
+                        TempData["WarningMessage"] = $"Đã bỏ qua {result.SkippedCount} thành phố (đã tồn tại).";
+                    }
+                    
+                    if (result.Errors.Any())
+                    {
+                        TempData["ErrorMessage"] = string.Join("<br/>", result.Errors);
+                    }
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Lỗi khi nhập dữ liệu: {ex.Message}");
+                return View(model);
+            }
         }
     }
 }

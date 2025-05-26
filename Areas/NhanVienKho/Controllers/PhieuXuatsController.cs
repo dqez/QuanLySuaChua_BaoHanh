@@ -137,6 +137,22 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
                     {
                         phieuXuat.TongTien += phieu.TongTien.Value;
                     }
+
+                    // Trừ số lượng tồn linh kiện theo từng chi tiết sửa chữa
+                    var chiTietSuaChuas = await _context.ChiTietSuaChuas
+                        .Where(ct => ct.PhieuSuaChuaId == phieuSuaChuaId && ct.LinhKienId != null)
+                        .ToListAsync();
+
+                    foreach (var chiTiet in chiTietSuaChuas)
+                    {
+                        var linhKien = await _context.LinhKiens.FindAsync(chiTiet.LinhKienId);
+                        if (linhKien != null)
+                        {
+                            linhKien.SoLuongTon -= chiTiet.SoLuongLinhKien;
+                            if (linhKien.SoLuongTon < 0) linhKien.SoLuongTon = 0;
+                            _context.LinhKiens.Update(linhKien);
+                        }
+                    }
                 }
 
                 // Cập nhật tổng tiền sau khi thêm chi tiết
@@ -191,15 +207,37 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
             {
                 try
                 {
+                    // Lấy các chi tiết phiếu xuất cũ
+                    var chiTietCu = await _context.ChiTietPxes
+                        .Where(c => c.PhieuXuatId == id)
+                        .ToListAsync();
+
+                    // Cộng lại số lượng tồn cho các linh kiện đã xuất ở chi tiết cũ
+                    foreach (var ctpx in chiTietCu)
+                    {
+                        var chiTietSuaChuas = await _context.ChiTietSuaChuas
+                            .Where(ct => ct.PhieuSuaChuaId == ctpx.PhieuSuaChuaId && ct.LinhKienId != null)
+                            .ToListAsync();
+
+                        foreach (var chiTiet in chiTietSuaChuas)
+                        {
+                            var linhKien = await _context.LinhKiens.FindAsync(chiTiet.LinhKienId);
+                            if (linhKien != null)
+                            {
+                                linhKien.SoLuongTon += chiTiet.SoLuongLinhKien;
+                                _context.LinhKiens.Update(linhKien);
+                            }
+                        }
+                    }
+
                     // Xóa chi tiết cũ
-                    var chiTietCu = _context.ChiTietPxes.Where(c => c.PhieuXuatId == id);
                     _context.ChiTietPxes.RemoveRange(chiTietCu);
                     await _context.SaveChangesAsync();
 
                     // Reset tổng tiền
                     phieuXuat.TongTien = 0;
 
-                    // Thêm chi tiết mới
+                    // Thêm chi tiết mới và trừ lại số lượng tồn
                     foreach (var phieuSuaChuaId in phieuSuaChuaIds)
                     {
                         var ctpx = new ChiTietPx
@@ -214,6 +252,22 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
                         if (psc != null && psc.TongTien.HasValue)
                         {
                             phieuXuat.TongTien += psc.TongTien.Value;
+                        }
+
+                        // Trừ số lượng tồn linh kiện theo từng chi tiết sửa chữa
+                        var chiTietSuaChuas = await _context.ChiTietSuaChuas
+                            .Where(ct => ct.PhieuSuaChuaId == phieuSuaChuaId && ct.LinhKienId != null)
+                            .ToListAsync();
+
+                        foreach (var chiTiet in chiTietSuaChuas)
+                        {
+                            var linhKien = await _context.LinhKiens.FindAsync(chiTiet.LinhKienId);
+                            if (linhKien != null)
+                            {
+                                linhKien.SoLuongTon -= chiTiet.SoLuongLinhKien;
+                                if (linhKien.SoLuongTon < 0) linhKien.SoLuongTon = 0;
+                                _context.LinhKiens.Update(linhKien);
+                            }
                         }
                     }
 
@@ -235,6 +289,7 @@ namespace QuanLySuaChua_BaoHanh.Areas.NhanVienKho.Controllers
             ViewData["KhoId"] = new SelectList(_context.NguoiDungs, "Id", "Id", phieuXuat.KhoId);
             return View(phieuXuat);
         }
+
 
 
 

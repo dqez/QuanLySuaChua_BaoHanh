@@ -25,11 +25,12 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
 
             return View("CapNhatDon", donHangs);
         }
+
         public IActionResult CapNhatTrangThaiDon(string id)
         {
             var phieu = _context.PhieuSuaChuas
-                         .Include(p => p.KhachHang)
-                         .FirstOrDefault(p => p.PhieuSuaChuaId == id);
+                .Include(p => p.KhachHang)
+                .FirstOrDefault(p => p.PhieuSuaChuaId == id);
 
             if (phieu == null)
                 return NotFound();
@@ -37,35 +38,67 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
 
             return View("CapNhatTrangThaiDon", phieu);
         }
+
         public IActionResult CapNhatTrangThai(string id, string trangThaiMoi)
         {
             var phieu = _context.PhieuSuaChuas.FirstOrDefault(p => p.PhieuSuaChuaId == id);
-            if (phieu == null) return NotFound();
+            if (phieu == null)
+                return NotFound();
 
             phieu.TrangThai = trangThaiMoi;
+
+            // Nếu trạng thái mới là DaThanhToan thì cập nhật ngày
+            if (trangThaiMoi.ToLower() == "dathanhtoan")
+            {
+                phieu.NgayThanhToan = DateTime.Now;
+                phieu.NgayTra = DateTime.Now;
+            }
+
             _context.SaveChanges();
 
             return RedirectToAction("CapNhatDon");
         }
+
+
         [HttpGet]
         public IActionResult ThemDon()
         {
-            return View("ĐKOFF");
+            return View("ThemDon"); 
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult ThemDon(PhieuSuaChua model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.PhieuSuaChuas.Add(model);
-                _context.SaveChanges();
-                return RedirectToAction("CapNhatDon");
+                foreach (var item in ModelState)
+                {
+                    foreach (var error in item.Value.Errors)
+                    {
+                        Console.WriteLine($"❌ {item.Key}: {error.ErrorMessage}");
+                    }
+                }
+
+                return View("ThemDon", model);
             }
 
-            // Nếu không hợp lệ, trả về form để hiển thị lỗi
-            return View("ĐKOFF", model);
+            if (_context.PhieuSuaChuas.Any(p => p.PhieuSuaChuaId == model.PhieuSuaChuaId))
+            {
+                ModelState.AddModelError("PhieuSuaChuaId", "Mã phiếu này đã tồn tại.");
+                return View("ThemDon", model);
+            }
+
+            if (string.IsNullOrEmpty(model.PhieuSuaChuaId))
+            {
+                model.PhieuSuaChuaId = Guid.NewGuid().ToString();
+            }
+
+            _context.PhieuSuaChuas.Add(model);
+            _context.SaveChanges();
+
+            return RedirectToAction("CapNhatDon");
         }
+
     }
 }

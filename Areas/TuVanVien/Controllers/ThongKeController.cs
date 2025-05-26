@@ -70,6 +70,8 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
         }
 
         [HttpGet]
+        [HttpGet]
+        [HttpGet]
         public async Task<IActionResult> DoanhThu(DateTime? tuNgay, DateTime? denNgay)
         {
             ValidateAndPrepareDateRange(ref tuNgay, ref denNgay);
@@ -78,28 +80,46 @@ namespace QuanLySuaChua_BaoHanh.Areas.TuVanVien.Controllers
             ViewBag.DenNgay = denNgay;
 
             ViewBag.TongDoanhThu = await _context.PhieuSuaChuas
-                .Where(p => p.NgayThanhToan >= tuNgay && p.NgayThanhToan <= denNgay && p.TongTien.HasValue)
+                .Where(p =>
+                    p.NgayThanhToan >= tuNgay &&
+                    p.NgayThanhToan <= denNgay &&
+                    p.TongTien.HasValue &&
+                    p.TrangThai == TrangThaiPhieu.HoanThanh.ToString()
+                )
                 .SumAsync(p => p.TongTien ?? 0);
 
             ViewBag.SoDonHoanThanh = await _context.PhieuSuaChuas
-                .Where(p => p.NgayTra >= tuNgay && p.NgayTra <= denNgay && p.TrangThai == TrangThaiPhieu.HoanThanh.ToString())
+                .Where(p =>
+                    p.NgayTra >= tuNgay &&
+                    p.NgayTra <= denNgay &&
+                    p.TrangThai == TrangThaiPhieu.HoanThanh.ToString()
+                )
                 .CountAsync();
+            var doanhThuTheoThang = _context.PhieuSuaChuas
+    .Where(p =>
+        p.NgayThanhToan != null &&
+        p.NgayThanhToan >= tuNgay &&
+        p.NgayThanhToan <= denNgay &&
+        p.TongTien.HasValue &&
+        p.TrangThai == TrangThaiPhieu.HoanThanh.ToString()
+    )
+    .AsEnumerable()
+    .GroupBy(p => p.NgayThanhToan.Value.ToString("MM/yyyy"))
+    .Select(g => new
+    {
+        ThangNam = g.Key,
+        DoanhThu = g.Sum(p => p.TongTien ?? 0),
+        SoDon = g.Count()
+    })
+    .ToList();
 
-            var doanhThuTheoThang = await _context.PhieuSuaChuas
-                .Where(p => p.NgayThanhToan >= tuNgay && p.NgayThanhToan <= denNgay)
-                .GroupBy(p => new { p.NgayThanhToan.Value.Month, p.NgayThanhToan.Value.Year })
-                .Select(g => new
-                {
-                    ThangNam = $"{g.Key.Month:D2}/{g.Key.Year}",
-                    DoanhThu = g.Sum(p => p.TongTien ?? 0),
-                    SoDon = g.Count(),
-                    TrungBinh = g.Average(p => p.TongTien ?? 0)
-                }).ToListAsync();
-
-            ViewBag.BieuDoDoanhThu = doanhThuTheoThang;
+            // ✅ Sửa chỗ này: Serialize tại controller luôn
+            ViewBag.BieuDoDoanhThu = JsonSerializer.Serialize(doanhThuTheoThang);
 
             return View();
         }
+
+
 
         [HttpGet]
         public async Task<IActionResult> DonSuaChua(DateTime? tuNgay, DateTime? denNgay)

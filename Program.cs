@@ -58,6 +58,9 @@ builder.Services.AddScoped<IPhieuSuaChuaService, PhieuSuaChuaService>();
 builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 builder.Services.AddScoped<IExportService, ExportService>();
 
+// Đăng ký service Excel Import
+builder.Services.AddScoped<ExcelImportService>();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

@@ -1,92 +1,241 @@
-﻿@{  
-   ViewData["Title"] = "Trang chủ nhân viên kho";  
-   Layout = "_LayoutStashEmployee";  
-}  
+﻿@{
+    ViewData["Title"] = "Trang chủ nhân viên kho";
+    Layout = "_LayoutStashEmployee";
+}
 <style>
-    .glass-card {
-        background: rgba(255,255,255,0.85);
-        border-radius: 1.5rem;
-        box-shadow: 0 8px 32px 0 rgba(31,38,135,0.15);
-        backdrop-filter: blur(6px);
-        -webkit-backdrop-filter: blur(6px);
-        border: 1px solid rgba(255,255,255,0.18);
-        padding: 2.5rem 2rem;
+    body {
+        background: linear-gradient(120deg, #e0e7ff 0%, #f0fdfa 100%);
+        min-height: 100vh;
     }
 
-    .brand-logos img {
-        filter: grayscale(1) brightness(0.8);
-        transition: filter 0.3s;
-        max-height: 48px;
+    .dashboard-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 0;
+        pointer-events: none;
+        background: url('https://www.transparenttextures.com/patterns/cubes.png');
+        opacity: 0.08;
     }
 
-        .brand-logos img:hover {
-            filter: none;
+    .main-card-3d {
+        background: #f8fafc;
+        border-radius: 2.2rem;
+        box-shadow: 0 8px 32px 0 #4f8cff22, 0 2px 8px 0 #bae6fd;
+        border: 1.5px solid #e0e7ef;
+        padding: 2.8rem 2.2rem 2.2rem 2.2rem;
+        position: relative;
+        overflow: hidden;
+        min-height: 520px;
+        transition: box-shadow 0.2s;
+    }
+
+        .main-card-3d:hover {
+            box-shadow: 0 16px 48px 0 #4f8cff33, 0 4px 16px 0 #bae6fd;
         }
 
-    .feature-list li {
-        font-size: 1.1rem;
-        margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-    }
+        .main-card-3d::before {
+            content: "";
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, #4f8cff33 0%, #bae6fd00 100%);
+            z-index: 0;
+            border-radius: 50%;
+            filter: blur(2px);
+        }
 
-    .feature-list i {
-        font-size: 1.2rem;
-        margin-right: 0.5rem;
-    }
+        .main-card-3d::after {
+            content: "";
+            position: absolute;
+            bottom: -40px;
+            left: -40px;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, #bae6fd44 0%, #4f8cff00 100%);
+            z-index: 0;
+            border-radius: 50%;
+            filter: blur(2px);
+        }
 
-    .main-gradient {
-        background: linear-gradient(90deg, #4f8cff 0%, #6dd5ed 100%);
+    .main-title-gradient {
+        background: linear-gradient(90deg, #4f8cff 0%, #38bdf8 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
+        font-size: 2.7rem;
+        font-weight: 800;
+        letter-spacing: 1.5px;
     }
+
+    .main-welcome {
+        font-size: 1.25rem;
+        color: #2563eb;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .main-feature-list {
+        list-style: none;
+        padding-left: 0;
+        margin-bottom: 2rem;
+    }
+
+        .main-feature-list li {
+            font-size: 1.13rem;
+            margin-bottom: 0.7rem;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            color: #2563eb;
+            background: #e0f2fe;
+            border-radius: 0.7rem;
+            padding: 0.5rem 1rem;
+            box-shadow: 0 1px 4px 0 #bae6fd33;
+            transition: background 0.18s;
+        }
+
+            .main-feature-list li:hover {
+                background: #bae6fd;
+            }
+
+        .main-feature-list i {
+            font-size: 1.4rem;
+            margin-right: 0.7rem;
+            color: #38bdf8;
+            filter: drop-shadow(0 2px 4px #bae6fd88);
+        }
+
+    .main-quick-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+        margin-bottom: 2.2rem;
+        justify-content: center;
+    }
+
+    .main-link-card {
+        background: linear-gradient(120deg, #e0f2fe 0%, #f0fdfa 100%);
+        border-radius: 1.2rem;
+        box-shadow: 0 2px 8px 0 #bae6fd44;
+        padding: 1.2rem 1.5rem;
+        min-width: 180px;
+        min-height: 120px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: box-shadow 0.18s, transform 0.18s, background 0.18s, color 0.18s;
+        border: 1.5px solid #bae6fd;
+        text-decoration: none;
+        color: #2563eb;
+        font-weight: 600;
+        font-size: 1.08rem;
+        position: relative;
+        cursor: pointer;
+    }
+
+        .main-link-card:hover {
+            box-shadow: 0 6px 24px 0 #4f8cff33;
+            background: linear-gradient(120deg, #f0fdfa 0%, #e0f2fe 100%);
+            color: #1e40af;
+            transform: translateY(-4px) scale(1.04);
+            text-decoration: none;
+        }
+
+        .main-link-card i {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            color: #38bdf8;
+            filter: drop-shadow(0 2px 4px #bae6fd88);
+            transition: color 0.18s;
+        }
+
+        .main-link-card:hover i {
+            color: #2563eb;
+        }
+
+    .main-brand-logos {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+        margin-bottom: 2.2rem;
+        justify-content: center;
+    }
+
+        .main-brand-logos .main-link-card {
+            min-width: 180px;
+            min-height: 120px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.08rem;
+            color: #2563eb;
+            font-weight: 600;
+            text-align: center;
+        }
+
+            .main-brand-logos .main-link-card img {
+                filter: grayscale(1) brightness(0.8);
+                transition: filter 0.3s;
+                margin-bottom: 0.7rem;
+            }
+
+            .main-brand-logos .main-link-card:hover img {
+                filter: none;
+            }
 </style>
-<div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="container-fluid col-xxl-10">
-        <div class="row flex-lg-nowrap align-items-center g-5">
-            <div class="col-lg-6 order-lg-2 text-center">
-                <img style="clip-path: polygon(25% 0%, 100% 0%, 100% 99%, 0% 100%); border-radius: 1.5rem;"
-                     src="https://images.unsplash.com/photo-1618004912476-29818d81ae2e?crop=entropy&amp;cs=tinysrgb&amp;fit=crop&amp;fm=jpg&amp;ixid=MnwzNzg0fDB8MXxzZWFyY2h8NzV8fHB1cnBsZXxlbnwwfDB8fHwxNjQ3NDcxNjY4&amp;ixlib=rb-1.2.1&amp;q=80&amp;w=1080&amp;h=768"
-                     class="d-block mx-lg-auto img-fluid shadow-lg"
-                     alt="Warehouse" loading="lazy" width="800" height="500">
-            </div>
-            <div class="col-lg-6 col-xl-5 text-center text-lg-start pt-lg-5 mt-xl-4">
-                <div class="glass-card">
-                    <div class="mb-4">
-                        <h1 class="fw-bold display-4 main-gradient">Quản lý kho linh kiện</h1>
-                    </div>
-                    <div class="mb-4">
-                        <p class="lead mb-0">
-                            <span class="fw-semibold text-primary">Chào mừng bạn đến với hệ thống quản lý kho linh kiện.</span><br>
-                            Tại đây, bạn có thể dễ dàng quản lý phiếu nhập, phiếu xuất, kiểm tra tồn kho và theo dõi thông tin linh kiện.
-                        </p>
-                    </div>
-                    <div class="mb-4">
-                        <p class="fw-bold mb-2">Các chức năng nổi bật:</p>
-                        <ul class="feature-list list-unstyled ps-0">
-                            <li><i class="bi bi-check-circle-fill text-success"></i> Theo dõi tồn kho linh kiện</li>
-                            <li><i class="bi bi-check-circle-fill text-success"></i> Quản lý nhập - xuất linh kiện</li>
-                            <li><i class="bi bi-check-circle-fill text-success"></i> Xem báo cáo nhanh</li>
-                            <li><i class="bi bi-check-circle-fill text-success"></i> Tìm kiếm và tra cứu linh kiện</li>
-                        </ul>
-                    </div>
-                    <div class="brand-logos row mt-4 justify-content-center g-3">
-                        <div class="col-3 d-flex justify-content-center">
-                            <img class="img-fluid" src="https://lclibrary.b-cdn.net/starters/wp-content/uploads/sites/15/2021/11/motorola.svg" alt="Motorola">
-                        </div>
-                        <div class="col-3 d-flex justify-content-center">
-                            <img class="img-fluid" src="https://lclibrary.b-cdn.net/starters/wp-content/uploads/sites/15/2021/11/asus.svg" alt="Asus">
-                        </div>
-                        <div class="col-3 d-flex justify-content-center">
-                            <img class="img-fluid" src="https://lclibrary.b-cdn.net/starters/wp-content/uploads/sites/15/2021/11/sony.svg" alt="Sony">
-                        </div>
-                        <div class="col-3 d-flex justify-content-center">
-                            <img class="img-fluid" src="https://lclibrary.b-cdn.net/starters/wp-content/uploads/sites/15/2021/11/samsung-282297.svg" alt="Samsung">
-                        </div>
+<div class="dashboard-bg"></div>
+<div class="container py-5">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-lg-6 col-xl-5 mb-5 mb-lg-0">
+            <div class="main-card-3d">
+                <div class="mb-3">
+                    <span class="main-title-gradient d-block mb-2">
+                        <i class="bi bi-boxes"></i> Quản lý kho linh kiện
+                    </span>
+                    <div class="main-welcome">
+                        Chào mừng bạn đến với hệ thống quản lý kho!
                     </div>
                 </div>
+                <div class="mb-3">
+                    <ul class="main-feature-list">
+                        <li><i class="bi bi-bar-chart-steps"></i> Theo dõi tồn kho trực quan</li>
+                        <li><i class="bi bi-arrow-left-right"></i> Quản lý nhập - xuất linh kiện</li>
+                        <li><i class="bi bi-search"></i> Tìm kiếm, tra cứu nhanh</li>
+                        <li><i class="bi bi-clipboard-data"></i> Báo cáo, thống kê tức thì</li>
+                    </ul>
+                </div>
+               
+                <div class="main-brand-logos" style="gap:1.2rem; margin-bottom:2.2rem; justify-content:center;">
+                    <a href="https://www.motorola.com/" target="_blank" rel="noopener" class="main-link-card shadow-sm" title="Motorola">
+                        <img src="https://lclibrary.b-cdn.net/starters/wp-content/uploads/sites/15/2021/11/motorola.svg" alt="Motorola" style="max-height:48px; margin-bottom:0.7rem;">
+                        Motorola
+                    </a>
+                    <a href="https://www.asus.com/" target="_blank" rel="noopener" class="main-link-card shadow-sm" title="Asus">
+                        <img src="https://lclibrary.b-cdn.net/starters/wp-content/uploads/sites/15/2021/11/asus.svg" alt="Asus" style="max-height:48px; margin-bottom:0.7rem;">
+                        Asus
+                    </a>
+                    <a href="https://www.sony.com/" target="_blank" rel="noopener" class="main-link-card shadow-sm" title="Sony">
+                        <img src="https://lclibrary.b-cdn.net/starters/wp-content/uploads/sites/15/2021/11/sony.svg" alt="Sony" style="max-height:48px; margin-bottom:0.7rem;">
+                        Sony
+                    </a>
+                    <a href="https://www.samsung.com/" target="_blank" rel="noopener" class="main-link-card shadow-sm" title="Samsung">
+                        <img src="https://lclibrary.b-cdn.net/starters/wp-content/uploads/sites/15/2021/11/samsung-282297.svg" alt="Samsung" style="max-height:48px; margin-bottom:0.7rem;">
+                        Samsung
+                    </a>
+                </div>
             </div>
+        </div>
+        <div class="col-lg-6 order-lg-2 text-center">
+            <img style="clip-path: polygon(25% 0%, 100% 0%, 100% 99%, 0% 100%); border-radius: 2.2rem;"
+                 src="https://images.unsplash.com/photo-1618004912476-29818d81ae2e?crop=entropy&amp;cs=tinysrgb&amp;fit=crop&amp;fm=jpg&amp;ixid=MnwzNzg0fDB8MXxzZWFyY2h8NzV8fHB1cnBsZXxlbnwwfDB8fHwxNjQ3NDcxNjY4&amp;ixlib=rb-1.2.1&amp;q=80&amp;w=1080&amp;h=768"
+                 class="d-block mx-lg-auto img-fluid shadow-lg"
+                 alt="Warehouse" loading="lazy" width="800" height="500">
         </div>
     </div>
 </div>

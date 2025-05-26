@@ -99,7 +99,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const donTheoNgay = @Html.Raw(JsonSerializer.Serialize(ViewBag.DonTheoNgay));
-        const trangThai = @Html.Raw(ViewBag.ThongKeTrangThaiJson); // ✅ Dùng đúng JSON đã xử lý DisplayName
+        const trangThai = @Html.Raw(ViewBag.ThongKeTrangThaiJson); 
 
         const ctx1 = document.getElementById('chartDonTheoNgay').getContext('2d');
         new Chart(ctx1, {

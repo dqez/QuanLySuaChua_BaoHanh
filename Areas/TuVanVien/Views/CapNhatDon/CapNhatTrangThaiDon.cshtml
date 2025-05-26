@@ -48,7 +48,7 @@
 
                 <div class="d-flex justify-content-between mt-4">
                     @if ((Model.PhuongThucThanhToan?.ToLower().Contains("tienmat") ?? false)
-                    && Model.TrangThai?.ToLower() != "hoan thanh")
+                    && Model.TrangThai?.ToLower() != "DaSuaXong")
                     {
                         <form method="post" asp-action="CapNhatTrangThai" asp-route-id="@Model.PhieuSuaChuaId">
                             <input type="hidden" name="trangThaiMoi" value="DaThanhToan" />

@@ -18,6 +18,12 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group mb-3">
+                            <label asp-for="SanPhamId" class="form-label fw-bold">Mã sản phẩm</label>
+                            <input asp-for="SanPhamId" class="form-control" placeholder="Nhập mã sản phẩm" />
+                            <span asp-validation-for="SanPhamId" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-group mb-3">
                             <label asp-for="KhachHangId" class="form-label fw-bold">Khách Hàng</label>
                             <select asp-for="KhachHangId" class="form-select" asp-items="ViewBag.KhachHangId">
                                 <option value="">-- Chọn khách hàng --</option>
@@ -60,7 +66,7 @@
                         
                         <div class="form-group mb-3">
                             <label asp-for="NgayHetHanBh" class="form-label fw-bold">Ngày Hết Hạn Bảo Hành</label>
-                            <input asp-for="NgayHetHanBh" type="date" class="form-control" id="hetHan" />
+                            <input asp-for="NgayHetHanBh" type="date" class="form-control" id="hetHan" readonly />
                             <span asp-validation-for="NgayHetHanBh" class="text-danger"></span>
                         </div>
                         
