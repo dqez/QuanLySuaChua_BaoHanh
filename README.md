@@ -52,20 +52,43 @@ Xây dựng hệ thống quản lý sửa chữa và bảo hành thiết bị đ
   10. Quản trị viên gửi sản phẩm đã sửa chữa
   11. Khách hàng xác nhận đã nhận hàng
 
-```mermaid
-usecase
-actor Admin
-actor "Kỹ thuật viên" as Tech
-actor "Khách hàng" as Customer
-actor "CSKH" as Support
-actor "Nhân viên kho" as Store
 
-Admin --> (Quản lý người dùng)
-Admin --> (Xem báo cáo)
-Tech --> (Xử lý đơn sửa chữa)
-Store --> (Quản lý kho linh kiện)
-Support --> (Tiếp nhận yêu cầu sửa chữa)
-Customer --> (Tạo yêu cầu sửa chữa)
-Customer --> (Thanh toán dịch vụ)
+## Cài đặt & Chạy project
+### Yêu cầu
+  - Visual Studio 2022 (hoặc Rider)
+  - .NET 8 SDK
+  - SQL Server (2019 trở lên)
+
+### Các bước
+1. Clone repo:
+  ```
+  git clone https://github.com/dqez/QuanLySuaChua_BaoHanh.git
+  cd QuanLySuaChua_BaoHanh
+  ```
+
+2. Mở solution bằng Visual Studio 2022.
+
+3. Cập nhật appsettings.json:
+```
+"ConnectionStrings": {
+    "DefaultConnection": "Server=.;Database=QuanLySuaChuaBaoHanh;Trusted_Connection=True;TrustServerCertificate=True;"
+}
 ```
 
+4. Chạy migration để tạo database:
+```
+dotnet ef database update
+```
+
+5. Build & run:
+```
+dotnet run
+```
+
+6. Truy cập tại https://localhost:5001 hoặc http://localhost:5000.
+
+### Tài khoản mặc định
+```
+Username: admin1
+Password: Admin@123
+```
