@@ -53,7 +53,6 @@ Xây dựng hệ thống quản lý sửa chữa và bảo hành thiết bị đ
   11. Khách hàng xác nhận đã nhận hàng
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': { 'actorBorder':'#000', 'actorTextColor':'#000'}}}%%
 usecase
 actor Admin
 actor "Kỹ thuật viên" as Tech
