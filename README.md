@@ -53,7 +53,8 @@ Xây dựng hệ thống quản lý sửa chữa và bảo hành thiết bị đ
   11. Khách hàng xác nhận đã nhận hàng
 
 ```mermaid
-usecaseDiagram
+%%{init: {'theme':'base', 'themeVariables': { 'actorBorder':'#000', 'actorTextColor':'#000'}}}%%
+usecase
 actor Admin
 actor "Kỹ thuật viên" as Tech
 actor "Khách hàng" as Customer
@@ -68,5 +69,4 @@ Support --> (Tiếp nhận yêu cầu sửa chữa)
 Customer --> (Tạo yêu cầu sửa chữa)
 Customer --> (Thanh toán dịch vụ)
 ```
-
 
